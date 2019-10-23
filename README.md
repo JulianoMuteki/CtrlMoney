@@ -1,2 +1,2 @@
-# CtrlMoney
+# Ctrl Money
 Personal spending control
