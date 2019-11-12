@@ -53,6 +53,11 @@ export default {
           icon: 'icon-puzzle'
         },
         {
+          name: 'Bank',
+          url: '/base/bank',
+          icon: 'icon-puzzle'
+        },
+        {
           name: 'Carousels',
           url: '/base/carousels',
           icon: 'icon-puzzle'
@@ -122,6 +127,43 @@ export default {
           url: '/base/tooltips',
           icon: 'icon-puzzle'
         }
+      ]
+    },
+    {
+      name: 'Register',
+      url: '/register',
+      icon: 'icon-shield',
+      children: [
+        {
+          name: 'Bank',
+          url: '/register/bank',
+          icon: 'icon-cursor',
+        },
+        {
+          name: 'Classification',
+          url: '/buttons/dropdowns',
+          icon: 'icon-cursor'
+        },
+        {
+          name: 'FinancialTransaction',
+          url: '/buttons/button-groups',
+          icon: 'icon-cursor'
+        },
+        {
+          name: 'GroupTransaction',
+          url: '/buttons/brand-buttons',
+          icon: 'icon-cursor'
+        },
+        {
+          name: 'TransactionSummary',
+          url: '/buttons/brand-buttons',
+          icon: 'icon-cursor',
+        },
+        {
+          name: 'Transfer',
+          url: '/buttons/brand-buttons',
+          icon: 'icon-cursor',
+        },
       ]
     },
     {
@@ -265,21 +307,6 @@ export default {
         text: 'NEW'
       },
       attributes: { disabled: true },
-    },
-    {
-      name: 'Download CoreUI',
-      url: 'http://coreui.io/vue/',
-      icon: 'icon-cloud-download',
-      class: 'mt-auto',
-      variant: 'success',
-      attributes: { target: '_blank', rel: 'noopener' }
-    },
-    {
-      name: 'Try CoreUI PRO',
-      url: 'http://coreui.io/pro/vue/',
-      icon: 'icon-layers',
-      variant: 'danger',
-      attributes: { target: '_blank', rel: 'noopener' }
     },
   ]
 }

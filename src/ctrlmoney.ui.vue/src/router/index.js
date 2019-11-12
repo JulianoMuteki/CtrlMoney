@@ -13,6 +13,9 @@ const Typography = () => import('@/views/theme/Typography')
 const Charts = () => import('@/views/Charts')
 const Widgets = () => import('@/views/Widgets')
 
+// Register CtrlMoney
+const Bank = () => import('@/views/register/Bank')
+
 // Views - Components
 const Cards = () => import('@/views/base/Cards')
 const Forms = () => import('@/views/base/Forms')
@@ -210,6 +213,21 @@ function configRoutes() {
               name: 'Tooltips',
               component: Tooltips
             }
+          ]
+        },
+        {
+          path: 'register',
+          redirect: '/register/bank',
+          name: 'Register',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'bank',
+              name: 'Bank',
+              component: Bank
+            },
           ]
         },
         {
