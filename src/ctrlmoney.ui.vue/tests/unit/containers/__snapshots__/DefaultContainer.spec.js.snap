@@ -22,7 +22,7 @@ exports[`DefaultContainer.vue renders correctly 1`] = `
       to="#"
     >
       <img
-        alt="CoreUI Logo"
+        alt="CtrlMoney Logo"
         class="navbar-brand-full"
         height="25"
         src="img/logo.png"
@@ -30,7 +30,7 @@ exports[`DefaultContainer.vue renders correctly 1`] = `
       />
        
       <img
-        alt="CoreUI Logo"
+         alt="CtrlMoney Logo"
         class="navbar-brand-minimized"
         height="30"
         src="img/brand/sygnet.svg"
@@ -189,7 +189,7 @@ exports[`DefaultContainer.vue renders correctly 1`] = `
   <thefooter-stub>
     <div>
       <a
-        href="https://coreui.io"
+        href="#"
       >
         CoreUI
       </a>
@@ -211,9 +211,9 @@ exports[`DefaultContainer.vue renders correctly 1`] = `
       </span>
        
       <a
-        href="https://coreui.io"
+        href="#"
       >
-        CoreUI for Vue
+        CtrlMoney for Vue
       </a>
     </div>
   </thefooter-stub>

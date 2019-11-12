@@ -27,7 +27,7 @@ exports[`CoreUIIcons.vue renders correctly 1`] = `
       >
         <a
           class="card-header-action"
-          href="https://github.com/coreui/coreui-icons"
+          href="#"
           rel="noreferrer noopener"
           target="_blank"
         >
