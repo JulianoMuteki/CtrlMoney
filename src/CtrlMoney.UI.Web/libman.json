@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "admin-lte@3.0.5",
+      "destination": "wwwroot/admin-lte/"
+    }
+  ]
+}
