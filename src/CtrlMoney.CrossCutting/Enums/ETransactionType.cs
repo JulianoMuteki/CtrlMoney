@@ -7,6 +7,7 @@ namespace CtrlMoney.CrossCutting.Enums
     public enum ETransactionType
     {
         INCOME = 0,
-        EXPENSE = 1
+        EXPENSE = 1, 
+        TRANSFER = 2
     }
 }

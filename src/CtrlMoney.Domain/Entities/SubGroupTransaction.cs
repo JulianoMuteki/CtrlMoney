@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CtrlMoney.Domain.Entities
 {
-    class Transfer
+    class SubGroupTransaction
     {
     }
 }
