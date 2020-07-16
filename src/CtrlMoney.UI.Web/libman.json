@@ -18,6 +18,14 @@
     {
       "library": "jquery@3.4.1",
       "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "datatables@1.10.20",
+      "destination": "wwwroot/lib/datatables/"
+    },
+    {
+      "library": "datatables-responsive@2.2.3",
+      "destination": "wwwroot/lib/datatables/js/datatables-responsive/"
     }
   ]
 }
