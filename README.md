@@ -1,5 +1,6 @@
 # Ctrl Money
-Personal spending control
+Controle de gastos e investimentos
+
 
 # Docker
 sudo service docker start
