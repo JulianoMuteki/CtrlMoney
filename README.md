@@ -1,6 +1,11 @@
 # Ctrl Money
 Controle de gastos e investimentos
 
+### AdminLTE Template
+AdminLTE has been carefully coded with clear comments in all of its JS, SCSS and HTML files. SCSS has been used to increase code customizability.
+Download from GitHub releases.
+https://github.com/ColorlibHQ/AdminLTE
+
 
 # Docker
 sudo service docker start
