@@ -16,7 +16,7 @@ inet 172.31.235.196/14333
 
 # Migrations Overview
 
-## Open Package Manager Console > ctrlbox\src\CtrlBox.Infra.Context
+## Open Package Manager Console > ctrlmoney\src\CtrlMoney.Infra.Context
 
 ```Add-Migration InitialCreate```
 
