@@ -1,7 +1,7 @@
 # Ctrl Money
 Personal spending control
 
-
+# Docker
 sudo service docker start
 
 sudo docker pull mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
