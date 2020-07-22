@@ -5,15 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\0 - Aggregation\" />
-    <Folder Include="Entities\1 - SubEntities\" />
-    <Folder Include="Entities\2 - ValueObjects\" />
+    <ProjectReference Include="..\CtrlMoney.Domain\CtrlMoney.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -33,6 +33,11 @@ namespace CtrlMoney.UI.Web.Controllers
             return View();
         }
 
+        public IActionResult Reports()
+        {
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

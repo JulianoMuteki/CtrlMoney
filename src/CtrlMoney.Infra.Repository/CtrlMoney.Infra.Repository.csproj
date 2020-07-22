@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CtrlMoney.CrossCutting\CtrlMoney.CrossCutting.csproj" />
+    <ProjectReference Include="..\CtrlMoney.Domain\CtrlMoney.Domain.csproj" />
+    <ProjectReference Include="..\CtrlMoney.Infra.Context\CtrlMoney.Infra.Context.csproj" />
+  </ItemGroup>
+
+</Project>

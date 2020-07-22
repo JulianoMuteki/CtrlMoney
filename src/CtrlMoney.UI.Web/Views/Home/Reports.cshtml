@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewData["Title"] = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- select -->
+                <div class="form-group">
+                    <label>Selecione banco</label>
+                    <select class="form-control">
+                        <option>Itaú</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- /.col -->
+           
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fluxo de caixa</h3>
+
+                        <div class="card-tools">
+                            <ul class="pagination pagination-sm float-right">
+                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px">Mês</th>
+                                    <th>Saldo Inicial</th>
+                                    <th>Entradas</th>
+                                    <th>Saídas</th>
+                                    <th>Saldo banco</th>
+                                    <th>Acumulado</th>
+                                    <th>Lucratividade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Janeiro</td>
+                                    <td>R$ 2.000,0</td>
+                                    <td>R$ 19.200,0</td>
+                                    <td>R$ 16.950,0</td>
+                                    <td>R$ 2.250,0</td>
+                                    <td>R$ 4.250,0</td>
+                                    <td>12%</td>
+                                </tr>
+                                <tr>
+                                    <td>Fevereiro</td>
+                                    <td>
+                                        R$ 4.250,0
+                                    </td>
+                                    <td>
+                                        R$ 17.700,0
+                                    </td>
+                                    <td>
+                                        R$ 14.400,0
+                                    </td>
+                                    <td>
+                                        R$ 3.300,0
+                                    </td>
+                                    <td>
+                                        R$ 7.550,0
+                                    </td>
+                                    <td>
+                                        19%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Março</td>
+                                    <td>
+                                        R$ 7.550,0
+                                    </td>
+                                    <td>
+                                        R$ 16.500,0
+                                    </td>
+                                    <td>
+                                        R$ 18.700,0
+                                    </td>
+                                    <td>
+                                        -R$ 2.200,0
+                                    </td>
+                                    <td>
+                                        R$ 5.350,0
+
+                                    </td>
+                                    <td>
+                                        -13%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Abril</td>
+                                    <td>
+                                        R$ 5.350,0
+                                    </td>
+                                    <td>
+                                        R$ 12.900,0
+                                    </td>
+                                    <td>
+                                        R$ 18.850,0
+                                    </td>
+                                    <td>
+                                        -R$ 5.950,0
+                                    </td>
+                                    <td>
+                                        -R$ 600,0
+                                    </td>
+                                    <td>
+                                        -46%
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+
