@@ -31,6 +31,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.CrossCutting.Ioc"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.AppService", "src\CtrlMoney.AppService\CtrlMoney.AppService.csproj", "{B3967569-A6CA-4EDD-9412-D699D2ECD38A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.3 - DevOps", "4.3 - DevOps", "{B4FAB8EF-A2EC-42FD-AF84-E963A01F2D22}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +84,7 @@ Global
 		{D0B5FD98-2558-454C-A9A5-9613D112C272} = {FD597515-773B-4966-B6D4-B609293D9009}
 		{1389667C-9C36-4941-A28B-83E3B6C10600} = {5EF8B0B3-380F-4234-A049-B1807DB1DD35}
 		{B3967569-A6CA-4EDD-9412-D699D2ECD38A} = {24C8350B-503F-4962-8C9E-09EB3D454042}
+		{B4FAB8EF-A2EC-42FD-AF84-E963A01F2D22} = {71B56D46-5D3A-4F1D-97B4-87720FCA9D90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38EB263C-007B-4828-8AF0-F1B813B3FCD2}
