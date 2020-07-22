@@ -8,6 +8,7 @@ https://github.com/ColorlibHQ/AdminLTE
 
 
 # Docker
+## SQL Server
 sudo service docker start
 
 sudo docker pull mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
@@ -18,6 +19,8 @@ ip addr show
 
 inet 172.31.235.196/14333
 
+## PostgresSQL
+CtrlMoney\src\docker-compose.yaml
 
 
 # Migrations Overview
