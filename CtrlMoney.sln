@@ -23,17 +23,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - CrossCutting", "4.1 -
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2 - Data", "4.2 - Data", "{FD597515-773B-4966-B6D4-B609293D9009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.Infra.Context", "src\CtrlMoney.Infra.Context\CtrlMoney.Infra.Context.csproj", "{EC16D713-277B-4328-8A39-1FD0F6CE7BF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.Infra.Context", "src\CtrlMoney.Infra.Context\CtrlMoney.Infra.Context.csproj", "{EC16D713-277B-4328-8A39-1FD0F6CE7BF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.Infra.Repository", "src\CtrlMoney.Infra.Repository\CtrlMoney.Infra.Repository.csproj", "{D0B5FD98-2558-454C-A9A5-9613D112C272}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.Infra.Repository", "src\CtrlMoney.Infra.Repository\CtrlMoney.Infra.Repository.csproj", "{D0B5FD98-2558-454C-A9A5-9613D112C272}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.CrossCutting.Ioc", "src\CtrlMoney.CrossCutting.Ioc\CtrlMoney.CrossCutting.Ioc.csproj", "{1389667C-9C36-4941-A28B-83E3B6C10600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.CrossCutting.Ioc", "src\CtrlMoney.CrossCutting.Ioc\CtrlMoney.CrossCutting.Ioc.csproj", "{1389667C-9C36-4941-A28B-83E3B6C10600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.AppService", "src\CtrlMoney.AppService\CtrlMoney.AppService.csproj", "{B3967569-A6CA-4EDD-9412-D699D2ECD38A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.AppService", "src\CtrlMoney.AppService\CtrlMoney.AppService.csproj", "{B3967569-A6CA-4EDD-9412-D699D2ECD38A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.3 - DevOps", "4.3 - DevOps", "{B4FAB8EF-A2EC-42FD-AF84-E963A01F2D22}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
+		docker-compose2.yaml = docker-compose2.yaml
 	EndProjectSection
 EndProject
 Global
