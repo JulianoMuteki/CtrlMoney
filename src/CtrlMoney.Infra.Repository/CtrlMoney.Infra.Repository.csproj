@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CtrlMoney.CrossCutting\CtrlMoney.CrossCutting.csproj" />
     <ProjectReference Include="..\CtrlMoney.Domain\CtrlMoney.Domain.csproj" />
     <ProjectReference Include="..\CtrlMoney.Infra.Context\CtrlMoney.Infra.Context.csproj" />
   </ItemGroup>

@@ -16,4 +16,8 @@
     <Folder Include="Entities\2 - ValueObjects\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CtrlMoney.CrossCutting\CtrlMoney.CrossCutting.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -29,7 +29,7 @@ namespace CtrlMoney.Infra.Context
 
         public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-            SeedRoles(roleManager);
+          //  SeedRoles(roleManager);
             SeedUsers(userManager);
         }
 
