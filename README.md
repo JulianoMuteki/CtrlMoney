@@ -1,6 +1,10 @@
 # Ctrl Money
 Controle de gastos e investimentos
 
+## Version
+Entity Framework Core 3.1.6
+AspNet Core 3.1.3
+
 ### AdminLTE Template
 AdminLTE has been carefully coded with clear comments in all of its JS, SCSS and HTML files. SCSS has been used to increase code customizability.
 Download from GitHub releases.
@@ -46,11 +50,11 @@ or
 
 
 # Packages
-PM> Install-Package Microsoft.EntityFrameworkCore -Version 3.1.6
-PM> Install-Package FluentValidation -Version 9.0.1
-PM> Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore -Version 3.1.6
-PM> Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson -Version 3.0.3
-PM> Install-Package Npgsql.EntityFrameworkCore.PostgreSQL -Version 3.1.4
+ - PM> Install-Package Microsoft.EntityFrameworkCore -Version 3.1.6
+ - PM> Install-Package FluentValidation -Version 9.0.1
+ - PM> Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore -Version 3.1.6
+ - PM> Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson -Version 3.0.3
+ - PM> Install-Package Npgsql.EntityFrameworkCore.PostgreSQL -Version 3.1.4
 
 # Database
 https://www.npgsql.org/efcore/index.html
