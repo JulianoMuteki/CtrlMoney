@@ -8,6 +8,7 @@ https://github.com/ColorlibHQ/AdminLTE
 
 
 # Docker
+## SQL Server
 sudo service docker start
 
 sudo docker pull mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-18.04
@@ -18,6 +19,8 @@ ip addr show
 
 inet 172.31.235.196/14333
 
+## PostgresSQL
+CtrlMoney\src\docker-compose.yaml
 
 
 # Migrations Overview
@@ -46,3 +49,8 @@ or
 PM> Install-Package Microsoft.EntityFrameworkCore -Version 3.1.6
 PM> Install-Package FluentValidation -Version 9.0.1
 PM> Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore -Version 3.1.6
+PM> Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson -Version 3.0.3
+PM> Install-Package Npgsql.EntityFrameworkCore.PostgreSQL -Version 3.1.4
+
+# Database
+https://www.npgsql.org/efcore/index.html
