@@ -1,10 +1,10 @@
-﻿using CtrlMoney.Domain.Identity;
+﻿using CtrlMoney.Domain.Entities.FinancialClassification;
+using CtrlMoney.Domain.Identity;
+using CtrlMoney.Infra.Context.Mapping.FinancialClassification;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CtrlMoney.Infra.Context
 {
@@ -12,6 +12,9 @@ namespace CtrlMoney.Infra.Context
                                                           ApplicationUserRole, ApplicationUserLogin,
                                                           ApplicationRoleClaim, ApplicationUserToken>
     {
+
+        public DbSet<Composite> Composites { get; set; }
+        public DbSet<Leaf> Leaves { get; set; }
         public CtrlMoneyContext()
         {
             // ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -31,6 +34,9 @@ namespace CtrlMoney.Infra.Context
         {
             modelBuilder.Ignore<ValidationFailure>();
             modelBuilder.Ignore<ValidationResult>();
+
+            modelBuilder.ApplyConfiguration(new CompositeMap());
+            modelBuilder.ApplyConfiguration(new LeafMap());
 
             base.OnModelCreating(modelBuilder);
 

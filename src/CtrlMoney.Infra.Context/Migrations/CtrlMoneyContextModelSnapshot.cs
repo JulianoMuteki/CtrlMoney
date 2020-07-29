@@ -19,6 +19,71 @@ namespace CtrlMoney.Infra.Context.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("CtrlMoney.Domain.Entities.FinancialClassification.Composite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("CompositeID")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("character varying(250)")
+                        .HasMaxLength(250);
+
+                    b.HasKey("Id")
+                        .HasName("CompositeID");
+
+                    b.ToTable("Composites");
+                });
+
+            modelBuilder.Entity("CtrlMoney.Domain.Entities.FinancialClassification.Leaf", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("LeafID")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompositeID")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("character varying(250)")
+                        .HasMaxLength(250);
+
+                    b.HasKey("Id")
+                        .HasName("LeafID");
+
+                    b.HasIndex("CompositeID");
+
+                    b.ToTable("Leaves");
+                });
+
             modelBuilder.Entity("CtrlMoney.Domain.Identity.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -216,6 +281,15 @@ namespace CtrlMoney.Infra.Context.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CtrlMoney.Domain.Entities.FinancialClassification.Leaf", b =>
+                {
+                    b.HasOne("CtrlMoney.Domain.Entities.FinancialClassification.Composite", "Composite")
+                        .WithMany("Leaves")
+                        .HasForeignKey("CompositeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CtrlMoney.Domain.Identity.ApplicationRoleClaim", b =>
