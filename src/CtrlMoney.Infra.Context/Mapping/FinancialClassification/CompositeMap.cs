@@ -21,10 +21,13 @@ namespace CtrlMoney.Infra.Context.Mapping.FinancialClassification
             builder.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(250);
+
             builder.HasMany(x => x.Leaves)
                  .WithOne(x => x.Composite)
                  .HasForeignKey(x => x.CompositeID)
                  .IsRequired(true);
+
+
         }
     }
 }

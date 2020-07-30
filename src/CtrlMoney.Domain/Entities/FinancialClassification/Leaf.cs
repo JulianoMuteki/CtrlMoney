@@ -12,6 +12,8 @@ namespace CtrlMoney.Domain.Entities.FinancialClassification
         public Guid CompositeID { get; private set; }
         public string Title { get; set; }
 
+        public ICollection<Composite> CompositesChildren { get; set; }
+
         public Leaf()
             :base()
         {
