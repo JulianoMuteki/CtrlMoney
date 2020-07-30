@@ -56,6 +56,9 @@ or
  - PM> Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson -Version 3.0.3
  - PM> Install-Package Npgsql.EntityFrameworkCore.PostgreSQL -Version 3.1.4
  - PM> Install-Package Microsoft.EntityFrameworkCore.Design -Version 3.1.6
+ - PM> Install-Package Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -Version 3.1.6
+ - PM> Install-Package Microsoft.EntityFrameworkCore.Tools -Version 3.1.6
+ - PM> Install-Package Microsoft.EntityFrameworkCore.Tools -Version 3.1.6
 
 # Database
 https://www.npgsql.org/efcore/index.html
