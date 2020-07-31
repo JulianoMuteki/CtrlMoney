@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CtrlMoney.Infra.Context.Migrations
 {
     [DbContext(typeof(CtrlMoneyContext))]
-    [Migration("20200730225722_Composite-Pattern")]
-    partial class CompositePattern
+    [Migration("20200731010808_CompositeGroup")]
+    partial class CompositeGroup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CtrlMoney.Infra.Context.Migrations
 {
     [DbContext(typeof(CtrlMoneyContext))]
-    [Migration("20200724004125_InitialCreate")]
+    [Migration("20200731002818_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
