@@ -23,7 +23,6 @@
     <Folder Include="Mapping\0 - Aggregation\" />
     <Folder Include="Mapping\1 - SubEntities\" />
     <Folder Include="Mapping\2 - ValueObjects\" />
-    <Folder Include="Mapping\A - Registration\" />
   </ItemGroup>
 
 </Project>

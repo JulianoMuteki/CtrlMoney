@@ -1,5 +1,7 @@
-﻿using CtrlMoney.Domain.Entities.FinancialClassification;
+﻿using CtrlMoney.Domain.Entities;
+using CtrlMoney.Domain.Entities.FinancialClassification;
 using CtrlMoney.Domain.Identity;
+using CtrlMoney.Infra.Context.Mapping;
 using CtrlMoney.Infra.Context.Mapping.FinancialClassification;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -15,6 +17,8 @@ namespace CtrlMoney.Infra.Context
 
         public DbSet<Composite> Composites { get; set; }
         public DbSet<Leaf> Leaves { get; set; }
+        public DbSet<Bank> Banks { get; set; }
+
         public CtrlMoneyContext()
         {
             // ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -37,6 +41,7 @@ namespace CtrlMoney.Infra.Context
 
             modelBuilder.ApplyConfiguration(new CompositeMap());
             modelBuilder.ApplyConfiguration(new LeafMap());
+            modelBuilder.ApplyConfiguration(new BankMap());
 
             base.OnModelCreating(modelBuilder);
 
@@ -67,7 +72,6 @@ namespace CtrlMoney.Infra.Context
                             .IsRequired();
 
                 });
-
             modelBuilder.Entity<ApplicationRole>(b =>
             {
                 // Each Role can have many entries in the UserRole join table

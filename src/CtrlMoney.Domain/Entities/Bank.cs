@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CtrlMoney.Domain.Common;
 
 namespace CtrlMoney.Domain.Entities
 {
-    class Bank
+    public class Bank : EntityBase
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public double BankBalance { get; private set; }
-
-        public double InitialBalance { get; set; }
+        public int BankCode { get; set; }
+        public double InitialBalance { get; private set; }
     }
 }

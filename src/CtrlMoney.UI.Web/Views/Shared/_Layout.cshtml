@@ -18,6 +18,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- DataTables -->
     <link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/lib/datatables/css/responsive.bootstrap4.min.css" rel="stylesheet" />
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css">
     <!-- Theme style -->
     <link href="~/admin-lte/css/adminlte.css" rel="stylesheet" />
     <!-- Google Font: Source Sans Pro -->
@@ -213,30 +216,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- /.sidebar -->
         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">Starter Page</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Starter Page</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-            <!-- Main content -->
-            @RenderBody()
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
+
+        @RenderBody()
+
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
             <!-- Control sidebar content goes here -->
@@ -274,9 +256,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="~/admin-lte/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="~/admin-lte/js/demo.js"></script>
+    <!-- Select2 -->
+    <script src="~/lib/select2/js/select2.full.min.js"></script>
+
     <!-- page script -->
     <script>
         $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
             $("#example1").DataTable({
                 "responsive": true,
                 "autoWidth": false,

@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CtrlMoney.AppService\CtrlMoney.AppService.csproj" />
     <ProjectReference Include="..\CtrlMoney.Infra.Repository\CtrlMoney.Infra.Repository.csproj" />
   </ItemGroup>
 

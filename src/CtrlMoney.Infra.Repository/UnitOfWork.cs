@@ -62,12 +62,11 @@ namespace CtrlMoney.Infra.Repository
 
         private void CreateReository<T>() where T : class
         {
-            //if (typeof(IClientRepository).Equals((typeof(T))) && !RepositoriesCustom.Keys.Contains(typeof(T)))
-            //{
-            //    IClientRepository repository = new ClientRepository(_dbContext);
-            //    RepositoriesCustom.Add(typeof(T), repository);
-            //}
-           throw new NotImplementedException();
+            if (typeof(IBankRepository).Equals((typeof(T))) && !RepositoriesCustom.Keys.Contains(typeof(T)))
+            {
+                IBankRepository repository = new BankRepository(_dbContext);
+                RepositoriesCustom.Add(typeof(T), repository);
+            }
         }
 
         //public async Task<int> Commit()

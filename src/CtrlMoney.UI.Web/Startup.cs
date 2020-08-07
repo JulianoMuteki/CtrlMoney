@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CtrlMoney.CrossCutting.Ioc;
 using CtrlMoney.Domain.Identity;
 using CtrlMoney.Domain.Security;
 using CtrlMoney.Infra.Context;
@@ -124,8 +125,8 @@ namespace CtrlMoney.UI.Web
         private static void RegisterServices(IServiceCollection services)
         {
             // Adding dependencies from another layers (isolated from Presentation)
-           // InfraBootStrapperModule.RegisterServices(services);
-           // ApplicationBootStrapperModule.RegisterServices(services);
+            InfraBootStrapperModule.RegisterServices(services);
+            ApplicationBootStrapperModule.RegisterServices(services);
         }
     }
 }

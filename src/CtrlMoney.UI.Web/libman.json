@@ -26,6 +26,10 @@
     {
       "library": "datatables-responsive@2.2.3",
       "destination": "wwwroot/lib/datatables/js/datatables-responsive/"
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "wwwroot/lib/select2/"
     }
   ]
 }
