@@ -26,5 +26,8 @@ namespace CtrlMoney.Domain.Interfaces.Application
         void Delete(Guid id);
 
         Task<Guid> DeleteAsync(Guid id);
+
+        int AddRange(ICollection<T> entity);
+
     }
 }

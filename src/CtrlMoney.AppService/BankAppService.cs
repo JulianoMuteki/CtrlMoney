@@ -24,7 +24,7 @@ namespace CtrlMoney.AppService
             try
             {
                 return _unitOfWork.RepositoryCustom<IBankRepository>().GetAllBanks();
-                
+
             }
             catch (CustomException exc)
             {
@@ -58,7 +58,19 @@ namespace CtrlMoney.AppService
 
         public ICollection<Bank> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var banks = _unitOfWork.Repository<Bank>().GetAll();
+                return banks;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<Bank>("Unexpected error fetching my banks", nameof(this.GetAll), ex);
+            }
         }
 
         public Task<ICollection<Bank>> GetAllAsync()
@@ -84,6 +96,31 @@ namespace CtrlMoney.AppService
         public Task<Bank> UpdateAsync(Bank updated)
         {
             throw new NotImplementedException();
+        }
+
+        public int AddRange(ICollection<Bank> entity)
+        {
+            try
+            {
+
+                //if (!client.ComponentValidator.IsValid)
+                //{
+                //    entity.SetNotifications(client.ComponentValidator.GetNotifications());
+                //    return entity;
+                //}
+                var result = _unitOfWork.Repository<Bank>().AddRange(entity);
+                _unitOfWork.CommitSync();
+
+                return result;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<BankAppService>("Unexpected error fetching all Addrange bank", nameof(this.AddRange), ex);
+            }
         }
     }
 }

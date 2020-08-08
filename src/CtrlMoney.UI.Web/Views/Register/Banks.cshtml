@@ -26,40 +26,145 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- SELECT2 EXAMPLE -->
-            <div class="card card-default">
-                <div class="card-header">
-                    <h3 class="card-title">Select your accounts banks</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- SELECT2 EXAMPLE -->
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <h3 class="card-title">Select your accounts banks</h3>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <h5>List banks Febraran</h5>
-                    <div class="row">
-                        <div class="col-12 col-sm-6">
-                            <div class="form-group">
-                                <div class="select2-purple">
-                                    <select class="select2" multiple="multiple" data-placeholder="Select a State" data-dropdown-css-class="select2-purple" style="width: 100%;" id="bankCode" asp-items="@((List<SelectListItem>)ViewData["ListBanks"])"></select>
-                                </div>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
                             </div>
-                            <!-- /.form-group -->
                         </div>
-                        <!-- /.col -->
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h5>List banks Febraran</h5>
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <div class="select2-purple">
+                                            <select id="slt2Banks" class="select2" multiple="multiple" data-placeholder="Select a State" data-dropdown-css-class="select2-purple" style="width: 100%;" id="bankCode" asp-items="@((List<SelectListItem>)ViewData["ListBanks"])"></select>
+                                        </div>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button id="btnAddBank" type="submit" class="btn btn-primary">Submit</button>
+                        </div>
                     </div>
-                    <!-- /.row -->
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    Here will set value for each bank
+                    <!-- /.card -->
                 </div>
             </div>
-            <!-- /.card -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Your banks</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="tbBanks" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th style="width: 10px">Code</th>
+                                        <th>BankBalance</th>
+                                        <th style="width: 40px">InitialBalance</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script type="text/javascript">
+
+    function loadTableBanks() {
+        $('#tbBanks').dataTable({
+            "sAjaxSource": '/Register/GetAjaxHandlerMyBanks',
+            "bProcessing": true,
+            "bDestroy": true,
+            "aoColumns": [
+                //{
+                //    data: function (row, type, set) {
+                //        if (type === 'display') {
+                //            return row.Name;
+                //        }
+                //    }
+                //},
+                {
+                    "mData": "Name"
+                },
+                {
+                    "mData": "BankCode",
+                    "defaultContent": "<i>code</i>",
+                },
+                {
+                    "mData": "BankBalance",
+                    "bSortable": false,
+                    "defaultContent": "<i>balance</i>",
+                },
+                {
+                    "mData": "InitialBalance",
+                    "defaultContent": "<i>Edit Not set</i>",
+                },
+                {
+                    "bSortable": false,
+                    "defaultContent": "<i>Edit Not set</i>",
+                }
+            ]
+        });
+    }
+    jQuery(document).ready(function () {
+        loadTableBanks();
+
+        $("#btnAddBank").click(function () {
+            var selections = (JSON.stringify($(slt2Banks).select2('data')));
+
+            $.ajax({
+                url: '@Url.Content("~/Register/PostAjaxHandlerAddBanks")',
+                type: 'POST',
+                dataType: 'json',
+                data: { claimsJSON: selections },
+                "success": function (json) {
+                    if (!json.NotAuthorized) {
+                        loadTableBanks();
+                    }
+                },
+                "error": function (erro) {
+
+                    alert(erro);
+                }
+
+            });
+            event.preventDefault();
+        });
+    });
+</script>

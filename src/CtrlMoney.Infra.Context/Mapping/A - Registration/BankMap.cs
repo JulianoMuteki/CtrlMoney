@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CtrlMoney.Infra.Context.Mapping
 {
-    class BankMap : EntityConfigurationBase<Bank>
+    public class BankMap : EntityConfigurationBase<Bank>
     {
         protected override void Initialize(EntityTypeBuilder<Bank> builder)
         {
@@ -20,7 +20,7 @@ namespace CtrlMoney.Infra.Context.Mapping
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(250);
-            
+
             builder.Property(e => e.BankCode)
              .IsRequired();
 

@@ -5,8 +5,8 @@ namespace CtrlMoney.Domain.Entities
     public class Bank : EntityBase
     {
         public string Name { get; set; }
-        public double BankBalance { get; private set; }
+        public double BankBalance { get; set; }
         public int BankCode { get; set; }
-        public double InitialBalance { get; private set; }
+        public double InitialBalance { get; set; }
     }
 }
