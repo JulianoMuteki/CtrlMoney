@@ -72,5 +72,10 @@ namespace CtrlMoney.UI.Web.Controllers
             });
         }
 
+
+        public IActionResult MenusGroup()
+        {
+            return View();
+        }
     }
 }

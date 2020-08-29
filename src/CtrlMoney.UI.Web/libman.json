@@ -30,6 +30,10 @@
     {
       "library": "select2@4.0.13",
       "destination": "wwwroot/lib/select2/"
+    },
+    {
+      "library": "bootstrap-treeview@1.2.0",
+      "destination": "wwwroot/lib/bootstrap-treeview/bootstrap-treeview/"
     }
   ]
 }
