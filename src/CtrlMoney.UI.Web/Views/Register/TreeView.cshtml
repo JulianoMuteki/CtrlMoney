@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewData["Title"] = "MenusGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Advanced Form</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Account bank Form</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-text-width"></i>
+                                Unordered List
+                            </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="treeview">
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- ./col -->
+  
+            </div>
+            <div class="row">
+
+                <div class="col-xs-7">
+                    <p>
+                        New Node Content:
+                        <input class="form-control" id="theInput" value="My New Node">
+                    </p>
+                    <p>
+                        Add Node:
+                        <button id="btnFirst" class="btn btn-default">First Child</button>
+                        <button id="btnLast" class="btn btn-default">Last Child</button>
+                    </p>
+                    <p>
+                        <button id="btnNoSel" class="btn btn-default">Remove Selection</button>
+                    </p>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<script>
+
+    // Treeview Initialization
+    $(document).ready(function () {
+        function getTree() {
+            // Some logic to retrieve, or generate tree structure
+            var defaultData = [
+                {
+                    text: 'Renda fixa',
+                    href: '#parent1',
+                    tags: ['4'],
+                    nodes: [
+                        {
+                            text: 'Simples',
+                            href: '#child2',
+                            tags: ['0']
+                        },
+                        {
+                            text: 'Indexados',
+                            href: '#child3',
+                            tags: ['0'],
+                            icon: 'fas fa-scroll'
+                        },
+                        {
+                            text: 'Ativos',
+                            href: '#child1',
+                            icon: "file-invoice-dollar",
+                            //selectedIcon: "fas fa-wallet",
+                            tags: ['3'],
+                            nodes: [
+                                {
+                                    text: 'Soberano',
+                                    href: '#grandchild1',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Grau de investimentos',
+                                    href: '#grandchild2',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Crédito Livre',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                }
+                            ]
+                        },
+                        {
+                            text: 'Investimentos exterior',
+                            href: '#child4',
+                            tags: ['0'],
+                            icon: 'fas fa-wallet'
+                        },
+                    ]
+                },
+                {
+                    text: 'Multimercado',
+                    href: '#parent1',
+                    tags: ['4'],
+                    nodes: [
+                        {
+                            text: 'Alocação',
+                            href: '#child2',
+                            tags: ['0'],
+                            icon: 'fas fa-scroll'
+                        },
+                        {
+                            text: 'Estratégia',
+                            href: '#child1',
+                            icon: "file-invoice-dollar",
+                            //selectedIcon: "fas fa-wallet",
+                            tags: ['3'],
+                            nodes: [
+                                {
+                                    text: 'Macro',
+                                    href: '#grandchild1',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Trading',
+                                    href: '#grandchild2',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Long and Short - D',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Long and Short - N',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Juros e Moeda',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    text: 'Ações',
+                    href: '#parent1',
+                    tags: ['4'],
+                    nodes: [
+                        {
+                            text: 'Indexados',
+                            href: '#child2',
+                            tags: ['0'],
+                            icon: 'fas fa-scroll'
+                        },
+                        {
+                            text: 'Ativos',
+                            href: '#child1',
+                            icon: "file-invoice-dollar",
+                            //selectedIcon: "fas fa-wallet",
+                            tags: ['3'],
+                            nodes: [
+                                {
+                                    text: 'Valor/Crescimento',
+                                    href: '#grandchild1',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Setoriais',
+                                    href: '#grandchild2',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Dividendos',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Small Caps',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: 'Índice ativo',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                }
+                            ]
+                        },
+                        {
+                            text: 'Específicos',
+                            href: '#child1',
+                            icon: "file-invoice-dollar",
+                            //selectedIcon: "fas fa-wallet",
+                            tags: ['3'],
+                            nodes: [
+                                {
+                                    text: ' Fundos fechados de ações',
+                                    href: '#grandchild1',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: ' Fundos de ações FMP-FGTS',
+                                    href: '#grandchild2',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                },
+                                {
+                                    text: ' Fundos de mono ação',
+                                    href: '#grandchild3',
+                                    tags: ['0'],
+                                    icon: 'fas fa-scroll'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            return defaultData;
+        }
+        var tree = $('#treeview').treeview({
+            color: "#428bca",
+            expandIcon: 'fas fa-folder-plus',
+            collapseIcon: 'fas fa-folder-minus',
+            // nodeIcon: 'fas fa-folder-open', // >>>>>>>>> icon default
+            data: getTree(),
+            onNodeSelected: function (event, node) {
+                var id = node['nodeId'];
+                console.log(id);
+                $("#treeview").treeview("addNode", [id, {
+                    node:
+                    {
+                        text: ' test',
+                        href: '#grandchild9',
+                        tags: ['0'],
+                        icon: 'fas fa-scroll'
+                    }
+                }]);
+            }
+        });
+
+   
+    });
+</script>

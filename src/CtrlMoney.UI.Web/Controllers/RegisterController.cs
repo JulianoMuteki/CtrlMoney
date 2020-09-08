@@ -77,5 +77,10 @@ namespace CtrlMoney.UI.Web.Controllers
         {
             return View();
         }
+
+        public IActionResult TreeView()
+        {
+            return View();
+        }
     }
 }

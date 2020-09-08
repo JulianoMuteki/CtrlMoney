@@ -93,6 +93,12 @@
 
 		return {
 
+			// Adding Node Method
+			addNode: $.proxy(this.addNode, this),
+			// Delete Node Method
+			deleteNode: $.proxy(this.deleteNode, this),
+			deleteChildrenNode: $.proxy(this.deleteChildrenNode, this),
+
 			// Options (public access)
 			options: this.options,
 
@@ -170,6 +176,67 @@
 		this.destroy();
 		$.removeData(this, pluginName);
 		$('#' + this.styleId).remove();
+	};
+
+	// Adding child nodes to nodes
+	Tree.prototype.addNode = function (identifiers, options) {
+		this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
+			this.setAddNode(node, options);
+		}, this));
+
+		this.setInitialStates({ nodes: this.tree }, 0);
+		this.render();
+	};
+
+	//Add child nodes
+	Tree.prototype.setAddNode = function (node, options) {
+        /*If the parent node to insert a child node currently does not have any children, then [] is assigned to the parent node.
+	      Otherwise, node.nodes will have undefined errors*/
+		if (node.nodes == null) {
+			node.nodes = [];
+		}
+		if (options.node) {
+			node.nodes.push(options.node);
+		}
+	};
+	/**
+	 * Delete a node if the root node cannot be deleted
+	 * Gets the parent node of the node,
+	 * Delete oneself from the parent node nodes collection according to Id
+	 * Refresh parent node
+	 * @param identifiers
+	 * @param options
+	 */
+	Tree.prototype.deleteNode = function (identifiers, options) {
+		this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
+			var parentNode = this.getParent(node);
+			if (parentNode && parentNode.nodes != null) {
+				for (var i = parentNode.nodes.length - 1; i >= 0; i--) {
+					if (parentNode.nodes[i].nodeId == node.nodeId) {
+						parentNode.nodes.splice(i, 1);
+					}
+				}
+				this.setInitialStates({ nodes: this.tree }, 0);
+				this.render();
+			} else {
+				console.log('Root node cannot be deleted');
+			}
+		}, this));
+	};
+	/**
+	 * Delete child nodes
+	 * Vacant child node refresh node
+	 * @param node
+	 * @param options
+	 */
+	Tree.prototype.deleteChildrenNode = function (identifiers, options) {
+		this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
+			if (node.nodes != null) {
+				node.nodes = null;
+				this.setInitialStates({ nodes: this.tree }, 0);
+				this.render();
+			}
+		}, this));
 	};
 
 	Tree.prototype.destroy = function () {
