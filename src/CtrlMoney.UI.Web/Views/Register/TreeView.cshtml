@@ -45,25 +45,63 @@
                     <!-- /.card -->
                 </div>
                 <!-- ./col -->
-  
+
             </div>
             <div class="row">
-
-                <div class="col-xs-7">
-                    <p>
-                        New Node Content:
-                        <input class="form-control" id="theInput" value="My New Node">
-                    </p>
-                    <p>
-                        Add Node:
-                        <button id="btnFirst" class="btn btn-default">First Child</button>
-                        <button id="btnLast" class="btn btn-default">Last Child</button>
-                    </p>
-                    <p>
-                        <button id="btnNoSel" class="btn btn-default">Remove Selection</button>
-                    </p>
+                <!-- left column -->
+                <div class="col-md-8">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Add node in item selected</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form role="form" id="quickForm">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="title">Title tree</label>
+                                    <input type="text" name="title" class="form-control" id="title" placeholder="title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <input type="text" name="description" class="form-control" id="description" placeholder="description">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tag">Tag</label>
+                                    <input type="text" name="tag" class="form-control" id="tag" placeholder="tag">
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <a class="btn btn-primary btn-sm" href="#" id="btnAddNode">
+                                    <i class="fas fa-plus">
+                                    </i>
+                                    View
+                                </a>
+                                <a class="btn btn-info btn-sm" href="#">
+                                    <i class="fas fa-pencil-alt">
+                                    </i>
+                                    Edit
+                                </a>
+                                <a class="btn btn-danger btn-sm" href="#">
+                                    <i class="fas fa-trash">
+                                    </i>
+                                    Delete
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
                 </div>
+                <!--/.col (left) -->
+                <!-- right column -->
+                <div class="col-md-6">
+
+                </div>
+                <!--/.col (right) -->
             </div>
+            <!-- /.row -->
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -79,8 +117,8 @@
             var defaultData = [
                 {
                     text: 'Renda fixa',
-                    href: '#parent1',
-                    tags: ['4'],
+                    href: 'https://www.pgadmin.org/download/',
+                    tags: ['available'],
                     nodes: [
                         {
                             text: 'Simples',
@@ -263,27 +301,43 @@
 
             return defaultData;
         }
+
+        var nodeSelected = "";
         var tree = $('#treeview').treeview({
             color: "#428bca",
+            showTags: true,
+            enableLinks: true,
+            levels: 0,
             expandIcon: 'fas fa-folder-plus',
             collapseIcon: 'fas fa-folder-minus',
             // nodeIcon: 'fas fa-folder-open', // >>>>>>>>> icon default
             data: getTree(),
             onNodeSelected: function (event, node) {
-                var id = node['nodeId'];
-                console.log(id);
-                $("#treeview").treeview("addNode", [id, {
-                    node:
-                    {
-                        text: ' test',
-                        href: '#grandchild9',
-                        tags: ['0'],
-                        icon: 'fas fa-scroll'
-                    }
-                }]);
+                nodeSelected = node['nodeId'];
+                console.log(nodeSelected);
             }
         });
 
+        $("#btnAddNode").click(function () {
+            var newNode = tree.treeview('addNode', [nodeSelected, {
+                node:
+                {
+                    text: $("#title").val(),
+                    href: '#grandchild9',
+                    tags: [$("#tag").val()], 
+                    state: {
+                        selected: true,
+                        expanded: true
+                    }
+                }
+            }]);
+
+           // var node = $('#tree').treeview('getNode', newNode["nodeId"]);
+
+            tree.treeview('unselectAll', { silent: true });
+            tree.treeview('toggleNodeExpanded', [nodeSelected, { silent: true }]);
+           
+        });
    
     });
 </script>

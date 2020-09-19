@@ -17,6 +17,12 @@ namespace CtrlMoney.Infra.Context
 
         public DbSet<Composite> Composites { get; set; }
         public DbSet<Leaf> Leaves { get; set; }
+
+        public DbSet<ParentTree> ParentsTrees { get; set; }
+        public DbSet<ChildTree> ChildrenTrees { get; set; }
+        public DbSet<GrandChildTree> GrandChildrenTrees { get; set; }
+
+
         public DbSet<Bank> Banks { get; set; }
 
         public CtrlMoneyContext()
@@ -42,6 +48,10 @@ namespace CtrlMoney.Infra.Context
             modelBuilder.ApplyConfiguration(new CompositeMap());
             modelBuilder.ApplyConfiguration(new LeafMap());
             modelBuilder.ApplyConfiguration(new BankMap());
+
+            modelBuilder.ApplyConfiguration(new ParentTreeMap());
+            modelBuilder.ApplyConfiguration(new ChildTreeMap());
+            modelBuilder.ApplyConfiguration(new GrandChildTreeMap());
 
             base.OnModelCreating(modelBuilder);
 
