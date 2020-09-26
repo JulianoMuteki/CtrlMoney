@@ -8,6 +8,7 @@ namespace CtrlMoney.Domain.Entities
     {
         Input,
         Output,
-        Transfer
+        Transfer,
+        Investment
     }
 }

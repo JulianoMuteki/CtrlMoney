@@ -60,7 +60,7 @@ or
 
 # Database
 https://www.npgsql.org/efcore/index.html
-
+http://localhost:16543/browser/
 
 # Docker
  - sudo docker-compose up -d

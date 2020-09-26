@@ -82,5 +82,10 @@ namespace CtrlMoney.UI.Web.Controllers
         {
             return View();
         }
+
+        public IActionResult AddFinancialTransaction()
+        {
+            return View();
+        }
     }
 }

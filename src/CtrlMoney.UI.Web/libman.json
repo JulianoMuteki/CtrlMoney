@@ -34,6 +34,14 @@
     {
       "library": "bootstrap-treeview@1.2.0",
       "destination": "wwwroot/lib/bootstrap-treeview/bootstrap-treeview/"
+    },
+    {
+      "library": "jquery.inputmask@5.0.5",
+      "destination": "wwwroot/lib/jquery.inputmask/"
+    },
+    {
+      "library": "bootstrap-daterangepicker@3.0.5",
+      "destination": "wwwroot/lib/bootstrap-daterangepicker/"
     }
   ]
 }
