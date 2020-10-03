@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewData["Title"] = "AddTransaction";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Cadastro de transações financeiras</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Add Transaction</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-6">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Classificação financeira</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Grupo 1</label>
+                                <select class="form-control select2" style="width: 100%;">
+                                    <option selected="selected">Transportes</option>
+                                    <option>Alaska</option>
+                                    <option>California</option>
+                                    <option>Delaware</option>
+                                    <option>Tennessee</option>
+                                    <option>Texas</option>
+                                    <option>Washington</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Sub grupo 1.1</label>
+                                <select class="form-control select2" style="width: 100%;">
+                                    <option selected="selected">Oficina</option>
+                                    <option>Alaska</option>
+                                    <option>California</option>
+                                    <option>Delaware</option>
+                                    <option>Tennessee</option>
+                                    <option>Texas</option>
+                                    <option>Washington</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Sub grupo 1.1.1 <span class="text-danger">*</span></label>
+                                <select class="form-control select2" style="width: 100%;">
+                                    <option selected="selected">Peças</option>
+                                    <option>Alaska</option>
+                                    <option>California</option>
+                                    <option>Delaware</option>
+                                    <option>Tennessee</option>
+                                    <option>Texas</option>
+                                    <option>Washington</option>
+                                </select>
+                                <p class="text-danger">Obrigatório</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Descrição</label>
+                                <input type="text" class="form-control" placeholder="Enter ...">
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+                <!--/.col (left) -->
+                <!-- right column -->
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Adicionar registro</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- select -->
+                            <div class="form-group">
+                                <label>Tipo movimntação</label>
+                                <select class="form-control">
+                                    <option>Gasto</option>
+                                    <option>Investimento</option>
+                                    <option>Transferência</option>
+                                    <option>Recebimento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Banco</label>
+                                <select class="form-control select2" style="width: 100%;">
+                                    <option selected="selected">Itaú</option>
+                                    <option>Alaska</option>
+                                    <option>California</option>
+                                    <option>Delaware</option>
+                                    <option>Tennessee</option>
+                                    <option>Texas</option>
+                                    <option>Washington</option>
+                                </select>
+                            </div>
+                            <h5 class="mt-4 mb-2">Valor</h5>
+                            <div class="input-group">
+
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Data de pagamento:</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <div class="float-right">
+                                <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Save</button>
+                            </div>
+                            <button type="reset" class="btn btn-default"><i class="fas fa-times"></i> Discard</button>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+                <!--/.col (right) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
