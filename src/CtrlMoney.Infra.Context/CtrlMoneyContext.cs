@@ -33,12 +33,18 @@ namespace CtrlMoney.Infra.Context
         public CtrlMoneyContext(DbContextOptions<CtrlMoneyContext> options)
              : base(options)
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+            ChangeTracker.LazyLoadingEnabled = true;
         }
 
         public void SetTrackAll()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+        }
+
+        public void EnableLazyLoading()
+        {
+            ChangeTracker.LazyLoadingEnabled = true;
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

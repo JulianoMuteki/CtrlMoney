@@ -88,5 +88,10 @@ namespace CtrlMoney.Infra.Repository
         {
             _dbContext.SetTrackAll();
         }
+
+        public void EnableLazyLoading()
+        {
+            _dbContext.EnableLazyLoading();
+        }
     }
 }

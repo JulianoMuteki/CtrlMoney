@@ -131,10 +131,15 @@ namespace CtrlMoney.Infra.Repository.Common
         {
             try
             {
-                if (_context.Entry<T>(entity).State == EntityState.Added)   
+                if (_context.Entry<T>(entity).State == EntityState.Added)
                 {
                     _context.Set<T>().Add(entity);
-                }else if (_context.Entry<T>(entity).State == EntityState.Modified)
+                }
+                if (_context.Entry<T>(entity).State == EntityState.Detached)
+                {
+                    _context.Entry(entity).State = EntityState.Added;                   
+                }
+                else if (_context.Entry<T>(entity).State == EntityState.Modified)
                 {
                     _context.Set<T>().Attach(entity);
                     _context.Entry(entity).State = EntityState.Modified;
@@ -152,7 +157,7 @@ namespace CtrlMoney.Infra.Repository.Common
             try
             {
                 _context.Set<T>().AddRange(entity);
-              //  var result = _context.SaveChanges();
+                //  var result = _context.SaveChanges();
                 return 1;
             }
             catch (Exception ex)
@@ -166,7 +171,7 @@ namespace CtrlMoney.Infra.Repository.Common
             try
             {
                 _context.Set<T>().Add(entity);
-               
+
                 return entity;
             }
             catch (Exception ex)
@@ -186,7 +191,7 @@ namespace CtrlMoney.Infra.Repository.Common
 
                 _context.Set<T>().Attach(updated);
                 _context.Entry(updated).State = EntityState.Modified;
-             //   _context.SaveChanges();
+                //   _context.SaveChanges();
 
                 return updated;
             }
@@ -226,7 +231,7 @@ namespace CtrlMoney.Infra.Repository.Common
 
                 _context.Set<T>().Attach(updated);
                 _context.Entry(updated).State = EntityState.Modified;
-              //  await _unitOfWork.Commit();
+                //  await _unitOfWork.Commit();
 
                 return updated;
             }
@@ -241,7 +246,7 @@ namespace CtrlMoney.Infra.Repository.Common
             try
             {
                 _context.Set<T>().Remove(t);
-              //  _context.SaveChanges();
+                //  _context.SaveChanges();
             }
             catch (Exception ex)
             {

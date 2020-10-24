@@ -25,7 +25,7 @@ namespace CtrlMoney.Infra.Context.Mapping.FinancialClassification
             builder.HasMany(x => x.Children)
                  .WithOne(x => x.ParentNode)
                  .HasForeignKey(x => x.ParentNodeID)
-                 .IsRequired(true);
+                 .IsRequired(false);
 
         }
     }

@@ -83,10 +83,12 @@ namespace CtrlMoney.UI.Web
                 }
             });
 
-            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
-            services.AddRazorPages().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
-            // services.AddAutoMapperSetup();
+            //services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+            //services.AddRazorPages().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+            //// services.AddAutoMapperSetup();
 
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNewtonsoftJson();
+            services.AddRazorPages().AddNewtonsoftJson();
             RegisterServices(services);
         }
 

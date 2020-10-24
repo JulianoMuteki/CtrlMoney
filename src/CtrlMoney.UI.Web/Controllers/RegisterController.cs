@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CtrlMoney.Domain.Entities;
 using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Helpers;
@@ -14,9 +13,11 @@ namespace CtrlMoney.UI.Web.Controllers
     public class RegisterController : Controller
     {
         private readonly IBankAppService _bankAppService;
-        public RegisterController(IBankAppService bankAppService)
+        private readonly IRegisterAppService _registerAppService;
+        public RegisterController(IBankAppService bankAppService, IRegisterAppService registerAppService)
         {
             _bankAppService = bankAppService;
+            _registerAppService = registerAppService;
         }
         public IActionResult Banks()
         {
@@ -72,7 +73,6 @@ namespace CtrlMoney.UI.Web.Controllers
             });
         }
 
-
         public IActionResult MenusGroup()
         {
             return View();
@@ -83,9 +83,41 @@ namespace CtrlMoney.UI.Web.Controllers
             return View();
         }
 
-        public IActionResult AddFinancialTransaction()
+        [HttpGet]
+        public IActionResult GetNodes()
         {
-            return View();
+            try
+            {
+                var trees = _registerAppService.GetAll();
+
+                var result = ConvertTreeToNodes.ConvertToJson(trees);
+
+                return Json(new
+                {
+                    aaData = result
+                });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AddTreeData(string nodeID, string titleTree, string description, string tag)
+        {
+            try
+            {
+                _registerAppService.AddTree(nodeID, titleTree, description, tag);
+                return Json(new
+                {
+                    success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

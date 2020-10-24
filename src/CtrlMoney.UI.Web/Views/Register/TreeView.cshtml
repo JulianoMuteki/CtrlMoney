@@ -77,7 +77,7 @@
                                 <a class="btn btn-primary btn-sm" href="#" id="btnAddNode">
                                     <i class="fas fa-plus">
                                     </i>
-                                    View
+                                    Add
                                 </a>
                                 <a class="btn btn-info btn-sm" href="#">
                                     <i class="fas fa-pencil-alt">
@@ -109,200 +109,234 @@
 <!-- /.content-wrapper -->
 
 <script>
+    var nodeSelected;
+    function addDataTree() {
+        var _titleTree = $(title).val();
+        var _description = $(description).val();
+        var _tag = $(tag).val();
+        var idParent = nodeSelected == null || nodeSelected == undefined ? "" : nodeSelected.href;
 
-    // Treeview Initialization
-    $(document).ready(function () {
-        function getTree() {
-            // Some logic to retrieve, or generate tree structure
-            var defaultData = [
-                {
-                    text: 'Renda fixa',
-                    href: 'https://www.pgadmin.org/download/',
-                    tags: ['available'],
-                    nodes: [
-                        {
-                            text: 'Simples',
-                            href: '#child2',
-                            tags: ['0']
-                        },
-                        {
-                            text: 'Indexados',
-                            href: '#child3',
-                            tags: ['0'],
-                            icon: 'fas fa-scroll'
-                        },
-                        {
-                            text: 'Ativos',
-                            href: '#child1',
-                            icon: "file-invoice-dollar",
-                            //selectedIcon: "fas fa-wallet",
-                            tags: ['3'],
-                            nodes: [
-                                {
-                                    text: 'Soberano',
-                                    href: '#grandchild1',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Grau de investimentos',
-                                    href: '#grandchild2',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Crédito Livre',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                }
-                            ]
-                        },
-                        {
-                            text: 'Investimentos exterior',
-                            href: '#child4',
-                            tags: ['0'],
-                            icon: 'fas fa-wallet'
-                        },
-                    ]
-                },
-                {
-                    text: 'Multimercado',
-                    href: '#parent1',
-                    tags: ['4'],
-                    nodes: [
-                        {
-                            text: 'Alocação',
-                            href: '#child2',
-                            tags: ['0'],
-                            icon: 'fas fa-scroll'
-                        },
-                        {
-                            text: 'Estratégia',
-                            href: '#child1',
-                            icon: "file-invoice-dollar",
-                            //selectedIcon: "fas fa-wallet",
-                            tags: ['3'],
-                            nodes: [
-                                {
-                                    text: 'Macro',
-                                    href: '#grandchild1',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Trading',
-                                    href: '#grandchild2',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Long and Short - D',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Long and Short - N',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Juros e Moeda',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    text: 'Ações',
-                    href: '#parent1',
-                    tags: ['4'],
-                    nodes: [
-                        {
-                            text: 'Indexados',
-                            href: '#child2',
-                            tags: ['0'],
-                            icon: 'fas fa-scroll'
-                        },
-                        {
-                            text: 'Ativos',
-                            href: '#child1',
-                            icon: "file-invoice-dollar",
-                            //selectedIcon: "fas fa-wallet",
-                            tags: ['3'],
-                            nodes: [
-                                {
-                                    text: 'Valor/Crescimento',
-                                    href: '#grandchild1',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Setoriais',
-                                    href: '#grandchild2',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Dividendos',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Small Caps',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: 'Índice ativo',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                }
-                            ]
-                        },
-                        {
-                            text: 'Específicos',
-                            href: '#child1',
-                            icon: "file-invoice-dollar",
-                            //selectedIcon: "fas fa-wallet",
-                            tags: ['3'],
-                            nodes: [
-                                {
-                                    text: ' Fundos fechados de ações',
-                                    href: '#grandchild1',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: ' Fundos de ações FMP-FGTS',
-                                    href: '#grandchild2',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                },
-                                {
-                                    text: ' Fundos de mono ação',
-                                    href: '#grandchild3',
-                                    tags: ['0'],
-                                    icon: 'fas fa-scroll'
-                                }
-                            ]
-                        }
-                    ]
+        $.ajax({
+            url: '../Register/AddTreeData',
+            type: 'POST',
+            dataType: 'json',
+            data: { nodeID: idParent, titleTree: _titleTree, description: _description, tag: _tag },
+            "success": function (json) {
+                if (!json.NotAuthorized) {
+                    alert(json.success);
+                   console.log(json);
                 }
-            ];
+            }        
+        });
+    }
 
-            return defaultData;
-        }
+    function getNodesTree() {
+        $.ajax({
+            url: '../Register/GetNodes',
+            type: 'GET',
+            dataType: 'json',
+            "success": function (json) {
+                if (!json.NotAuthorized) {
+                    //alert(json);
+                    console.log(JSON.parse(json.aaData).node_Trees);
+                    loadTreeView(JSON.parse(json.aaData).node_Trees);
+                }
+            }
+        });
+    }
 
-        var nodeSelected = "";
+    function getTree() {
+        // Some logic to retrieve, or generate tree structure
+        var defaultData = [
+            {
+                text: 'Renda fixa',
+                href: '535245b2-62a2-4b9b-abd0-774bd30d48c0',
+                tags: ['available'],
+                nodes: [
+                    {
+                        text: 'Simples',
+                        href: '#child2',
+                        tags: ['0']
+                    },
+                    {
+                        text: 'Indexados',
+                        href: '#child3',
+                        tags: ['0'],
+                        icon: 'fas fa-scroll'
+                    },
+                    {
+                        text: 'Ativos',
+                        href: '#child1',
+                        icon: "file-invoice-dollar",
+                        //selectedIcon: "fas fa-wallet",
+                        tags: ['3'],
+                        nodes: [
+                            {
+                                text: 'Soberano',
+                                href: '#grandchild1',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Grau de investimentos',
+                                href: '#grandchild2',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Crédito Livre',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            }
+                        ]
+                    },
+                    {
+                        text: 'Investimentos exterior',
+                        href: '#child4',
+                        tags: ['0'],
+                        icon: 'fas fa-wallet'
+                    },
+                ]
+            },
+            {
+                text: 'Multimercado',
+                href: '#parent1',
+                tags: ['4'],
+                nodes: [
+                    {
+                        text: 'Alocação',
+                        href: '#child2',
+                        tags: ['0'],
+                        icon: 'fas fa-scroll'
+                    },
+                    {
+                        text: 'Estratégia',
+                        href: '#child1',
+                        icon: "file-invoice-dollar",
+                        //selectedIcon: "fas fa-wallet",
+                        tags: ['3'],
+                        nodes: [
+                            {
+                                text: 'Macro',
+                                href: '#grandchild1',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Trading',
+                                href: '#grandchild2',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Long and Short - D',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Long and Short - N',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Juros e Moeda',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                text: 'Ações',
+                href: '#parent1',
+                tags: ['4'],
+                nodes: [
+                    {
+                        text: 'Indexados',
+                        href: '#child2',
+                        tags: ['0'],
+                        icon: 'fas fa-scroll'
+                    },
+                    {
+                        text: 'Ativos',
+                        href: '#child1',
+                        icon: "file-invoice-dollar",
+                        //selectedIcon: "fas fa-wallet",
+                        tags: ['3'],
+                        nodes: [
+                            {
+                                text: 'Valor/Crescimento',
+                                href: '#grandchild1',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Setoriais',
+                                href: '#grandchild2',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Dividendos',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Small Caps',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: 'Índice ativo',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            }
+                        ]
+                    },
+                    {
+                        text: 'Específicos',
+                        href: '#child1',
+                        icon: "file-invoice-dollar",
+                        //selectedIcon: "fas fa-wallet",
+                        tags: ['3'],
+                        nodes: [
+                            {
+                                text: ' Fundos fechados de ações',
+                                href: '#grandchild1',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: ' Fundos de ações FMP-FGTS',
+                                href: '#grandchild2',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            },
+                            {
+                                text: ' Fundos de mono ação',
+                                href: '#grandchild3',
+                                tags: ['0'],
+                                icon: 'fas fa-scroll'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        return defaultData;
+    }
+
+    function loadTreeView(dataTree) {
+        
         var tree = $('#treeview').treeview({
             color: "#428bca",
             showTags: true,
@@ -311,32 +345,46 @@
             expandIcon: 'fas fa-folder-plus',
             collapseIcon: 'fas fa-folder-minus',
             // nodeIcon: 'fas fa-folder-open', // >>>>>>>>> icon default
-            data: getTree(),
+            data: dataTree,
             onNodeSelected: function (event, node) {
-                nodeSelected = node['nodeId'];
-                console.log(nodeSelected);
+               // nodeSelected = node['nodeId'];
+                console.log(node);
+                nodeSelected = node;
+            },
+            onNodeUnselected: function (event, node) {
+                // nodeSelected = node['nodeId'];
+                console.log("onNodeUnselected");
+                nodeSelected = null;
             }
         });
+    }
+
+    // Treeview Initialization
+    $(document).ready(function () {
+
+        getNodesTree();
+
 
         $("#btnAddNode").click(function () {
-            var newNode = tree.treeview('addNode', [nodeSelected, {
-                node:
-                {
-                    text: $("#title").val(),
-                    href: '#grandchild9',
-                    tags: [$("#tag").val()], 
-                    state: {
-                        selected: true,
-                        expanded: true
-                    }
-                }
-            }]);
+            addDataTree();
+           // var newNode = tree.treeview('addNode', [nodeSelected, {
+           //     node:
+           //     {
+           //         text: $("#title").val(),
+           //         href: '#grandchild9',
+           //         tags: [$("#tag").val()], 
+           //         state: {
+           //             selected: true,
+           //             expanded: true
+           //         }
+           //     }
+           // }]);
+           //// var node = $('#tree').treeview('getNode', newNode["nodeId"]);
+           // tree.treeview('unselectAll', { silent: true });
+           // tree.treeview('toggleNodeExpanded', [nodeSelected, { silent: true }]);
 
-           // var node = $('#tree').treeview('getNode', newNode["nodeId"]);
 
-            tree.treeview('unselectAll', { silent: true });
-            tree.treeview('toggleNodeExpanded', [nodeSelected, { silent: true }]);
-           
+
         });
    
     });

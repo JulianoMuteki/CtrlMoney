@@ -3,15 +3,17 @@ using System;
 using CtrlMoney.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CtrlMoney.Infra.Context.Migrations
 {
     [DbContext(typeof(CtrlMoneyContext))]
-    partial class CtrlMoneyContextModelSnapshot : ModelSnapshot
+    [Migration("20201017191842_ParentNodeID_Isnot_Required")]
+    partial class ParentNodeID_Isnot_Required
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
