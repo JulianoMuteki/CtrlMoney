@@ -87,8 +87,8 @@ namespace CtrlMoney.UI.Web
             //services.AddRazorPages().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
             //// services.AddAutoMapperSetup();
 
-            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddNewtonsoftJson();
-            services.AddRazorPages().AddNewtonsoftJson();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddRazorPages();
             RegisterServices(services);
         }
 

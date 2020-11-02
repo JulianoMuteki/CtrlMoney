@@ -62,14 +62,15 @@ namespace CtrlMoney.UI.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAjaxHandlerMyBanks()
+        public JsonResult GetAjaxHandlerMyBanks()
         {
             var banks = _bankAppService.GetAll();
 
             var banksVM = banks.Select(x => new BankVM(x)).ToList();
             return Json(new
             {
-                aaData = banksVM
+                aaData = banksVM,            
+                success = true
             });
         }
 

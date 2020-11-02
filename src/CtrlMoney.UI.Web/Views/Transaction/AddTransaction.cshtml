@@ -93,41 +93,29 @@
                             <div class="form-group">
                                 <label>Tipo movimentação</label>
                                 <select class="form-control select2">
-                                    <option>Gasto</option>
+                                    <option>Despesa</option>
                                     <option>Investimento</option>
                                     <option>Transferência</option>
-                                    <option>Recebimento</option>
+                                    <option>Receita</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Banco</label>
-                                <select class="form-control select2" style="width: 100%;">
-                                    <option selected="selected">Itaú</option>
-                                    <option>Alaska</option>
-                                    <option>California</option>
-                                    <option>Delaware</option>
-                                    <option>Tennessee</option>
-                                    <option>Texas</option>
-                                    <option>Washington</option>
-                                </select>
+                                <div class="select2-purple">
+                                    <select id="slt2Banks" class="select2" data-placeholder="Select a bank" data-dropdown-css-class="select2-purple" style="width: 100%;" asp-items="@((List<SelectListItem>)ViewData["ListBanks"])"></select>
+                                </div>
                             </div>
-                            <h5 class="mt-4 mb-2">Valor</h5>
+                            <label>Valor</label>
                             <div class="input-group">
-
+                                
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
                                 </div>
-                                <input type="text" class="form-control">
+                                <input type="text" id="money" style="text-align: left;"><br>
                             </div>
                             <div class="form-group">
-                                <label>Data de pagamento:</label>
-                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">
-
-                                </div>
+                                <label>Data de movimentação:</label>
+                                <input type="text" class="form-control" id="datemask" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
                             </div>
 
                         </div>
@@ -150,3 +138,23 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script src="~/lib/jquery.inputmask/jquery.inputmask.js"></script>
+<script src="~/lib/jquery.inputmask/inputmask.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' });
+
+        $("#money").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ",",
+            groupSeparator: ".",
+           // allowMinus: false,
+          //  prefix: 'R$ ',
+            digits: 2,
+            //    digitsOptional: false,
+            rightAlign: false
+        //    unmaskAsNumber: true
+        });
+    });
+</script>
