@@ -39,6 +39,7 @@ namespace CtrlMoney.UI.Web.Models
 
             foreach (var item in parent.Children)
             {
+                nodeParent.nodes = nodeParent.nodes ?? new Collection<Node_Tree>();
                 nodeParent.nodes.Add(CreateChildTree(item));
             }
 
@@ -51,6 +52,7 @@ namespace CtrlMoney.UI.Web.Models
 
             foreach (var item in child.Children)
             {
+                nodeChild.nodes = nodeChild.nodes ?? new Collection<Node_Tree>();
                 nodeChild.nodes.Add(CreateGrandChildTree(item));
             }
 

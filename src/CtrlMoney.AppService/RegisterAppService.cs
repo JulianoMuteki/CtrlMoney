@@ -73,7 +73,7 @@ namespace CtrlMoney.AppService
 
         public ICollection<ParentTree> GetAll()
         {
-            return _parentTreeAppService.GetAll();
+            return _parentTreeAppService.GetAll_WithChildrem();
         }
     }
 }

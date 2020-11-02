@@ -67,6 +67,11 @@ namespace CtrlMoney.Infra.Repository
                 IBankRepository repository = new BankRepository(_dbContext);
                 RepositoriesCustom.Add(typeof(T), repository);
             }
+            else if  (typeof(IParentTreeRepository).Equals((typeof(T))) && !RepositoriesCustom.Keys.Contains(typeof(T)))
+            {
+                IParentTreeRepository repository = new ParentTreeRepository(_dbContext);
+                RepositoriesCustom.Add(typeof(T), repository);
+            }
         }
 
         //public async Task<int> Commit()

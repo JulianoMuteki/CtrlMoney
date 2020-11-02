@@ -7,5 +7,6 @@ namespace CtrlMoney.Domain.Interfaces.Application
 {
     public interface IParentTreeAppService: IApplicationServiceBase<ParentTree>
     {
+        ICollection<ParentTree> GetAll_WithChildrem();
     }
 }

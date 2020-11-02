@@ -109,5 +109,21 @@ namespace CtrlMoney.AppService
         {
             throw new NotImplementedException();
         }
+
+        public ICollection<ParentTree> GetAll_WithChildrem()
+        {
+            try
+            {
+                return _unitOfWork.RepositoryCustom<IParentTreeRepository>().GetAll_WithChildrem();
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<ParentTreeAppService>("Unexpected error fetching get", nameof(this.GetAll_WithChildrem), ex);
+            }
+        }
     }
 }
