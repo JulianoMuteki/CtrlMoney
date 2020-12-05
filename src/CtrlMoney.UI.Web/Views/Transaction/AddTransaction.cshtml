@@ -36,39 +36,15 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Grupo 1</label>
-                                <select class="form-control select2" style="width: 100%;">
-                                    <option selected="selected">Transportes</option>
-                                    <option>Alaska</option>
-                                    <option>California</option>
-                                    <option>Delaware</option>
-                                    <option>Tennessee</option>
-                                    <option>Texas</option>
-                                    <option>Washington</option>
-                                </select>
+                                <select id="slt2ParentTree" class="select2" data-placeholder="Select a first" data-dropdown-css-class="select2-purple" style="width: 100%;" asp-items="@((List<SelectListItem>)ViewData["ParentsTrees"])"></select>
                             </div>
                             <div class="form-group">
                                 <label>Sub grupo 1.1</label>
-                                <select class="form-control select2" style="width: 100%;">
-                                    <option selected="selected">Oficina</option>
-                                    <option>Alaska</option>
-                                    <option>California</option>
-                                    <option>Delaware</option>
-                                    <option>Tennessee</option>
-                                    <option>Texas</option>
-                                    <option>Washington</option>
-                                </select>
+                                <select id="slt2ChildTree" class="select2" data-placeholder="Select a first" data-dropdown-css-class="select2-purple" style="width: 100%;"></select>
                             </div>
                             <div class="form-group">
                                 <label>Sub grupo 1.1.1 <span class="text-danger">*</span></label>
-                                <select class="form-control select2" style="width: 100%;">
-                                    <option selected="selected">Peças</option>
-                                    <option>Alaska</option>
-                                    <option>California</option>
-                                    <option>Delaware</option>
-                                    <option>Tennessee</option>
-                                    <option>Texas</option>
-                                    <option>Washington</option>
-                                </select>
+                                <select id="slt2GrandChildTree" class="select2" data-placeholder="Select a first" data-dropdown-css-class="select2-purple" style="width: 100%;"></select>
                                 <p class="text-danger">Obrigatório</p>
                             </div>
                             <div class="form-group">
@@ -150,11 +126,50 @@
             radixPoint: ",",
             groupSeparator: ".",
            // allowMinus: false,
+            numericInput: true,
           //  prefix: 'R$ ',
             digits: 2,
             //    digitsOptional: false,
-            rightAlign: false
+            rightAlign: true
         //    unmaskAsNumber: true
+        });
+
+        $("#slt2ParentTree").change(function (event) {
+            $("#slt2ChildTree").val(null);            
+            $("#slt2ChildTree").empty();
+            $("#slt2GrandChildTree").val(null);
+            $("#slt2GrandChildTree").empty();
+
+            if ($(this).val() !== '0') {
+                var url = '@Url.Content("~/Transaction/GetAjaxHandlerChildTrees")'
+                $.getJSON(url, { parentTreeID: $(this).val() }, function (aaData) {
+                    $.each(aaData, function (index, obj) {
+                        var newOption = new Option(obj.Text, obj.Value, false, obj.Selected);
+                        $("#slt2ChildTree").append(newOption);
+                    });
+                    $("#slt2ChildTree").trigger('change');
+                });
+            }
+        });
+
+        $("#slt2ChildTree").change(function (event) {
+            $("#slt2GrandChildTree").val(null);
+            $("#slt2GrandChildTree").empty();
+
+            if ($(this).val() !== '0') {
+                var url = '@Url.Content("~/Transaction/GetAjaxHandlerGrandChildTrees")'
+                $.getJSON(url, { childTreeID: $(this).val() }, function (aaData, isSuccess) {
+                    if (isSuccess) {
+                        $.each(aaData, function (index, obj) {
+                            var newOption = new Option(obj.Text, obj.Value, false, obj.Selected);
+                            $("#slt2GrandChildTree").append(newOption).trigger('change');
+                        });
+                        $("#slt2GrandChildTree").trigger('change');
+                    } else {
+                        alert(aaData);
+                    }
+                });
+            }
         });
     });
 </script>

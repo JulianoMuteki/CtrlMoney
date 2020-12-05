@@ -5,6 +5,7 @@ using CtrlMoney.Domain.Interfaces.Base;
 using CtrlMoney.Domain.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -96,6 +97,24 @@ namespace CtrlMoney.AppService
         public Task<GrandChildTree> UpdateAsync(GrandChildTree updated)
         {
             throw new NotImplementedException();
+        }
+
+        public ICollection<GrandChildTree> GetListByParentID(Guid parentID)
+        {
+            try
+            {
+                var childTrees = _unitOfWork.Repository<GrandChildTree>().FindBy(x => x.ParentNodeID == parentID).ToList();
+                _unitOfWork.CommitSync();
+                return childTrees;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<GrandChildTreeAppService>("Unexpected error fetching GetListByParentID", nameof(this.GetListByParentID), ex);
+            }
         }
     }
 }

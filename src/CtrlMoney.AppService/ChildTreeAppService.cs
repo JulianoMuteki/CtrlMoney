@@ -2,7 +2,7 @@
 using CtrlMoney.Domain.Entities.FinancialClassification;
 using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.Domain.Interfaces.Base;
-using CtrlMoney.Domain.Interfaces.Repository;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -96,6 +96,24 @@ namespace CtrlMoney.AppService
         public Task<ChildTree> UpdateAsync(ChildTree updated)
         {
             throw new NotImplementedException();
+        }
+
+        public ICollection<ChildTree> GetListByParentID(Guid parentID)
+        {
+            try
+            {
+                var childTrees = _unitOfWork.Repository<ChildTree>().FindBy(x => x.ParentNodeID == parentID).ToList();
+                _unitOfWork.CommitSync();
+                return childTrees;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<ChildTreeAppService>("Unexpected error fetching GetListByParentID", nameof(this.GetListByParentID), ex);
+            }
         }
     }
 }

@@ -7,5 +7,6 @@ namespace CtrlMoney.Domain.Interfaces.Application
 {
     public interface IGrandChildTreeAppService: IApplicationServiceBase<GrandChildTree>
     {
+        public ICollection<GrandChildTree> GetListByParentID(Guid parentID);
     }
 }
