@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CtrlMoney.CrossCutting.Enums;
 using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,18 @@ namespace CtrlMoney.UI.Web.Controllers
 
             ViewData["ParentsTrees"] = parentsTrees;
 
+            Array values = Enum.GetValues(typeof(ETransactionType));
+            var items = new List<SelectListItem>();
+            foreach (var i in values)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = EnumHelper.GetDescription<ETransactionType>((ETransactionType)i),
+                    Value = i.ToString()
+                });
+            }
+
+            ViewData["TransactionTypes"] = items;
             return View();
         }
 
