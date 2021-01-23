@@ -2,6 +2,7 @@
 using CtrlMoney.Domain.Entities.FinancialClassification;
 using CtrlMoney.Domain.Identity;
 using CtrlMoney.Infra.Context.Mapping;
+using CtrlMoney.Infra.Context.Mapping.Financial;
 using CtrlMoney.Infra.Context.Mapping.FinancialClassification;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,12 +18,10 @@ namespace CtrlMoney.Infra.Context
 
         public DbSet<Composite> Composites { get; set; }
         public DbSet<Leaf> Leaves { get; set; }
-
         public DbSet<ParentTree> ParentsTrees { get; set; }
         public DbSet<ChildTree> ChildrenTrees { get; set; }
         public DbSet<GrandChildTree> GrandChildrenTrees { get; set; }
-
-
+        public DbSet<FinancialTransaction> FinancialTransactions { get; set; }
         public DbSet<Bank> Banks { get; set; }
 
         public CtrlMoneyContext()
@@ -58,6 +57,7 @@ namespace CtrlMoney.Infra.Context
             modelBuilder.ApplyConfiguration(new ParentTreeMap());
             modelBuilder.ApplyConfiguration(new ChildTreeMap());
             modelBuilder.ApplyConfiguration(new GrandChildTreeMap());
+            modelBuilder.ApplyConfiguration(new FinancialTransactionMap());
 
             base.OnModelCreating(modelBuilder);
 

@@ -11,6 +11,7 @@ namespace CtrlMoney.Domain.Entities.FinancialClassification
             : base()
         {
             this.Children = new HashSet<ChildTree>();
+            this.FinancialTransactions = new HashSet<FinancialTransaction>();
         }
 
         public string Title { get; set; }
@@ -21,6 +22,8 @@ namespace CtrlMoney.Domain.Entities.FinancialClassification
         public GrandChildTree ParentNode { get; set; }
         public Guid? ParentNodeID { get; set; }
         public ICollection<ChildTree> Children { get; set; }
+        public ICollection<FinancialTransaction> FinancialTransactions { get; set; }
+
 
         public void Add(ChildTree node)
         {

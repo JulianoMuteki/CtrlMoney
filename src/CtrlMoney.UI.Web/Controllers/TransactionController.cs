@@ -62,8 +62,20 @@ namespace CtrlMoney.UI.Web.Controllers
                     Value = i.ToString()
                 });
             }
-
             ViewData["TransactionTypes"] = items;
+
+            Array paymentsMethods = Enum.GetValues(typeof(EPaymentMethod));
+            var itemsPaymentsMethods = new List<SelectListItem>();
+            foreach (var i in paymentsMethods)
+            {
+                itemsPaymentsMethods.Add(new SelectListItem
+                {
+                    Text = EnumHelper.GetDescription<EPaymentMethod>((EPaymentMethod)i),
+                    Value = i.ToString()
+                });
+            }
+            ViewData["PaymentsMethods"] = itemsPaymentsMethods;
+
             return View();
         }
 

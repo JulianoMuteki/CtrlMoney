@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Cadastro de transações financeiras</h1>
+                    <h1>Register of financial transactions</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -31,24 +31,24 @@
                 <div class="col-md-6">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Classificação financeira</h3>
+                            <h3 class="card-title">Financial group</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label>Grupo 1</label>
+                                <label>Group 1</label>
                                 <select id="slt2ParentTree" class="select2" data-placeholder="Select a first" data-dropdown-css-class="select2-purple" style="width: 100%;" asp-items="@((List<SelectListItem>)ViewData["ParentsTrees"])"></select>
                             </div>
                             <div class="form-group">
-                                <label>Sub grupo 1.1</label>
+                                <label>Sub goudp 1.1</label>
                                 <select id="slt2ChildTree" class="select2" data-placeholder="Select a first" data-dropdown-css-class="select2-purple" style="width: 100%;"></select>
                             </div>
                             <div class="form-group">
-                                <label>Sub grupo 1.1.1 <span class="text-danger">*</span></label>
+                                <label>Sub group 1.1.1 <span class="text-danger">*</span></label>
                                 <select id="slt2GrandChildTree" class="select2" data-placeholder="Select a first" data-dropdown-css-class="select2-purple" style="width: 100%;"></select>
-                                <p class="text-danger">Obrigatório</p>
+                                <p class="text-danger">Required</p>
                             </div>
                             <div class="form-group">
-                                <label>Descrição</label>
+                                <label>Description</label>
                                 <input type="text" class="form-control" placeholder="Enter ...">
                             </div>
                         </div>
@@ -62,35 +62,46 @@
                 <div class="col-md-6">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Adicionar registro</h3>
+                            <h3 class="card-title">Add financial transaction</h3>
                         </div>
                         <div class="card-body">
                             <!-- select -->
                             <div class="form-group">
-                                <label>Tipo movimentação</label>
+                                <label>Transaction type</label>
                                 <div class="select2-gray">
                                     <select id="slt2TransactionTypes" class="select2" data-placeholder="Select a type" data-dropdown-css-class="select2-gray" style="width: 100%;" asp-items="@((List<SelectListItem>)ViewData["TransactionTypes"])"></select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Banco</label>
+                                <label>Bank</label>
                                 <div class="select2-purple">
                                     <select id="slt2Banks" class="select2" data-placeholder="Select a bank" data-dropdown-css-class="select2-purple" style="width: 100%;" asp-items="@((List<SelectListItem>)ViewData["ListBanks"])"></select>
                                 </div>
                             </div>
-                            <label>Valor</label>
+                            <label>Value</label>
                             <div class="input-group">
-                                
+
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
                                 </div>
                                 <input type="text" id="money" style="text-align: left;"><br>
                             </div>
                             <div class="form-group">
-                                <label>Data de movimentação:</label>
-                                <input type="text" class="form-control" id="datemask" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
+                                <label>Payment date:</label>
+                                <input type="text" class="form-control" id="datemask" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                             </div>
-
+                            <div class="form-group">
+                                <label>Oparation methods</label>
+                                <div class="select2-gray">
+                                    <select id="slt2PaymentMethods" class="select2" data-placeholder="Select a type" data-dropdown-css-class="select2-gray" style="width: 100%;" asp-items="@((List<SelectListItem>)ViewData["PaymentsMethods"])"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch3">
+                                    <label class="custom-control-label" for="customSwitch3">Operation done</label>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
@@ -116,7 +127,7 @@
 <script type="text/javascript">
     $(function () {
         //Datemask dd/mm/yyyy
-        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' });
+        $('#datemask').inputmask();
 
         $("#money").inputmask('currency', {
             "autoUnmask": true,
