@@ -34,6 +34,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.3 - DevOps", "4.3 - DevOps", "{B4FAB8EF-A2EC-42FD-AF84-E963A01F2D22}"
 	ProjectSection(SolutionItems) = preProject
 		src\CtrlMoney.Resources\docker-compose.yml = src\CtrlMoney.Resources\docker-compose.yml
+		InstallDocker.sh = InstallDocker.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CCAE6E8C-DA4C-44B9-AD40-5F526AAF70B7}"
@@ -45,6 +46,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mock-Data", "Mock-Data", "{
 	ProjectSection(SolutionItems) = preProject
 		febraban_banks.json = febraban_banks.json
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Test", "5 - Test", "{13640474-D6F2-4165-B9D2-D73D2F9ADC25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.Test.XUnit", "src\CtrlMoney.Test.XUnit\CtrlMoney.Test.XUnit.csproj", "{54175EEE-E617-4B19-B4F6-ABF4B82458BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +85,10 @@ Global
 		{B3967569-A6CA-4EDD-9412-D699D2ECD38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3967569-A6CA-4EDD-9412-D699D2ECD38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3967569-A6CA-4EDD-9412-D699D2ECD38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54175EEE-E617-4B19-B4F6-ABF4B82458BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54175EEE-E617-4B19-B4F6-ABF4B82458BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54175EEE-E617-4B19-B4F6-ABF4B82458BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54175EEE-E617-4B19-B4F6-ABF4B82458BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +105,7 @@ Global
 		{B3967569-A6CA-4EDD-9412-D699D2ECD38A} = {24C8350B-503F-4962-8C9E-09EB3D454042}
 		{B4FAB8EF-A2EC-42FD-AF84-E963A01F2D22} = {71B56D46-5D3A-4F1D-97B4-87720FCA9D90}
 		{15058CA6-85C0-445E-8829-D1F4A0B89CD5} = {FD597515-773B-4966-B6D4-B609293D9009}
+		{54175EEE-E617-4B19-B4F6-ABF4B82458BF} = {13640474-D6F2-4165-B9D2-D73D2F9ADC25}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38EB263C-007B-4828-8AF0-F1B813B3FCD2}
