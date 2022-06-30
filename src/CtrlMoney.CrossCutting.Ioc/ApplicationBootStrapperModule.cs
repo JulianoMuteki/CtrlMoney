@@ -1,5 +1,6 @@
 ﻿using CtrlMoney.AppService;
 using CtrlMoney.Domain.Interfaces.Application;
+using CtrlMoney.WorkSheet.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CtrlMoney.CrossCutting.Ioc
@@ -13,6 +14,8 @@ namespace CtrlMoney.CrossCutting.Ioc
             services.AddScoped<IParentTreeAppService, ParentTreeAppService>();
             services.AddScoped<IChildTreeAppService, ChildTreeAppService>();
             services.AddScoped<IGrandChildTreeAppService, GrandChildTreeAppService>();
+            services.AddScoped<IXLWorkbookService, XLWorkbookService>();
+        
         }
     }
 }

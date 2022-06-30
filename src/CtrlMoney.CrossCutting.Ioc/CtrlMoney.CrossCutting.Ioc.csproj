@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CtrlMoney.AppService\CtrlMoney.AppService.csproj" />
     <ProjectReference Include="..\CtrlMoney.Infra.Repository\CtrlMoney.Infra.Repository.csproj" />
+    <ProjectReference Include="..\CtrlMoney.WorkSheet.Service\CtrlMoney.WorkSheet.Service.csproj" />
   </ItemGroup>
 
 </Project>
