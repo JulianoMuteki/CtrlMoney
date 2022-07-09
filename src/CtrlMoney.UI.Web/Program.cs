@@ -16,7 +16,7 @@ namespace CtrlMoney.UI.Web
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             CreateDbIfNotExist(host);
             host.Run();
         }

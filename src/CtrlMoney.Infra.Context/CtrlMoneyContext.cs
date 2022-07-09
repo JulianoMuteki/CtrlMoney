@@ -22,6 +22,9 @@ namespace CtrlMoney.Infra.Context
         public DbSet<ChildTree> ChildrenTrees { get; set; }
         public DbSet<GrandChildTree> GrandChildrenTrees { get; set; }
         public DbSet<FinancialTransaction> FinancialTransactions { get; set; }
+
+        public DbSet<BrokerageHistory> BrokeragesHistories { get; set; }
+
         public DbSet<Bank> Banks { get; set; }
 
         public CtrlMoneyContext()
@@ -58,6 +61,8 @@ namespace CtrlMoney.Infra.Context
             modelBuilder.ApplyConfiguration(new ChildTreeMap());
             modelBuilder.ApplyConfiguration(new GrandChildTreeMap());
             modelBuilder.ApplyConfiguration(new FinancialTransactionMap());
+
+            modelBuilder.ApplyConfiguration(new BrokerageHistoryMap());
 
             base.OnModelCreating(modelBuilder);
 
