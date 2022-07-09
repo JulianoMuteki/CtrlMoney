@@ -9,9 +9,11 @@ namespace CtrlMoney.UI.Web.Controllers
     public class B3Controller : Controller
     {
         private readonly IXLWorkbookService _xLWorkbookService;
-        public B3Controller(IXLWorkbookService xLWorkbookService)
+        private readonly IBrokerageHistoryService _brokerageHistoryService1;
+        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService)
         {
             _xLWorkbookService = xLWorkbookService;
+            _brokerageHistoryService1 = brokerageHistoryService;
         }
 
         public IActionResult Index()
@@ -44,7 +46,8 @@ namespace CtrlMoney.UI.Web.Controllers
                 model.IsSuccess = true;
                 model.Message = "File upload successfully";
 
-                _xLWorkbookService.ImportSheet();
+               var brokerageHistories = _xLWorkbookService.ImportSheet();
+                _brokerageHistoryService1.AddRange(brokerageHistories);
             }
             return View(model);
         }

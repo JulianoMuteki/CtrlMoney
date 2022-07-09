@@ -1,16 +1,17 @@
 ﻿using ClosedXML.Excel;
+using CtrlMoney.Domain.Entities;
 using CtrlMoney.Domain.Interfaces.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CtrlMoney.WorkSheet.Service
 {
     public class XLWorkbookService: IXLWorkbookService
     {
-        public void ImportSheet()
+        public XLWorkbookService()
+        {
+
+        }
+
+        public IList<BrokerageHistory> ImportSheet()
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
             //get file extension                       
@@ -19,11 +20,11 @@ namespace CtrlMoney.WorkSheet.Service
             var planilha = xls.Worksheets.First(w => w.Name == "Negociação");
             
             var totalLinhas = planilha.Rows().Count();
+            IList<BrokerageHistory> brokerageHistories = new List<BrokerageHistory>(totalLinhas);
+
             // primeira linha é o cabecalho
             for (int l = 2; l <= totalLinhas; l++)
             {
-                //Data do Negócio	Tipo de Movimentação	Mercado	Prazo/Vencimento	Instituição	Código de Negociação	Quantidade	Preço	Valor
-
                 var dataNegociacao = DateTime.Parse(planilha.Cell($"A{l}").Value.ToString());
                 var tipoMovimentacao = planilha.Cell($"B{l}").Value.ToString();
                 var mercado = planilha.Cell($"C{l}").Value.ToString();
@@ -31,10 +32,15 @@ namespace CtrlMoney.WorkSheet.Service
                 var instituicao = planilha.Cell($"E{l}").Value.ToString();
                 var ticket = planilha.Cell($"F{l}").Value.ToString();
                 var quantidade = int.Parse(planilha.Cell($"G{l}").Value.ToString());
-                var preco = planilha.Cell($"H{l}").Value.ToString();
-                var valor = planilha.Cell($"I{l}").Value.ToString();
+                var preco = Decimal.Parse(planilha.Cell($"H{l}").Value.ToString());
+                var valor = Decimal.Parse(planilha.Cell($"I{l}").Value.ToString());
 
+                DateTime eExpireDate = vencimento == "-" ? DateTime.MinValue : DateTime.Parse(vencimento);
+                BrokerageHistory brokerageHistory = new(valor, preco, quantidade, ticket, instituicao, eExpireDate, dataNegociacao, tipoMovimentacao, mercado);
+                brokerageHistories.Add(brokerageHistory);                
             }
+
+            return brokerageHistories;
         }
     }
 }

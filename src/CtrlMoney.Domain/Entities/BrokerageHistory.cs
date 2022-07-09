@@ -22,5 +22,19 @@ namespace CtrlMoney.Domain.Entities
         : base()
         {
         }
+
+        public BrokerageHistory(decimal totalPrice, decimal price, int quantity, string ticketCode, string stockBroker, DateTime expireDate, DateTime transactionDate, string transactionType, string market)
+            :base()
+        {
+            TotalPrice = totalPrice;
+            Price = price;
+            Quantity = quantity;
+            TicketCode = ticketCode;
+            StockBroker = stockBroker;
+            ExpireDate = expireDate;
+            TransactionDate = transactionDate;
+            TransactionType = transactionType;
+            Market = market;
+        }
     }
 }
