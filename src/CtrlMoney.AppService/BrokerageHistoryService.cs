@@ -33,9 +33,9 @@ namespace CtrlMoney.AppService
         {
             try
             {
-                var banks = _unitOfWork.Repository<BrokerageHistory>().AddRange(entity);
+                var result = _unitOfWork.Repository<BrokerageHistory>().AddRange(entity);
                 _unitOfWork.CommitSync();
-                return 1;
+                return result;
             }
             catch (CustomException exc)
             {
@@ -61,7 +61,20 @@ namespace CtrlMoney.AppService
 
         public ICollection<BrokerageHistory> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().GetAll();
+               
+                return brokerageHistories;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<Bank>("Unexpected error add range", nameof(this.AddRange), ex);
+            }
         }
 
         public Task<ICollection<BrokerageHistory>> GetAllAsync()

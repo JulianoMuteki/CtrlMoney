@@ -3,6 +3,7 @@ using CtrlMoney.UI.Web.Models;
 using CtrlMoney.WorkSheet.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Linq;
 
 namespace CtrlMoney.UI.Web.Controllers
 {
@@ -19,6 +20,19 @@ namespace CtrlMoney.UI.Web.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+
+        [HttpGet]
+        public JsonResult GetAjaxHandlerBrokeragesHistories()
+        {
+            var brokeragesHistories = _brokerageHistoryService1.GetAll();
+
+            return Json(new
+            {
+                aaData = brokeragesHistories,
+                success = true
+            });
         }
 
         public IActionResult UploadTransaction()
