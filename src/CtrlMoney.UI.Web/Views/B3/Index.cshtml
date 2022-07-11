@@ -67,42 +67,43 @@
         $('#tbBanks').dataTable({
             "sAjaxSource": '/B3/GetAjaxHandlerBrokeragesHistories',
             "bProcessing": true,
-            "bServerSide": true,
+            "bServerSide": false,
+            "paginate": true,
             "bDestroy": true,
             "aoColumns": [
                 {
                     "mData": "TransactionDate",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>TransactionDate</i>",
                 },
                 {
                     "mData": "TransactionType",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>TransactionType</i>",
                 },
                 {
                     "mData": "Market",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>Market</i>",
                 },
                 {
                     "mData": "ExpireDate",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>ExpireDate</i>",
                 },
                 {
                     "mData": "StockBroker",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>StockBroker</i>",
                 },
                 {
                     "mData": "TicketCode",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>TicketCode</i>",
                 },
                 {
                     "mData": "Quantity",
-                    "bSortable": false,
+                    "bSortable": true,
                     "defaultContent": "<i>Quantity</i>",
                 },
                 {
