@@ -25,6 +25,8 @@ namespace CtrlMoney.Infra.Context
 
         public DbSet<BrokerageHistory> BrokeragesHistories { get; set; }
 
+        public DbSet<Earning> Earnings { get; set; }
+
         public DbSet<Bank> Banks { get; set; }
 
         public CtrlMoneyContext()
@@ -63,6 +65,7 @@ namespace CtrlMoney.Infra.Context
             modelBuilder.ApplyConfiguration(new FinancialTransactionMap());
 
             modelBuilder.ApplyConfiguration(new BrokerageHistoryMap());
+            modelBuilder.ApplyConfiguration(new EarningMap());
 
             base.OnModelCreating(modelBuilder);
 
