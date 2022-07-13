@@ -26,4 +26,16 @@ namespace CtrlMoney.CrossCutting.Enums
         [Description("Deferred payment")]
         DEFERRED_PAYMENT = 2
     }
+
+    public enum EInvestmentType
+    {
+        [Description("Stock")]
+        Stock = 0,
+        [Description("ETF")]
+        ETF = 1,
+        [Description("Investment funds")]
+        INVESTMENT_FUNDS = 2,
+        [Description("Fixed income")]
+        FIXED_INCOME = 3
+    }
 }
