@@ -22,7 +22,6 @@ namespace CtrlMoney.UI.Web.Controllers
             return View();
         }
 
-
         [HttpGet]
         public JsonResult GetAjaxHandlerBrokeragesHistories()
         {
@@ -61,6 +60,104 @@ namespace CtrlMoney.UI.Web.Controllers
                 model.Message = "File upload successfully";
 
                var brokerageHistories = _xLWorkbookService.ImportSheet();
+                _brokerageHistoryService1.AddRange(brokerageHistories);
+            }
+            return View(model);
+        }
+
+
+        public IActionResult EarningIndex()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetAjaxHandlerEarnings()
+        {
+            var brokeragesHistories = _brokerageHistoryService1.GetAll();
+
+            return Json(new
+            {
+                aaData = brokeragesHistories,
+                success = true
+            });
+        }
+
+        public IActionResult UploadEarning()
+        {
+            SingleFileModel model = new SingleFileModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult UploadEarning(SingleFileModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.IsResponse = true;
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+                //create folder if not exist
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                string fileNameWithPath = Path.Combine(path, "b3.xlsx");
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    model.File.CopyTo(stream);
+                }
+                model.IsSuccess = true;
+                model.Message = "File upload successfully";
+
+                var brokerageHistories = _xLWorkbookService.ImportSheet();
+                _brokerageHistoryService1.AddRange(brokerageHistories);
+            }
+            return View(model);
+        }
+
+
+        public IActionResult PositionIndex()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetAjaxHandlerPositions()
+        {
+            var brokeragesHistories = _brokerageHistoryService1.GetAll();
+
+            return Json(new
+            {
+                aaData = brokeragesHistories,
+                success = true
+            });
+        }
+
+        public IActionResult UploadPosition()
+        {
+            SingleFileModel model = new SingleFileModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult UploadPosition(SingleFileModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.IsResponse = true;
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+                //create folder if not exist
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                string fileNameWithPath = Path.Combine(path, "b3.xlsx");
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    model.File.CopyTo(stream);
+                }
+                model.IsSuccess = true;
+                model.Message = "File upload successfully";
+
+                var brokerageHistories = _xLWorkbookService.ImportSheet();
                 _brokerageHistoryService1.AddRange(brokerageHistories);
             }
             return View(model);
