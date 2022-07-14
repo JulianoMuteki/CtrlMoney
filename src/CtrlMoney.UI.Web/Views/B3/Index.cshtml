@@ -33,7 +33,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="tbBanks" class="table table-bordered">
+                            <table id="tbBrokeragesHistories" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>TransactionDate</th>
@@ -63,8 +63,8 @@
 <!-- /.content-wrapper -->
 <script type="text/javascript">
 
-    function loadTableBanks() {
-        $('#tbBanks').dataTable({
+    function loadTableBrokeragesHistories() {
+        $('#tbBrokeragesHistories').dataTable({
             "sAjaxSource": '/B3/GetAjaxHandlerBrokeragesHistories',
             "bProcessing": true,
             "bServerSide": false,
@@ -120,6 +120,6 @@
         });
     }
     jQuery(document).ready(function() {
-        loadTableBanks();
+        loadTableBrokeragesHistories();
     });
 </script>

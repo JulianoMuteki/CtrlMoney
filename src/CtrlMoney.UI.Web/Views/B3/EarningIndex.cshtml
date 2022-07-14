@@ -4,5 +4,126 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>EarningIndex</h1>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Advanced Form</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Earnings</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Your historical</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="tbEarnings" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>TransactionDate</th>
+                                        <th>TransactionType</th>
+                                        <th>Market</th>
+                                        <th>ExpireDate</th>
+                                        <th>StockBroker</th>
+                                        <th>TicketCode</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>TotalPrice</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                 
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<script type="text/javascript">
+
+    function loadTableEarnings() {
+        $('#tbEarnings').dataTable({
+            "sAjaxSource": '/B3/GetAjaxHandlerBrokeragesHistories',
+            "bProcessing": true,
+            "bServerSide": false,
+            "paginate": true,
+            "bDestroy": true,
+            "aoColumns": [
+                {
+                    "mData": "TransactionDate",
+                    "bSortable": true,
+                    "defaultContent": "<i>TransactionDate</i>",
+                },
+                {
+                    "mData": "TransactionType",
+                    "bSortable": true,
+                    "defaultContent": "<i>TransactionType</i>",
+                },
+                {
+                    "mData": "Market",
+                    "bSortable": true,
+                    "defaultContent": "<i>Market</i>",
+                },
+                {
+                    "mData": "ExpireDate",
+                    "bSortable": true,
+                    "defaultContent": "<i>ExpireDate</i>",
+                },
+                {
+                    "mData": "StockBroker",
+                    "bSortable": true,
+                    "defaultContent": "<i>StockBroker</i>",
+                },
+                {
+                    "mData": "TicketCode",
+                    "bSortable": true,
+                    "defaultContent": "<i>TicketCode</i>",
+                },
+                {
+                    "mData": "Quantity",
+                    "bSortable": true,
+                    "defaultContent": "<i>Quantity</i>",
+                },
+                {
+                    "mData": "Price",
+                    "bSortable": false,
+                    "defaultContent": "<i>Price</i>",
+                },
+                {
+                    "mData": "TotalPrice",
+                    "bSortable": false,
+                    "defaultContent": "<i>TotalPrice</i>",
+                }
+            ]
+        });
+    }
+    jQuery(document).ready(function() {
+        loadTableEarnings();
+    });
+</script>
+
 
