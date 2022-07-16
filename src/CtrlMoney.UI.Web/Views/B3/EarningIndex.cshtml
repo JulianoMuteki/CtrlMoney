@@ -1,9 +1,7 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "EarningIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -12,7 +10,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Advanced Form</h1>
+                    <h1>Earnings list</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -38,15 +36,19 @@
                             <table id="tbEarnings" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>TransactionDate</th>
-                                        <th>TransactionType</th>
-                                        <th>Market</th>
-                                        <th>ExpireDate</th>
+                                        <th>PositionDate</th>
+                                        <th>EInvestmentType</th>
                                         <th>StockBroker</th>
                                         <th>TicketCode</th>
+                                        <th>ISINCode</th>
+                                        <th>Type</th>
+                                        <th>Bookkeeping</th>
                                         <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>TotalPrice</th>
+                                        <th>QuantityAvailable</th>
+                                        <th>QuantityUnavailable</th>
+                                        <th>Reason</th>
+                                        <th>ClosingPrice</th>
+                                        <th>ValueUpdated</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,31 +69,16 @@
 
     function loadTableEarnings() {
         $('#tbEarnings').dataTable({
-            "sAjaxSource": '/B3/GetAjaxHandlerBrokeragesHistories',
+            "sAjaxSource": '/B3/GetAjaxHandlerPositions',
             "bProcessing": true,
             "bServerSide": false,
             "paginate": true,
             "bDestroy": true,
             "aoColumns": [
                 {
-                    "mData": "TransactionDate",
+                    "mData": "PositionDate",
                     "bSortable": true,
-                    "defaultContent": "<i>TransactionDate</i>",
-                },
-                {
-                    "mData": "TransactionType",
-                    "bSortable": true,
-                    "defaultContent": "<i>TransactionType</i>",
-                },
-                {
-                    "mData": "Market",
-                    "bSortable": true,
-                    "defaultContent": "<i>Market</i>",
-                },
-                {
-                    "mData": "ExpireDate",
-                    "bSortable": true,
-                    "defaultContent": "<i>ExpireDate</i>",
+                    "defaultContent": "<i>EInvestmentType</i>",
                 },
                 {
                     "mData": "StockBroker",
@@ -104,19 +91,49 @@
                     "defaultContent": "<i>TicketCode</i>",
                 },
                 {
+                    "mData": "ISINCode",
+                    "bSortable": true,
+                    "defaultContent": "<i>ISINCode</i>",
+                },
+                {
+                    "mData": "Type",
+                    "bSortable": true,
+                    "defaultContent": "<i>Type</i>",
+                },
+                {
+                    "mData": "Bookkeeping",
+                    "bSortable": true,
+                    "defaultContent": "<i>Bookkeeping</i>",
+                },
+                {
                     "mData": "Quantity",
                     "bSortable": true,
                     "defaultContent": "<i>Quantity</i>",
                 },
                 {
-                    "mData": "Price",
+                    "mData": "QuantityAvailable",
                     "bSortable": false,
-                    "defaultContent": "<i>Price</i>",
+                    "defaultContent": "<i>QuantityAvailable</i>",
                 },
                 {
-                    "mData": "TotalPrice",
+                    "mData": "QuantityUnavailable",
                     "bSortable": false,
-                    "defaultContent": "<i>TotalPrice</i>",
+                    "defaultContent": "<i>QuantityUnavailable</i>",
+                },
+                {
+                    "mData": "Reason",
+                    "bSortable": false,
+                    "defaultContent": "<i>Reason</i>",
+                },
+                {
+                    "mData": "ClosingPrice",
+                    "bSortable": false,
+                    "defaultContent": "<i>ClosingPrice</i>",
+                },
+                {
+                    "mData": "ValueUpdated",
+                    "bSortable": false,
+                    "defaultContent": "<i>ValueUpdated</i>",
                 }
             ]
         });

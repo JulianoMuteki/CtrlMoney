@@ -1,4 +1,5 @@
 ﻿using CtrlMoney.Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace CtrlMoney.Domain.Interfaces.Application
@@ -7,6 +8,6 @@ namespace CtrlMoney.Domain.Interfaces.Application
     {
         IList<BrokerageHistory> ImportTransactionsSheet(string fullfileName);
         IList<Earning> ImportEarningsSheet(string fullfileName);
-        IList<Position> ImportPositionsSheet(string fullfileName);
+        IList<Position> ImportPositionsSheet(string fullfileName, DateTime positionDate);
     }
 }

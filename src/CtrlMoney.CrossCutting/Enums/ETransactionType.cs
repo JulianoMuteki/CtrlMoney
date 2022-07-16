@@ -30,7 +30,7 @@ namespace CtrlMoney.CrossCutting.Enums
     public enum EInvestmentType
     {
         [Description("Stock")]
-        Stock = 0,
+        STOCK = 0,
         [Description("ETF")]
         ETF = 1,
         [Description("Investment funds")]

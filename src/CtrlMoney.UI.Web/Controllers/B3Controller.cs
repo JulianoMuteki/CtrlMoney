@@ -12,10 +12,12 @@ namespace CtrlMoney.UI.Web.Controllers
     {
         private readonly IXLWorkbookService _xLWorkbookService;
         private readonly IBrokerageHistoryService _brokerageHistoryService1;
-        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService)
+        private readonly IPositionService _positionService;
+        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService, IPositionService positionService)
         {
             _xLWorkbookService = xLWorkbookService;
             _brokerageHistoryService1 = brokerageHistoryService;
+            _positionService = positionService;
         }
 
         public IActionResult Index()
@@ -108,11 +110,11 @@ namespace CtrlMoney.UI.Web.Controllers
         [HttpGet]
         public JsonResult GetAjaxHandlerPositions()
         {
-            var brokeragesHistories = _brokerageHistoryService1.GetAll();
+            var positions = _positionService.GetAll();
 
             return Json(new
             {
-                aaData = brokeragesHistories,
+                aaData = positions,
                 success = true
             });
         }
@@ -129,15 +131,15 @@ namespace CtrlMoney.UI.Web.Controllers
             if (ModelState.IsValid)
             {             
                 var fullfileName = CreateFile(model);
-                var brokerageHistories = _xLWorkbookService.ImportPositionsSheet(fullfileName);
-                // _brokerageHistoryService1.AddRange(brokerageHistories);
+                var positions = _xLWorkbookService.ImportPositionsSheet(fullfileName, DateTime.Parse(model.FileName));
+                _positionService.AddRange(positions);
                 System.IO.File.Delete(fullfileName);
 
                 model.IsSuccess = true;
                 model.Message = "File upload successfully";
                 model.IsResponse = true;
             }
-            return View(model);
+            return View("EarningsIndex");
         }
 
         private string CreateFile(SingleFileModel model)

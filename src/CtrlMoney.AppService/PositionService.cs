@@ -10,30 +10,30 @@ using System.Threading.Tasks;
 
 namespace CtrlMoney.AppService
 {
-    public class BrokerageHistoryService : IBrokerageHistoryService
+    public class PositionService : IPositionService
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public BrokerageHistoryService(IUnitOfWork unitOfWork)
+        public PositionService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public BrokerageHistory Add(BrokerageHistory entity)
+        public Position Add(Position entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<BrokerageHistory> AddAsync(BrokerageHistory entity)
+        public Task<Position> AddAsync(Position entity)
         {
             throw new NotImplementedException();
         }
 
-        public int AddRange(ICollection<BrokerageHistory> entity)
+        public int AddRange(ICollection<Position> entity)
         {
             try
             {
-                var result = _unitOfWork.Repository<BrokerageHistory>().AddRange(entity);
+                var result = _unitOfWork.Repository<Position>().AddRange(entity);
                 _unitOfWork.CommitSync();
                 return result;
             }
@@ -43,7 +43,7 @@ namespace CtrlMoney.AppService
             }
             catch (Exception ex)
             {
-                throw CustomException.Create<BrokerageHistoryService>("Unexpected error add range", nameof(this.AddRange), ex);
+                throw CustomException.Create<PositionService>("Unexpected error add range", nameof(this.AddRange), ex);
             }
 
             return 0;
@@ -59,13 +59,11 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
-        public ICollection<BrokerageHistory> GetAll()
+        public ICollection<Position> GetAll()
         {
             try
             {
-                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().GetAll();
-               
-                return brokerageHistories;
+               return _unitOfWork.Repository<Position>().GetAll();
             }
             catch (CustomException exc)
             {
@@ -73,31 +71,31 @@ namespace CtrlMoney.AppService
             }
             catch (Exception ex)
             {
-                throw CustomException.Create<BrokerageHistoryService>("Unexpected error add range", nameof(this.AddRange), ex);
+                throw CustomException.Create<PositionService>("Unexpected error add range", nameof(this.GetAll), ex);
             }
         }
 
-        public Task<ICollection<BrokerageHistory>> GetAllAsync()
+        public Task<ICollection<Position>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public BrokerageHistory GetById(Guid id)
+        public Position GetById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<BrokerageHistory> GetByIdAsync(Guid id)
+        public Task<Position> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public BrokerageHistory Update(BrokerageHistory updated)
+        public Position Update(Position updated)
         {
             throw new NotImplementedException();
         }
 
-        public Task<BrokerageHistory> UpdateAsync(BrokerageHistory updated)
+        public Task<Position> UpdateAsync(Position updated)
         {
             throw new NotImplementedException();
         }
