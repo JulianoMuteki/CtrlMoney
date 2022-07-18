@@ -36,19 +36,13 @@
                             <table id="tbEarnings" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>PositionDate</th>
-                                        <th>EInvestmentType</th>
-                                        <th>StockBroker</th>
                                         <th>TicketCode</th>
-                                        <th>ISINCode</th>
-                                        <th>Type</th>
-                                        <th>Bookkeeping</th>
+                                        <th>PaymentDate</th>
+                                        <th>EventType</th>
+                                        <th>StockBroker</th>
                                         <th>Quantity</th>
-                                        <th>QuantityAvailable</th>
-                                        <th>QuantityUnavailable</th>
-                                        <th>Reason</th>
-                                        <th>ClosingPrice</th>
-                                        <th>ValueUpdated</th>
+                                        <th>UnitPrice</th>
+                                        <th>NetValue</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -69,16 +63,26 @@
 
     function loadTableEarnings() {
         $('#tbEarnings').dataTable({
-            "sAjaxSource": '/B3/GetAjaxHandlerPositions',
+            "sAjaxSource": '/B3/GetAjaxHandlerEarnings',
             "bProcessing": true,
             "bServerSide": false,
             "paginate": true,
             "bDestroy": true,
             "aoColumns": [
                 {
-                    "mData": "PositionDate",
+                    "mData": "TicketCode",
                     "bSortable": true,
-                    "defaultContent": "<i>EInvestmentType</i>",
+                    "defaultContent": "<i>TicketCode</i>",
+                },
+                {
+                    "mData": "PaymentDate",
+                    "bSortable": true,
+                    "defaultContent": "<i>PaymentDate</i>",
+                },
+                {
+                    "mData": "EventType",
+                    "bSortable": true,
+                    "defaultContent": "<i>EventType</i>",
                 },
                 {
                     "mData": "StockBroker",
@@ -86,54 +90,19 @@
                     "defaultContent": "<i>StockBroker</i>",
                 },
                 {
-                    "mData": "TicketCode",
-                    "bSortable": true,
-                    "defaultContent": "<i>TicketCode</i>",
-                },
-                {
-                    "mData": "ISINCode",
-                    "bSortable": true,
-                    "defaultContent": "<i>ISINCode</i>",
-                },
-                {
-                    "mData": "Type",
-                    "bSortable": true,
-                    "defaultContent": "<i>Type</i>",
-                },
-                {
-                    "mData": "Bookkeeping",
-                    "bSortable": true,
-                    "defaultContent": "<i>Bookkeeping</i>",
-                },
-                {
                     "mData": "Quantity",
                     "bSortable": true,
                     "defaultContent": "<i>Quantity</i>",
                 },
                 {
-                    "mData": "QuantityAvailable",
-                    "bSortable": false,
-                    "defaultContent": "<i>QuantityAvailable</i>",
+                    "mData": "UnitPrice",
+                    "bSortable": true,
+                    "defaultContent": "<i>UnitPrice</i>",
                 },
                 {
-                    "mData": "QuantityUnavailable",
-                    "bSortable": false,
-                    "defaultContent": "<i>QuantityUnavailable</i>",
-                },
-                {
-                    "mData": "Reason",
-                    "bSortable": false,
-                    "defaultContent": "<i>Reason</i>",
-                },
-                {
-                    "mData": "ClosingPrice",
-                    "bSortable": false,
-                    "defaultContent": "<i>ClosingPrice</i>",
-                },
-                {
-                    "mData": "ValueUpdated",
-                    "bSortable": false,
-                    "defaultContent": "<i>ValueUpdated</i>",
+                    "mData": "NetValue",
+                    "bSortable": true,
+                    "defaultContent": "<i>NetValue</i>",
                 }
             ]
         });

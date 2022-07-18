@@ -12,21 +12,45 @@ namespace CtrlMoney.WorkSheet.Service
 
         }
 
-        public IList<Earning> ImportEarningsSheet(string idName)
+        public IList<Earning> ImportEarningsSheet(string fullfileName)
         {
-            throw new NotImplementedException();
+            var xls = new XLWorkbook(fullfileName);
+            var sheet = xls.Worksheets.First(w => w.Name == "Proventos Recebidos");
+
+            var totalRows = sheet.Rows().Count();
+            IList<Earning> earnings = new List<Earning>(totalRows);
+
+            for (int l = 2; l <= totalRows; l++)
+            {
+                var product = sheet.Cell($"A{l}").Value.ToString();
+                if (!string.IsNullOrEmpty(product))
+                {
+                    var ticketCode = product.Split('-')[0].Trim();
+
+                    DateTime.TryParse(sheet.Cell($"B{l}").Value.ToString(), out DateTime paymentDate);
+                    var eventType = sheet.Cell($"C{l}").Value.ToString();
+                    var stockBroker = sheet.Cell($"D{l}").Value.ToString();
+                    _ = int.TryParse(sheet.Cell($"E{l}").Value.ToString(), out int quantity);
+                    _ = decimal.TryParse(sheet.Cell($"F{l}").Value.ToString(), out decimal unitPrice);
+                    _ = decimal.TryParse(sheet.Cell($"G{l}").Value.ToString(), out decimal netValue);
+
+                    earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, unitPrice, netValue));
+                }
+            }
+            
+            return earnings;
         }
 
         public IList<Position> ImportPositionsSheet(string fullfileName, DateTime positionDate)
         {
             var xls = new XLWorkbook(fullfileName);
             List<Position> positions = new List<Position>();
-            positions.AddRange(ImportSheetTab(xls, positionDate, "Acoes", EInvestmentType.STOCK));
+            positions.AddRange(ImportSheetTabForPositions(xls, positionDate, "Acoes", EInvestmentType.STOCK));
 
             return positions;
         }
 
-        private static IList<Position> ImportSheetTab(XLWorkbook xls, DateTime positionDate, string tabName, EInvestmentType investmentType)
+        private static IList<Position> ImportSheetTabForPositions(XLWorkbook xls, DateTime positionDate, string tabName, EInvestmentType investmentType)
         {
             var sheet = xls.Worksheets.First(w => w.Name == tabName);
             var totalRowsCount = sheet.Rows().Count();

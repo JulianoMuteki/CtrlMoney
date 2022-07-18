@@ -13,11 +13,13 @@ namespace CtrlMoney.UI.Web.Controllers
         private readonly IXLWorkbookService _xLWorkbookService;
         private readonly IBrokerageHistoryService _brokerageHistoryService1;
         private readonly IPositionService _positionService;
-        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService, IPositionService positionService)
+        private readonly IEarningService _earningService;
+        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService, IPositionService positionService, IEarningService earningService)
         {
             _xLWorkbookService = xLWorkbookService;
             _brokerageHistoryService1 = brokerageHistoryService;
             _positionService = positionService;
+            _earningService = earningService;
         }
 
         public IActionResult Index()
@@ -69,11 +71,11 @@ namespace CtrlMoney.UI.Web.Controllers
         [HttpGet]
         public JsonResult GetAjaxHandlerEarnings()
         {
-            var brokeragesHistories = _brokerageHistoryService1.GetAll();
+            var earnings = _earningService.GetAll();
 
             return Json(new
             {
-                aaData = brokeragesHistories,
+                aaData = earnings,
                 success = true
             });
         }
@@ -90,15 +92,15 @@ namespace CtrlMoney.UI.Web.Controllers
             if (ModelState.IsValid)
             {
                 var fullfileName = CreateFile(model);
-                var brokerageHistories = _xLWorkbookService.ImportEarningsSheet(fullfileName);
-                // _brokerageHistoryService1.AddRange(brokerageHistories);
+                var earnings = _xLWorkbookService.ImportEarningsSheet(fullfileName);
+                _earningService.AddRange(earnings);
                 System.IO.File.Delete(fullfileName);
 
                 model.IsSuccess = true;
                 model.Message = "File upload successfully";
                 model.IsResponse = true;
             }
-            return View(model);
+            return View("EarningIndex");
         }
 
 
