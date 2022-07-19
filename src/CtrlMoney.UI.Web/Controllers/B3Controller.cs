@@ -59,7 +59,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 model.Message = "File upload successfully";
                 model.IsResponse = true;
             }
-            return View(model);
+            return RedirectToAction("Index");
         }
 
 
@@ -100,7 +100,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 model.Message = "File upload successfully";
                 model.IsResponse = true;
             }
-            return View("EarningIndex");
+            return RedirectToAction("EarningIndex");
         }
 
 
@@ -141,7 +141,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 model.Message = "File upload successfully";
                 model.IsResponse = true;
             }
-            return View("EarningsIndex");
+            return RedirectToAction("PositionIndex");
         }
 
         private string CreateFile(SingleFileModel model)
