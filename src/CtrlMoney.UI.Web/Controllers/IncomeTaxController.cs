@@ -1,5 +1,7 @@
 ﻿using CtrlMoney.Domain.Interfaces.Application;
+using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Linq;
 
 namespace CtrlMoney.UI.Web.Controllers
@@ -25,26 +27,30 @@ namespace CtrlMoney.UI.Web.Controllers
         {
             var positions = _positionService.GetAll();// Filtrar ano corrente e anterior
 
-            var incomesTaxes = positions.GroupBy(x =>x.TicketCode)
-                                    .Select(g => new
-                                  {
-                                        Id = g.Key,
-                                        TicketCode = g.Key,
-                                        LastDate = g.OrderBy(y => y.PositionDate).First().PositionDate.ToString("dd/MM/yyyy"),
-                                        LastTotalValue = g.OrderBy(y => y.PositionDate).First().ValueUpdated,
-                                        CurrentDate = g.OrderBy(y => y.PositionDate).Skip(1).First().PositionDate.ToString("dd/MM/yyyy"),
-                                        CurrentTotalValue = g.OrderBy(y => y.PositionDate).Skip(1).First().ValueUpdated
-                                    });
+            var incomesTaxesYear = positions.GroupBy(x => new { x.TicketCode, x.PositionDate.Year })
+                           .Select(g => new
+                           {
+                               TicketCode = g.Key.TicketCode,
+                               Year = g.Key.Year,
+                               TotalValue = g.Where(z => z.PositionDate.Year == g.Key.Year).First().ValueUpdated,
+                               Quantity = g.Where(z => z.PositionDate.Year == g.Key.Year).First().Quantity
+                           }
+                           ).ToList();
 
-            //var process = incomesTaxes.Select(g => new
-            //{
-            //    Id = g.TicketCode,
-            //    TicketCode = g.TicketCode,
-            //    LastDate = g.ListData.OrderBy(y => y.PositionDate).First().PositionDate,
-            //    LastTotalValue = g.ListData.OrderBy(y => y.PositionDate).First().ValueUpdated,
-            //    CurrentDate = g.ListData.OrderByDescending(y => y.PositionDate).First().PositionDate,
-            //    CurrentTotalValue = g.ListData.OrderByDescending(y => y.PositionDate).First().ValueUpdated
-            //});
+            var incomesTaxes = incomesTaxesYear.GroupBy(x => x.TicketCode)
+                     .Select(g => new
+                     {
+                         Id = g.Key,
+                         TicketCode = g.Key,
+
+                         LastDate = g.Where(x => x.Year == g.OrderBy(y => y.Year).First().Year).FirstOrDefault().Year,
+                         LastTotalValue = g.Where(x => x.Year == g.OrderBy(y => y.Year).First().Year).Sum(x => x.TotalValue),
+                         LastQuantity = g.Where(x => x.Year == g.OrderBy(y => y.Year).First().Year).Sum(x => x.Quantity),
+
+                         CurrentDate = g.Where(x => x.Year == g.OrderByDescending(y => y.Year).First().Year).FirstOrDefault().Year,
+                         CurrentTotalValue = g.Where(x => x.Year == g.OrderByDescending(y => y.Year).First().Year).Sum(x => x.TotalValue),
+                         CurrentQuantity = g.Where(x => x.Year == g.OrderByDescending(y => y.Year).First().Year).Sum(x => x.Quantity)
+                     }).ToList();
 
             return Json(new
             {
@@ -53,5 +59,34 @@ namespace CtrlMoney.UI.Web.Controllers
             });
         }
 
+        [HttpGet]
+        public ActionResult Details(string ticketCode)
+        {
+            var brokerageHistories = _brokerageHistoryService1.GetByTicketCode(ticketCode); // Filtral ticket com data
+            var resumeBrokerageHistories = brokerageHistories.GroupBy(x => x.TransactionDate.Year)
+                                    .Select(g => new ResumeBrokerageHistories
+                                    {
+                                        Year = g.Key,
+                                        TotalValue = g.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                        Quantity = g.Sum(x => x.Quantity)
+                                    }).ToList();
+
+            var incomeTaxTicket = new IncomeTaxTicket()
+            {
+                TicketCode = ticketCode,
+                ResumeBrokerageHistories = resumeBrokerageHistories,
+                BrokerageHistoryVMs = brokerageHistories.Select(x => new BrokerageHistoryVM()
+                {
+                    Price = x.Price,
+                    Quantity = x.Quantity,
+                    TotalPrice = x.TotalPrice,
+                    TransactionDate = x.TransactionDate,
+                    TransactionType = x.TransactionType
+                }).OrderBy(x => x.TransactionDate).ToList(),
+                Quantity = brokerageHistories.Sum(x => x.Quantity),
+                TotalValue = brokerageHistories.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
+            };
+            return PartialView("_PartialViewStocks", incomeTaxTicket);
+        }
     }
 }

@@ -73,7 +73,7 @@ namespace CtrlMoney.WorkSheet.Service
                     var quantityUnavailable = string.IsNullOrEmpty(strQuantityUnavailable) || strQuantityUnavailable == "-" ? 0 : int.Parse(strQuantityUnavailable);
                     var reason = sheet.Cell($"K{l}").Value.ToString();
                     _ = decimal.TryParse(sheet.Cell($"L{l}").Value.ToString(), out decimal closingPrice);
-                    _ = decimal.TryParse(sheet.Cell($"L{l}").Value.ToString(), out decimal valueUpdated);
+                    _ = decimal.TryParse(sheet.Cell($"M{l}").Value.ToString(), out decimal valueUpdated);
 
                     positions.Add(new Position(positionDate, investmentType, stockBroker, tickerCode, isinCode, type, bookkeeping, quantity,
                                                    quantityAvailable, quantityUnavailable, reason, closingPrice, valueUpdated));

@@ -92,6 +92,24 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
+        public ICollection<BrokerageHistory> GetByTicketCode(string ticketCode)
+        {
+            try
+            {
+                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().FindAll(x => x.TicketCode.StartsWith(ticketCode));
+
+                return brokerageHistories;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<BrokerageHistoryService>("Unexpected error GetByTicketCode", nameof(this.GetByTicketCode), ex);
+            }
+        }
+
         public BrokerageHistory Update(BrokerageHistory updated)
         {
             throw new NotImplementedException();

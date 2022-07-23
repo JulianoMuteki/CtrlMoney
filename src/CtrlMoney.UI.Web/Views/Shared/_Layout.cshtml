@@ -188,15 +188,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    Starter Pages
+                                    B3
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link active">
+                                    <a href="@Url.Action("Index", "B3")" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Active Page</p>
+                                        <p>Brokerages Histories</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("PositionIndex", "B3")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Positions</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("EarningIndex", "B3")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Earnings</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Income Tax
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "IncomeTax")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Index</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -268,7 +297,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- page script -->
     <script>
-        $(function () {
+        $(function() {
             //Initialize Select2 Elements
             $('.select2').select2()
 

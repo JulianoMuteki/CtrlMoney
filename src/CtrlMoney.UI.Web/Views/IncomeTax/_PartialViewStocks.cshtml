@@ -1,0 +1,55 @@
+﻿@model CtrlMoney.UI.Web.Models.IncomeTaxTicket
+
+<div class="col-md-6">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-money-check-alt"></i>
+                @Model.TicketCode - Escriturador Itaú
+            </h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <ul class="list-unstyled">
+                @foreach (var item in Model.ResumeBrokerageHistories)
+                {
+                    <li>@string.Format("{0} Unit {1} - {2}", item.Quantity, item.TotalValue, item.Year)</li>
+                }
+            </ul>
+            
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Quantidade</th>
+                        <th>Valor unit</th>
+                        <th>Valor total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.BrokerageHistoryVMs)
+                    {
+                        <tr>
+                            <td>@item.TransactionDate</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Price</td>
+                            <td>@item.TotalPrice</td>
+                        </tr>
+                    }
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <th>@Model.Quantity</th>
+                        <th></th>
+                        <th>@Model.TotalValue</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+<!-- /.col -->
