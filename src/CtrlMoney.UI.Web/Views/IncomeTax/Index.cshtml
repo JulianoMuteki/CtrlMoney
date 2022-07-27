@@ -33,6 +33,23 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Minimal</label>
+                                        <select id="yearsList" class="form-control select2" style="width: 100%;">
+                                            <option selected="selected">2022</option>
+                                            <option>2021</option>
+                                            <option>2020</option>
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <div class="card-body">
                             <table id="tbIncomesTaxes" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -50,7 +67,6 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                     <!-- /.card -->
                 </div>
@@ -92,9 +108,11 @@
         return "<div></div>";
     }
 
-    function loadTableIncomesTaxes() {
+    function loadTableIncomesTaxes(year) {
+        var url = '@Url.Content("~/IncomeTax/GetAjaxHandlerIncomesTaxes")?year=' + year;
+
         table = $('#tbIncomesTaxes').DataTable({
-            "sAjaxSource": '/IncomeTax/GetAjaxHandlerIncomesTaxes',
+            "sAjaxSource": url,
             "bProcessing": true,
             "bServerSide": false,
             "paginate": true,
@@ -150,7 +168,7 @@
         $('#tbIncomesTaxes tbody').on('click', 'td.dt-control', function() {
             var tr = $(this).closest('tr');
             var row = table.row(tr);
-             var ticket = row.data().TicketCode;
+            var ticket = row.data().TicketCode;
 
             if (row.child.isShown()) {
                 // This row is already open - close it
@@ -158,7 +176,7 @@
                 tr.removeClass('shown');
             } else {
                 // Open this row
-                
+
                 var url = '@Url.Action("Details","IncomeTax")?ticketCode=' + ticket;
 
                 $.get(url, function(data) {
@@ -170,6 +188,11 @@
             }
         });
 
-        loadTableIncomesTaxes();
+        loadTableIncomesTaxes($('option:selected', $("#yearsList")).text());
+
+        $("#yearsList").change(function() {          
+            loadTableIncomesTaxes($('option:selected', this).text());
+        });
+
     });
 </script>

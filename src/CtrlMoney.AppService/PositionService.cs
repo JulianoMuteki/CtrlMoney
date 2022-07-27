@@ -90,6 +90,22 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
+        public Position GetLatestYearByTicketCode(string ticketCode)
+        {
+            try
+            {
+                return _unitOfWork.Repository<Position>().FindAll(x => x.TicketCode == ticketCode).OrderByDescending(x => x.PositionDate).FirstOrDefault();
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<PositionService>("Unexpected error GetLatestYearByTicketCode", nameof(this.GetLatestYearByTicketCode), ex);
+            }
+        }
+
         public Position Update(Position updated)
         {
             throw new NotImplementedException();

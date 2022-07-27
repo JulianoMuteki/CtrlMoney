@@ -5,7 +5,7 @@
         <div class="card-header">
             <h3 class="card-title">
                 <i class="fas fa-money-check-alt"></i>
-                @Model.TicketCode - Escriturador Itaú
+                @Model.TicketCode - Escriturador: @Model.Bookkeeping
             </h3>
         </div>
         <!-- /.card-header -->
@@ -15,8 +15,7 @@
                 {
                     <li>@string.Format("{0} Unit {1} - {2}", item.Quantity, item.TotalValue, item.Year)</li>
                 }
-            </ul>
-            
+            </ul>            
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -36,7 +35,6 @@
                             <td>@item.TotalPrice</td>
                         </tr>
                     }
-
                 </tbody>
                 <tfoot>
                     <tr>
