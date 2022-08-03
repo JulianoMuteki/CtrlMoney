@@ -14,12 +14,15 @@ namespace CtrlMoney.UI.Web.Controllers
         private readonly IBrokerageHistoryService _brokerageHistoryService1;
         private readonly IPositionService _positionService;
         private readonly IEarningService _earningService;
-        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService, IPositionService positionService, IEarningService earningService)
+        private readonly IMovimentService _movementService;
+        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService, 
+                            IPositionService positionService, IEarningService earningService, IMovimentService movementService)
         {
             _xLWorkbookService = xLWorkbookService;
             _brokerageHistoryService1 = brokerageHistoryService;
             _positionService = positionService;
             _earningService = earningService;
+            _movementService = movementService;
         }
 
         public IActionResult Index()
@@ -144,6 +147,45 @@ namespace CtrlMoney.UI.Web.Controllers
             return RedirectToAction("PositionIndex");
         }
 
+        public IActionResult MovementIndex()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetAjaxHandlerMovements()
+        {
+            var positions = _movementService.GetAll();
+
+            return Json(new
+            {
+                aaData = positions,
+                success = true
+            });
+        }
+
+        public IActionResult UploadMovement()
+        {
+            SingleFileModel model = new SingleFileModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult UploadMovement(SingleFileModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var fullfileName = CreateFile(model);
+                var moviments = _xLWorkbookService.ImportMovimentsSheet(fullfileName);
+                _movementService.AddRange(moviments);
+                System.IO.File.Delete(fullfileName);
+
+                model.IsSuccess = true;
+                model.Message = "File upload successfully";
+                model.IsResponse = true;
+            }
+            return RedirectToAction("PositionIndex");
+        }
         private string CreateFile(SingleFileModel model)
         {
             string fullfileName;

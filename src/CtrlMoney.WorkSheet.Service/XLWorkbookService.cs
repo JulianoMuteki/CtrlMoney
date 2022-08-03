@@ -50,7 +50,7 @@ namespace CtrlMoney.WorkSheet.Service
             return positions;
         }
 
-        private static IList<Position> ImportSheetTabForPositions(XLWorkbook xls, DateTime positionDate, string tabName, EInvestmentType investmentType)
+        private IList<Position> ImportSheetTabForPositions(XLWorkbook xls, DateTime positionDate, string tabName, EInvestmentType investmentType)
         {
             var sheet = xls.Worksheets.First(w => w.Name == tabName);
             var totalRowsCount = sheet.Rows().Count();
@@ -110,6 +110,33 @@ namespace CtrlMoney.WorkSheet.Service
             }
 
             return brokerageHistories;
+        }
+
+        public IList<Moviment> ImportMovimentsSheet(string fullfileName)
+        {
+            var xls = new XLWorkbook(fullfileName);
+            var planilha = xls.Worksheets.First(w => w.Name == "Movimentação");
+
+            var totalLinhas = planilha.Rows().Count();
+            IList<Moviment> moviments = new List<Moviment>(totalLinhas);
+
+            for (int l = 2; l <= totalLinhas; l++)
+            {
+                var inputoutput = planilha.Cell($"A{l}").Value.ToString();
+                DateTime.TryParse(planilha.Cell($"B{l}").Value.ToString(), out DateTime date);
+                var movementType = planilha.Cell($"C{l}").Value.ToString();
+                var ticketCode = planilha.Cell($"D{l}").Value.ToString();
+                var stockBroker = planilha.Cell($"E{l}").Value.ToString();
+               
+                _ = int.TryParse(planilha.Cell($"F{l}").Value.ToString(), out int quantity);
+                _ = decimal.TryParse(planilha.Cell($"G{l}").Value.ToString().Replace('-', '0'), out decimal unitPrice);
+                _ = decimal.TryParse(planilha.Cell($"H{l}").Value.ToString().Replace('-', '0'), out decimal transactionValue);
+
+                Moviment moviment = new Moviment(inputoutput, date, movementType, ticketCode, stockBroker, quantity, unitPrice, transactionValue);
+                moviments.Add(moviment);
+            }
+
+            return moviments;
         }
     }
 }

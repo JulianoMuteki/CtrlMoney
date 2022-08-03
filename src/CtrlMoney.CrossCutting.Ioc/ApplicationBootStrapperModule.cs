@@ -18,7 +18,7 @@ namespace CtrlMoney.CrossCutting.Ioc
             services.AddScoped<IBrokerageHistoryService, BrokerageHistoryService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IEarningService, EarningService>();
-            
+            services.AddScoped<IMovimentService, MovimentService>();
         }
     }
 }
