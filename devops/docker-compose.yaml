@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  ctrl-money-app:
+    image: ctrl-money:latest
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    environment:
+       - DOTNET_ENVIRONMENT=Development
+    networks:
+      - ctrlinvest_ctrlinvest-postgres-network
+networks:
+  ctrlinvest_ctrlinvest-postgres-network:
+    external: true
