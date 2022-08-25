@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CtrlMoney.Infra.Context;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,8 +38,14 @@ namespace CtrlMoney.UI.Web
 
                 try
                 {
-                    
-                    DbInitializer.Initialize(services);
+
+                    var dbContext = scope.ServiceProvider.GetService<CtrlMoneyContext>();
+
+                    if (!dbContext.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>().Exists())
+                    {
+                        dbContext.GetInfrastructure().GetService<IMigrator>().Migrate();
+                        DbInitializer.Initialize(services);
+                    }
                 }
                 catch (Exception ex)
                 {
