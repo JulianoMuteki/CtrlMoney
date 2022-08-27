@@ -29,7 +29,7 @@ namespace CtrlMoney.Infra.Context
 
         public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-          //  SeedRoles(roleManager);
+            SeedRoles(roleManager);
             SeedUsers(userManager);
         }
 
@@ -63,8 +63,6 @@ namespace CtrlMoney.Infra.Context
                     role.Name = roleName;
                     IdentityResult roleResult = roleManager.CreateAsync(role).Result;
 
-                    //if (RoleAuthorize.Admin.ToString() == roleName)
-                    //    roleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.DefaultPermission, PolicyTypes.DeliveryPolicy.ExecuteDelivery)).Wait();
                 }
             }
         }

@@ -38,10 +38,9 @@ namespace CtrlMoney.UI.Web
 
                 try
                 {
-
                     var dbContext = scope.ServiceProvider.GetService<CtrlMoneyContext>();
 
-                    if (!dbContext.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>().Exists())
+                    if (dbContext.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>().Exists())
                     {
                         dbContext.GetInfrastructure().GetService<IMigrator>().Migrate();
                         DbInitializer.Initialize(services);

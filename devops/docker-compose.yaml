@@ -6,10 +6,13 @@ services:
     build:
       context: ../
       dockerfile: Dockerfile
+    ports:
+      - "8000:8000"      
     environment:
        - DOTNET_ENVIRONMENT=Development
+       - PORT=8000
     networks:
-      - ctrlinvest_ctrlinvest-postgres-network
+      - ctrl-money-stg-net
 networks:
-  ctrlinvest_ctrlinvest-postgres-network:
+  ctrl-money-stg-net:
     external: true
