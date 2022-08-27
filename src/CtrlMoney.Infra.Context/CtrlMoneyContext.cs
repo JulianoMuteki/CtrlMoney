@@ -41,7 +41,7 @@ namespace CtrlMoney.Infra.Context
             //ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             //ChangeTracker.LazyLoadingEnabled = true;
 
-            Database.Migrate();
+           // Database.Migrate();
         }
 
         public void SetTrackAll()
