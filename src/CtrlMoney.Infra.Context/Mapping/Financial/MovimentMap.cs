@@ -11,8 +11,8 @@ namespace CtrlMoney.Infra.Context.Mapping.Financial
             base.Initialize(builder);
 
             builder.ToTable("Moviments");
-            builder.Property(x => x.Id).HasColumnName("EarningID");
-            builder.HasKey(b => b.Id).HasName("EarningID");
+            builder.Property(x => x.Id).HasColumnName("MovimentsID");
+            builder.HasKey(b => b.Id).HasName("MovimentsID");
 
             builder.Property(e => e.TicketCode)
                     .IsRequired()
