@@ -10,30 +10,29 @@ services:
     ports:
       - "8000:80"
     links:
-      - postgres-db-dev
+      - ctrlmoney-db
     depends_on:
-      postgres-db-dev:
+      ctrlmoney-db:
         condition: service_healthy   
     environment:
        - DOTNET_ENVIRONMENT=Development
        - PORT=8000
-       #- ConnectionStrings__DefaultConnection="Username=postgres;Password='Pa$$W0rd-17';Host=172.31.179.64;Port=15432;Database=ctrlmoney-db-dev;"
-       - ConnectionStrings__DefaultConnection=User ID =postgres;Password=${DATABASE_DEFAULT_PASSWORD};Server=postgres-db-dev;Port=5432;Database=ctrlmoney-db-dev;Integrated Security=true;Pooling=true;
+       - ConnectionStrings__DefaultConnection=User ID =postgres;Password=${DATABASE_DEFAULT_PASSWORD};Server=ctrlmoney-db;Port=5432;Database=ctrlmoney-db-${ENVIRONMENT};Integrated Security=true;Pooling=true;
     networks:
-      - my-network
-  postgres-db-dev:
+      - ctrlmoney-network
+  ctrlmoney-db:
     image: postgres:latest
     restart: always
-    container_name: "ctrlmoney-db-dev"
+    container_name: "ctrlmoney-db-${ENVIRONMENT}"
     ports:
-      - "15432:5432"
+      - "5432"
     environment:
-      POSTGRES_DB: "ctrlmoney-db-dev"
+      POSTGRES_DB: "ctrlmoney-db-${ENVIRONMENT}"
       POSTGRES_PASSWORD: "${DATABASE_DEFAULT_PASSWORD}"
     healthcheck:
       test: "pg_isready -q -U postgres"
     networks:
-      - my-network
+      - ctrlmoney-network
 networks:
-  my-network:
-    external: true
+  ctrlmoney-network:
+    driver: bridge
