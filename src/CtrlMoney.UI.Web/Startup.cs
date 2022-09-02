@@ -1,34 +1,34 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
 using CtrlMoney.CrossCutting.Ioc;
 using CtrlMoney.Domain.Identity;
 using CtrlMoney.Domain.Security;
 using CtrlMoney.Infra.Context;
+using CtrlMoney.UI.Web.CustomConfig;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CtrlMoney.UI.Web
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+        private readonly ConnectionStrings ConnectionStrings;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            // ConnectionStrings = connectionStrings.Value;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        //https://stackoverflow.com/questions/53639969/net-core-mvc-page-not-refreshing-after-changes
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -90,10 +90,12 @@ namespace CtrlMoney.UI.Web
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddRazorPages();
             RegisterServices(services);
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+            // services.AddScoped(ctx => ctx.GetService<IOptions<ConnectionStrings>>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CtrlMoneyContext context)
         {
             if (env.IsDevelopment())
             {
@@ -122,6 +124,8 @@ namespace CtrlMoney.UI.Web
                           pattern:
                   "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.MigrateOfContext<CtrlMoneyContext>(context);
         }
 
         private static void RegisterServices(IServiceCollection services)
@@ -129,6 +133,27 @@ namespace CtrlMoney.UI.Web
             // Adding dependencies from another layers (isolated from Presentation)
             InfraBootStrapperModule.RegisterServices(services);
             ApplicationBootStrapperModule.RegisterServices(services);
+        }
+    }
+    public static class EFMigration
+    {
+        public static void MigrateOfContext<T>(this IApplicationBuilder app, CtrlMoneyContext context) where T : CtrlMoneyContext
+        {
+            var conn = app.ApplicationServices.GetService<IOptions<ConnectionStrings>>().Value;
+            var logger = app.ApplicationServices.GetService<ILogger<Startup>>();
+            logger.LogWarning("Connectionstring: {0}", context.Database.GetConnectionString());
+
+            if (!context.Database.CanConnect())
+            {
+                bool isOk = context.Database.EnsureCreated();
+                if (!isOk)
+                {
+                    
+                    logger.LogWarning("EnsureCreated failed");
+                }
+            }
+            else if (context.Database.GetPendingMigrations().Count() > 0)
+                context.Database.Migrate();
         }
     }
 }

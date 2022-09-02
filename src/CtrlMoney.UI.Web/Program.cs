@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CtrlMoney.Infra.Context;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -19,7 +15,7 @@ namespace CtrlMoney.UI.Web
         {
             var host = CreateHostBuilder(args).Build();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            CreateDbIfNotExist(host);
+           // CreateDbIfNotExist(host);
             host.Run();
         }
 
