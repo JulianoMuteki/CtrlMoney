@@ -1,0 +1,62 @@
+pipeline {
+  agent { label 'slave' }
+    parameters {
+        choice(name: 'ENVIRONMENT_OPTION', choices: ['Development', 'Staging', 'Production'], description: 'Environments')
+    }  
+  stages {
+    stage('Checkout DevOps repo') {
+      steps {
+        git([url: 'git@github.com:JulianoMuteki/CtrlMoney.git', branch: 'master', credentialsId: 'github-id-credentials'])
+      }
+    }      
+    stage('Docker-compose build') {
+      steps {
+        dir('/home/juliano/jenkins-node/workspace/Ctrl-Money-CI/devops/') {
+            sh 'docker-compose build'
+        }
+      }
+    }
+    stage('Docker run Dev') {
+        when {
+            expression{
+                params.ENVIRONMENT_OPTION == 'Development'
+            }
+        }        
+        steps {
+            withCredentials([file(credentialsId: 'DB_CTRL_MONEY_DEV_DEFAULT_PASS', variable: 'CTRL_MONEY_DEV_CREDENTIALS')]) {
+                dir('/home/juliano/jenkins-node/workspace/Ctrl-Money-CI/devops/') {
+                   sh 'docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml --env-file $CTRL_MONEY_DEV_CREDENTIALS -p ctrlmoney-dev up -d'
+                }
+            }
+        }
+    }
+    stage('Docker run Stg') {
+        when {
+            expression{
+                params.ENVIRONMENT_OPTION == 'Staging'
+            }
+        }        
+        steps {
+            withCredentials([file(credentialsId: 'DB_CTRL_MONEY_STG_DEFAULT_PASS', variable: 'CTRL_MONEY_STG_CREDENTIALS')]) {
+                dir('/home/juliano/jenkins-node/workspace/Ctrl-Money-CI/devops/') {
+                   sh 'docker-compose -f docker-compose.yaml -f docker-compose.stg.yaml --env-file $CTRL_MONEY_STG_CREDENTIALS -p ctrlmoney-stg up -d'
+                }
+            }
+        }
+    }
+    stage('Docker run Prod') {
+        when {
+            expression{
+                params.ENVIRONMENT_OPTION == 'Production'
+            }
+        }        
+        steps {
+            withCredentials([file(credentialsId: 'DB_CTRL_MONEY_PROD_DEFAULT_PASS', variable: 'CTRL_MONEY_PROD_CREDENTIALS')]) {            
+                dir('/home/juliano/jenkins-node/workspace/Ctrl-Money-CI/devops/') {
+                   sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file $CTRL_MONEY_PROD_CREDENTIALS -p ctrlmoney-prod up -d'
+                }
+            }
+        }
+    }    
+  }
+}
