@@ -3,36 +3,26 @@ version: '3'
 services:
   ctrl-money-app:
     image: ctrl-money:latest
-    container_name: "ctrl-money-app"    
+    container_name: "ctrlmoney-app-${ENVIRONMENT}"    
     build:
       context: ../
       dockerfile: Dockerfile
-    ports:
-      - "8000:80"
     links:
       - ctrlmoney-db
     depends_on:
       ctrlmoney-db:
-        condition: service_healthy   
-    environment:
-       - DOTNET_ENVIRONMENT=Development
-       - PORT=8000
-       - ConnectionStrings__DefaultConnection=User ID =postgres;Password=${DATABASE_DEFAULT_PASSWORD};Server=ctrlmoney-db;Port=5432;Database=ctrlmoney-db-${ENVIRONMENT};Integrated Security=true;Pooling=true;
-    networks:
-      - ctrlmoney-network
+        condition: service_healthy
   ctrlmoney-db:
     image: postgres:latest
+    container_name: "ctrlmoney-db-${ENVIRONMENT}"    
     restart: always
-    container_name: "ctrlmoney-db-${ENVIRONMENT}"
     ports:
       - "5432"
     environment:
-      POSTGRES_DB: "ctrlmoney-db-${ENVIRONMENT}"
-      POSTGRES_PASSWORD: "${DATABASE_DEFAULT_PASSWORD}"
+      POSTGRES_DB: "ctrlmoney-db-${ENVIRONMENT}"    
+      POSTGRES_PASSWORD: "${DATABASE_DEFAULT_PASSWORD}"      
     healthcheck:
       test: "pg_isready -q -U postgres"
-    networks:
-      - ctrlmoney-network
 networks:
   ctrlmoney-network:
     driver: bridge

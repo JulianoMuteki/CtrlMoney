@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  ctrl-money-app:
+    ports:
+      - "8000:80" 
+    environment:
+       - DOTNET_ENVIRONMENT=Production
+       - PORT=8000
+       - ConnectionStrings__DefaultConnection=User ID =postgres;Password=${DATABASE_DEFAULT_PASSWORD};Server=ctrlmoney-db;Port=5432;Database=ctrlmoney-db-${ENVIRONMENT};Integrated Security=true;Pooling=true;
+    networks:
+      - ctrlmoney-network
+  ctrlmoney-db:
+    networks:
+      - ctrlmoney-network
+networks:
+  ctrlmoney-network:
+    name: ctrlmoney-network
