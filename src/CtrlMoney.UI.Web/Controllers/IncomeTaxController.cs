@@ -1,6 +1,7 @@
 ﻿using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -11,11 +12,13 @@ namespace CtrlMoney.UI.Web.Controllers
         private readonly IBrokerageHistoryService _brokerageHistoryService1;
         private readonly IPositionService _positionService;
         private readonly IEarningService _earningService;
-        public IncomeTaxController(IBrokerageHistoryService brokerageHistoryService, IPositionService positionService, IEarningService earningService)
+        private readonly IMovimentService _movementService;
+        public IncomeTaxController(IBrokerageHistoryService brokerageHistoryService, IPositionService positionService, IEarningService earningService, IMovimentService movementService)
         {
             _brokerageHistoryService1 = brokerageHistoryService;
             _positionService = positionService;
             _earningService = earningService;
+            _movementService = movementService;
         }
         public IActionResult Index()
         {
@@ -72,24 +75,44 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                     TotalValue = g.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                                                                     Quantity = g.Sum(x => x.Quantity)
                                                                 }).ToList();
+            IList<BrokerageHistoryVM> brokerageHistoriesVMs = brokerageHistories.Select(x => new BrokerageHistoryVM()
+                                                                                            {
+                                                                                                Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                                                                Quantity = x.Quantity,
+                                                                                                TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                                                                TransactionDate = x.TransactionDate,
+                                                                                                TransactionType = x.TransactionType
+                                                                                            })
+                                                                                 .OrderBy(x => x.TransactionDate).ToList();
+
+            var movements = _movementService.GetAll()
+                                            .Where(x => x.MovimentType == "Bonificação em Ativos"
+                                                        && x.TicketCode == ticketCode).ToList();
+            foreach (var item in movements)
+            {
+                brokerageHistoriesVMs.Add(new BrokerageHistoryVM()
+                {
+                    Price = item.UnitPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    Quantity = item.Quantity,
+                    TotalPrice = item.TransactionValue.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    TransactionDate = item.Date,
+                    TransactionType = item.MovimentType
+                });
+            }
 
             var incomeTaxTicket = new IncomeTaxTicket()
             {
                 TicketCode = ticketCode,
                 ResumeBrokerageHistories = resumeBrokerageHistories,
-                BrokerageHistoryVMs = brokerageHistories.Select(x => new BrokerageHistoryVM()
-                                                            {
-                                                                Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                                                                Quantity = x.Quantity,
-                                                                TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                                                                TransactionDate = x.TransactionDate,
-                                                                TransactionType = x.TransactionType
-                                                            })
-                                                        .OrderBy(x => x.TransactionDate).ToList(),
-                Quantity = brokerageHistories.Sum(x => x.Quantity),
+                BrokerageHistoryVMs = brokerageHistoriesVMs,
+                Quantity = brokerageHistoriesVMs.Sum(x => x.Quantity),
                 TotalValue = brokerageHistories.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 Bookkeeping = lastPosition.Bookkeeping
             };
+
+
+
+
             return PartialView("_PartialViewStocks", incomeTaxTicket);
         }
     }

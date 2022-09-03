@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "EarningIndex";
+    ViewData["Title"] = "MovementIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,7 +15,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Earnings</li>
+                        <li class="breadcrumb-item active">Movements</li>
                     </ol>
                 </div>
             </div>
@@ -33,16 +33,17 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="tbEarnings" class="table table-bordered">
+                            <table id="tbMovements" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>TicketCode</th>
-                                        <th>PaymentDate</th>
-                                        <th>EventType</th>
+                                        <th>InputOutput</th>
+                                        <th>Date</th>
+                                        <th>MovimentType</th>        
+                                        <th>TicketCode</th>  
                                         <th>StockBroker</th>
                                         <th>Quantity</th>
                                         <th>UnitPrice</th>
-                                        <th>NetValue</th>
+                                        <th>TransactionValue</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,28 +62,33 @@
 <!-- /.content-wrapper -->
 <script type="text/javascript">
 
-    function loadTableEarnings() {
-        $('#tbEarnings').dataTable({
-            "sAjaxSource": '/B3/GetAjaxHandlerEarnings',
+    function loadTableMovements() {
+        $('#tbMovements').dataTable({
+            "sAjaxSource": '/B3/GetAjaxHandlerMovements',
             "bProcessing": true,
             "bServerSide": false,
             "paginate": true,
             "bDestroy": true,
             "aoColumns": [
                 {
+                    "mData": "InputOutput",
+                    "bSortable": true,
+                    "defaultContent": "<i>InputOutput</i>",
+                },
+                {
+                    "mData": "Date",
+                    "bSortable": true,
+                    "defaultContent": "<i>Date</i>",
+                },
+                {
+                    "mData": "MovimentType",
+                    "bSortable": true,
+                    "defaultContent": "<i>MovimentType</i>",
+                },
+                {
                     "mData": "TicketCode",
                     "bSortable": true,
                     "defaultContent": "<i>TicketCode</i>",
-                },
-                {
-                    "mData": "PaymentDate",
-                    "bSortable": true,
-                    "defaultContent": "<i>PaymentDate</i>",
-                },
-                {
-                    "mData": "EventType",
-                    "bSortable": true,
-                    "defaultContent": "<i>EventType</i>",
                 },
                 {
                     "mData": "StockBroker",
@@ -100,15 +106,15 @@
                     "defaultContent": "<i>UnitPrice</i>",
                 },
                 {
-                    "mData": "NetValue",
+                    "mData": "TransactionValue",
                     "bSortable": true,
-                    "defaultContent": "<i>NetValue</i>",
+                    "defaultContent": "<i>TransactionValue</i>",
                 }
             ]
         });
     }
     jQuery(document).ready(function() {
-        loadTableEarnings();
+        loadTableMovements();
     });
 </script>
 

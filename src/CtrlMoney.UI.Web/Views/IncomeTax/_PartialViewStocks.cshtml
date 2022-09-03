@@ -20,9 +20,11 @@
                 <thead>
                     <tr>
                         <th>Data</th>
+                        <th>Transaction type</th>
                         <th>Quantidade</th>
                         <th>Valor unit</th>
                         <th>Valor total</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -30,15 +32,17 @@
                     {
                         <tr>
                             <td>@item.TransactionDate</td>
+                            <td>@item.TransactionType</td>
                             <td>@item.Quantity</td>
                             <td>@item.Price</td>
-                            <td>@item.TotalPrice</td>
+                            <td>@item.TotalPrice</td>                            
                         </tr>
                     }
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Total</th>
+                         <th></th>
                         <th>@Model.Quantity</th>
                         <th></th>
                         <th>@Model.TotalValue</th>

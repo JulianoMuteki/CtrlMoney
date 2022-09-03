@@ -1,4 +1,5 @@
-﻿using CtrlMoney.Domain.Entities;
+﻿using CtrlMoney.CrossCutting;
+using CtrlMoney.Domain.Entities;
 using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.Domain.Interfaces.Base;
 using System;
@@ -30,7 +31,22 @@ namespace CtrlMoney.AppService
 
         public int AddRange(ICollection<Moviment> entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = _unitOfWork.Repository<Moviment>().AddRange(entity);
+                _unitOfWork.CommitSync();
+                return result;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error add range", nameof(this.AddRange), ex);
+            }
+
+            return 0;
         }
 
         public void Delete(Guid id)
@@ -45,7 +61,18 @@ namespace CtrlMoney.AppService
 
         public ICollection<Moviment> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _unitOfWork.Repository<Moviment>().GetAll();
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error get all", nameof(this.GetAll), ex);
+            }
         }
 
         public Task<ICollection<Moviment>> GetAllAsync()

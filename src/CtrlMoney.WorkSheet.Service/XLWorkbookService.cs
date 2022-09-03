@@ -122,18 +122,23 @@ namespace CtrlMoney.WorkSheet.Service
 
             for (int l = 2; l <= totalLinhas; l++)
             {
-                var inputoutput = planilha.Cell($"A{l}").Value.ToString();
-                DateTime.TryParse(planilha.Cell($"B{l}").Value.ToString(), out DateTime date);
-                var movementType = planilha.Cell($"C{l}").Value.ToString();
-                var ticketCode = planilha.Cell($"D{l}").Value.ToString();
-                var stockBroker = planilha.Cell($"E{l}").Value.ToString();
-               
-                _ = int.TryParse(planilha.Cell($"F{l}").Value.ToString(), out int quantity);
-                _ = decimal.TryParse(planilha.Cell($"G{l}").Value.ToString().Replace('-', '0'), out decimal unitPrice);
-                _ = decimal.TryParse(planilha.Cell($"H{l}").Value.ToString().Replace('-', '0'), out decimal transactionValue);
+                var product = planilha.Cell($"D{l}").Value.ToString();
+                if (!string.IsNullOrEmpty(product))
+                {
+                    var ticketCode = product.Split('-')[0].Trim();
 
-                Moviment moviment = new Moviment(inputoutput, date, movementType, ticketCode, stockBroker, quantity, unitPrice, transactionValue);
-                moviments.Add(moviment);
+                    var inputoutput = planilha.Cell($"A{l}").Value.ToString();
+                    DateTime.TryParse(planilha.Cell($"B{l}").Value.ToString(), out DateTime date);
+                    var movementType = planilha.Cell($"C{l}").Value.ToString();
+                    var stockBroker = planilha.Cell($"E{l}").Value.ToString();
+
+                    _ = int.TryParse(planilha.Cell($"F{l}").Value.ToString().Split(',')[0], out int quantity);
+                    _ = decimal.TryParse(planilha.Cell($"G{l}").Value.ToString().Replace('-', '0'), out decimal unitPrice);
+                    _ = decimal.TryParse(planilha.Cell($"H{l}").Value.ToString().Replace('-', '0'), out decimal transactionValue);
+
+                    Moviment moviment = new Moviment(inputoutput, date, movementType, ticketCode, stockBroker, quantity, unitPrice, transactionValue);
+                    moviments.Add(moviment);
+                }
             }
 
             return moviments;
