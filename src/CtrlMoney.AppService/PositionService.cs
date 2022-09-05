@@ -80,6 +80,22 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
+        public ICollection<Position> GetByBaseYear(int year)
+        {
+            try
+            {
+                return _unitOfWork.Repository<Position>().FindAll(x => x.PositionDate.Year == year || x.PositionDate.Year == (year + 1));
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<PositionService>("Unexpected error GetByBaseYear", nameof(this.GetByBaseYear), ex);
+            }
+        }
+
         public Position GetById(Guid id)
         {
             throw new NotImplementedException();
@@ -90,11 +106,11 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
-        public Position GetLatestYearByTicketCode(string ticketCode)
+        public async Task<ICollection<Position>> GetByTicketCodeAndYears(string ticketCode, int lastYear)
         {
             try
             {
-                return _unitOfWork.Repository<Position>().FindAll(x => x.TicketCode == ticketCode).OrderByDescending(x => x.PositionDate).FirstOrDefault();
+                return await _unitOfWork.Repository<Position>().FindAllAsync(x => x.TicketCode == ticketCode && (x.PositionDate.Year == lastYear || x.PositionDate.Year == lastYear + 1));
             }
             catch (CustomException exc)
             {
@@ -102,7 +118,7 @@ namespace CtrlMoney.AppService
             }
             catch (Exception ex)
             {
-                throw CustomException.Create<PositionService>("Unexpected error GetLatestYearByTicketCode", nameof(this.GetLatestYearByTicketCode), ex);
+                throw CustomException.Create<PositionService>("Unexpected error GetByStartTicketAndYears", nameof(this.GetByTicketCodeAndYears), ex);
             }
         }
 

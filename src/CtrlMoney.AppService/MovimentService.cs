@@ -90,6 +90,22 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Moviment> GetByStartTicketAndYears(string ticketCode, int year)
+        {
+            try
+            {
+                return _unitOfWork.Repository<Moviment>().FindAll(x => x.TicketCode.Contains(ticketCode.Substring(0, 4)) && (x.Date.Year == year || x.Date.Year == year + 1));
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error GetByStartTicketAndYears", nameof(this.GetByStartTicketAndYears), ex);
+            }
+        }
+
         public Moviment Update(Moviment updated)
         {
             throw new NotImplementedException();

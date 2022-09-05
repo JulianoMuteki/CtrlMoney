@@ -46,7 +46,8 @@ namespace CtrlMoney.WorkSheet.Service
             var xls = new XLWorkbook(fullfileName);
             List<Position> positions = new List<Position>();
             positions.AddRange(ImportSheetTabForPositions(xls, positionDate, "Acoes", EInvestmentType.STOCK));
-
+            positions.AddRange(ImportSheetTabForPositions(xls, positionDate, "Fundo de Investimento", EInvestmentType.INVESTMENT_FUNDS));
+            
             return positions;
         }
 
