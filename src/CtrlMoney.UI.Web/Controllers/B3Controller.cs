@@ -184,7 +184,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 model.Message = "File upload successfully";
                 model.IsResponse = true;
             }
-            return RedirectToAction("PositionIndex");
+            return RedirectToAction("MovementIndex");
         }
         private string CreateFile(SingleFileModel model)
         {
