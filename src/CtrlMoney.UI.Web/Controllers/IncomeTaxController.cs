@@ -125,7 +125,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 BrokerageHistoryVMs = brokerageHistoriesVMs.OrderBy(x=>x.TransactionDate).ToList(),
                 Quantity = brokerageHistoriesVMs.Sum(x => x.Quantity),
                 TotalValue = brokerageHistories.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                Bookkeeping = string.Join(", ", lastPositions.Select(x => x.Bookkeeping))
+                Bookkeeping = string.Join(", ", lastPositions.Where(x=>x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping))
             };
 
             return PartialView("_PartialViewStocks", incomeTaxTicket);

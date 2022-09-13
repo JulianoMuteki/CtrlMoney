@@ -82,7 +82,18 @@ namespace CtrlMoney.AppService
 
         public Moviment GetById(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _unitOfWork.Repository<Moviment>().GetById(id);
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error GetById", nameof(this.GetById), ex);
+            }
         }
 
         public Task<Moviment> GetByIdAsync(Guid id)
@@ -108,7 +119,21 @@ namespace CtrlMoney.AppService
 
         public Moviment Update(Moviment updated)
         {
-            throw new NotImplementedException();
+            try
+            {               
+                var movement = _unitOfWork.Repository<Moviment>().Update(updated);
+                
+                _unitOfWork.CommitSync();
+                return movement;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error Update", nameof(this.Update), ex);
+            }
         }
 
         public Task<Moviment> UpdateAsync(Moviment updated)

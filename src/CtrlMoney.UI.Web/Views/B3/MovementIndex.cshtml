@@ -44,6 +44,7 @@
                                         <th>Quantity</th>
                                         <th>UnitPrice</th>
                                         <th>TransactionValue</th>
+                                        <th>Edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,6 +110,17 @@
                     "mData": "TransactionValue",
                     "bSortable": true,
                     "defaultContent": "<i>TransactionValue</i>",
+                },
+                {
+                    "mData": null,
+                    "sType": "html",
+                    "mRender": function (data, type, row) {
+                        if (type === 'display') {
+                            var url = '/B3/EditMovementValue?ticketId=' + data.Id;
+                            return '<a href="' + url + '" class="btn mini"><i class="icon-link"></i> Edit</a>';
+                        }
+                        return data;
+                    }
                 }
             ]
         });

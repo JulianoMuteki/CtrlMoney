@@ -203,5 +203,36 @@ namespace CtrlMoney.UI.Web.Controllers
 
             return fullfileName;
         }
+
+        public IActionResult EditMovementValue(Guid ticketId)
+        {
+            var model = _movementService.GetById(ticketId);
+            MovementVM movementVM = new MovementVM()
+            {
+                TicketId = model.Id,
+                TicketCode = model.TicketCode,
+                StockBroker = model.StockBroker,
+                Date = model.Date,
+                InputOutput = model.InputOutput,
+                Quantity = model.Quantity,
+                MovimentType = model.MovimentType,
+                UnitPrice = model.UnitPrice
+            };
+           
+            return View(movementVM);
+        }
+
+        [HttpPost]
+        public IActionResult EditMovementValue(MovementVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var movement = _movementService.GetById(model.TicketId);
+                movement.UnitPrice = model.UnitPrice;
+                movement.TransactionValue = movement.Quantity * movement.UnitPrice;
+                _movementService.Update(movement);
+            }
+            return RedirectToAction("MovementIndex");
+        }
     }
 }
