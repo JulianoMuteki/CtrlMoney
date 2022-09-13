@@ -27,8 +27,10 @@ namespace CtrlMoney.Infra.Context
         public DbSet<Earning> Earnings { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Moviment> Moviments { get; set; }
+        public DbSet<TicketConversion> TicketsConversions { get; set; }
 
         public DbSet<Bank> Banks { get; set; }
+
 
         public CtrlMoneyContext()
         {
@@ -70,7 +72,8 @@ namespace CtrlMoney.Infra.Context
             modelBuilder.ApplyConfiguration(new BrokerageHistoryMap());
             modelBuilder.ApplyConfiguration(new EarningMap());
             modelBuilder.ApplyConfiguration(new PositionMap());
-            modelBuilder.ApplyConfiguration(new MovimentMap());
+            modelBuilder.ApplyConfiguration(new MovimentMap()); 
+            modelBuilder.ApplyConfiguration(new TicketConversionMap());
 
             base.OnModelCreating(modelBuilder);
 

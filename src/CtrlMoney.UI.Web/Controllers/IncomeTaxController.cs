@@ -13,12 +13,18 @@ namespace CtrlMoney.UI.Web.Controllers
         private readonly IPositionService _positionService;
         private readonly IEarningService _earningService;
         private readonly IMovimentService _movementService;
-        public IncomeTaxController(IBrokerageHistoryService brokerageHistoryService, IPositionService positionService, IEarningService earningService, IMovimentService movementService)
+        private readonly ITicketConversionService _ticketConversionService;
+        public IncomeTaxController(IBrokerageHistoryService brokerageHistoryService,
+                                   IPositionService positionService,
+                                   IEarningService earningService,
+                                   IMovimentService movementService,
+                                   ITicketConversionService ticketConversionService)
         {
             _brokerageHistoryService1 = brokerageHistoryService;
             _positionService = positionService;
             _earningService = earningService;
             _movementService = movementService;
+            _ticketConversionService = ticketConversionService;
         }
         public IActionResult Index()
         {
@@ -39,17 +45,6 @@ namespace CtrlMoney.UI.Web.Controllers
                                Quantity = g.Where(z => z.PositionDate.Year == g.Key.Year).First().Quantity
                            }
                            ).ToList();
-
-            //var incomesTaxesYearGroupTickets = incomesTaxesYear.GroupBy(x => x.Ticket)
-            //               .Select(g => new
-            //                   {
-            //                       TicketCode = g.OrderBy(x=>x.TicketCode).First().TicketCode,
-            //                       Tickets = g.Select(x => x.TicketCode),
-            //                       Year = g.First().Year,
-            //                       TotalValue = g.Sum(z => z.TotalValue),
-            //                       Quantity = g.Sum(z => z.Quantity)
-            //                   }
-            //               ).ToList();
 
             string[] finalTickes = new string[] { "12", "13" };
 
@@ -81,7 +76,16 @@ namespace CtrlMoney.UI.Web.Controllers
             var lastPositions = _positionService.GetByTicketCodeAndYears(ticketCode, year).Result;
 
             var brokerageHistories = _brokerageHistoryService1.GetByTicketCode(ticketCode); // Filtral ticket com data
-            var resumeBrokerageHistories = brokerageHistories.GroupBy(x => x.TransactionDate.Year)
+            var conversion = _ticketConversionService.GetByTicketInput(ticketCode);
+
+            if (conversion != null)
+            {
+                var brokerageHistoriesConversion = _brokerageHistoryService1.GetByTicketCode(conversion.TicketOutput);
+                if (brokerageHistoriesConversion.Count > 0)
+                    brokerageHistories = brokerageHistories.Concat(brokerageHistoriesConversion).ToList();
+            }
+
+            var resumeBrokerageHistoriesByYear = brokerageHistories.GroupBy(x => x.TransactionDate.Year)
                                                                 .Select(g => new ResumeBrokerageHistories
                                                                 {
                                                                     Year = g.Key,
@@ -97,7 +101,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 TransactionDate = x.TransactionDate,
                 TransactionType = x.TransactionType
             }).ToList();
-           
+
 
             var movements = _movementService.GetByStartTicketAndYears(ticketCode, year)
                                             .Where(x => x.MovimentType == "Bonificação em Ativos"
@@ -121,11 +125,11 @@ namespace CtrlMoney.UI.Web.Controllers
             var incomeTaxTicket = new IncomeTaxTicket()
             {
                 TicketCode = ticketCode,
-                ResumeBrokerageHistories = resumeBrokerageHistories,
-                BrokerageHistoryVMs = brokerageHistoriesVMs.OrderBy(x=>x.TransactionDate).ToList(),
+                ResumeBrokerageHistories = resumeBrokerageHistoriesByYear,
+                BrokerageHistoryVMs = brokerageHistoriesVMs.OrderBy(x => x.TransactionDate).ToList(),
                 Quantity = brokerageHistoriesVMs.Sum(x => x.Quantity),
                 TotalValue = brokerageHistories.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                Bookkeeping = string.Join(", ", lastPositions.Where(x=>x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping))
+                Bookkeeping = string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x=>x.Bookkeeping).Distinct())
             };
 
             return PartialView("_PartialViewStocks", incomeTaxTicket);

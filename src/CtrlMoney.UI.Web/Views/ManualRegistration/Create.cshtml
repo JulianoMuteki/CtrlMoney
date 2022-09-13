@@ -1,6 +1,6 @@
-﻿@model CtrlMoney.UI.Web.Models.MovementVM
+﻿@model CtrlMoney.UI.Web.Models.TicketConversionVM
 @{
-    ViewData["Title"] = "Movement";
+    ViewData["Title"] = "TicketConversion";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,12 +11,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Upload Transaction</h1>
+                    <h1 class="m-0 text-dark">Ticket Conversion</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Upload Transaction</li>
+                        <li class="breadcrumb-item active">Ticket Conversion</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -36,24 +36,20 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-               <form asp-action="EditMovementValue" asp-controller="B3" method="post" enctype="multipart/form-data">
-                @Html.HiddenFor(model => model.TicketId)
+               <form asp-action="Create" asp-controller="ManualRegistration" method="post" enctype="multipart/form-data">
+                @Html.HiddenFor(model => model.TicketConversionId)
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="idTicketCode">TicketCode</label>
-                    <input type="text" class="form-control" id="idTicketCode" placeholder="TicketCode" disabled="">
+                    <label for="idTicketInput">TicketInput</label>
+                    <input asp-for="TicketInput" type="text" class="form-control" id="idTicketInput" placeholder="TicketInput">
                   </div>
                   <div class="form-group">
-                    <label for="inputOutput">InputOutput</label>
-                    <input type="text" class="form-control" id="inputOutput" placeholder="input/output" disabled="">
+                    <label for="idTicketOutput">TicketOutput</label>
+                    <input asp-for="TicketOutput" type="text" class="form-control" id="idTicketOutput" placeholder="TicketOutput">
                   </div>
                   <div class="form-group">
-                    <label for="idDate">InputOutput</label>
-                    <input type="text" class="form-control" id="idDate" placeholder="Date" disabled="">
-                  </div>
-                  <div class="form-group">
-                    <label for="idMovimentType">InputOutput</label>
-                    <input type="text" class="form-control" id="idMovimentType" placeholder="MovimentType" disabled="">
+                    <label for="idStockBroker">StockBroker</label>
+                    <input asp-for="StockBroker" type="text" class="form-control" id="idStockBroker" placeholder="StockBroker">
                   </div>
                   <div class="form-group">
                     <label for="idQuantity">Quantity</label>
@@ -62,6 +58,10 @@
                   <div class="form-group">
                     <label for="idUnitPrice">UnitPrice</label>
                     <input asp-for="UnitPrice" type="text" class="form-control" id="idUnitPrice" placeholder="UnitPrice">
+                  </div>
+                  <div class="form-group">
+                    <label for="idDate">Date</label>
+                    <input asp-for="Date" type="date" class="form-control" id="idDate" placeholder="mm/dd/yyyy">
                   </div>
                 </div>
                 <!-- /.card-body -->
