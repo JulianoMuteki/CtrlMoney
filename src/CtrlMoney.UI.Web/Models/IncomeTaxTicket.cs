@@ -8,6 +8,7 @@ namespace CtrlMoney.UI.Web.Models
         public int Quantity { get; set; }
         public string TotalValue { get; set; }
         public string Bookkeeping { get; set; }
+        public string Conversion{ get; set; }
         public ICollection<ResumeBrokerageHistories> ResumeBrokerageHistories { get; set; }
         public ICollection<BrokerageHistoryVM> BrokerageHistoryVMs { get; set; }
     }

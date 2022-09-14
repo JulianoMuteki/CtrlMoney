@@ -51,7 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Test", "5 - Test", "{13
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.Test.XUnit", "src\CtrlMoney.Test.XUnit\CtrlMoney.Test.XUnit.csproj", "{54175EEE-E617-4B19-B4F6-ABF4B82458BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.WorkSheet.Service", "src\CtrlMoney.WorkSheet.Service\CtrlMoney.WorkSheet.Service.csproj", "{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.WorkSheet.Service", "src\CtrlMoney.WorkSheet.Service\CtrlMoney.WorkSheet.Service.csproj", "{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Automation", "6 - Automation", "{19372744-317F-4CA3-A99C-1F3073911ACB}"
 EndProject

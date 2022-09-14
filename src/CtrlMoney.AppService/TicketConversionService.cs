@@ -75,11 +75,11 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
-        public TicketConversion GetByTicketInput(string ticketInput)
+        public TicketConversion GetByTicketInput(string ticketCode)
         {
             try
             {
-                var result = _unitOfWork.Repository<TicketConversion>().Find(x => x.TicketInput == ticketInput);                
+                var result = _unitOfWork.Repository<TicketConversion>().Find(x => x.TicketInput == ticketCode || x.TicketOutput == ticketCode);                
                 return result;
             }
             catch (CustomException exc)

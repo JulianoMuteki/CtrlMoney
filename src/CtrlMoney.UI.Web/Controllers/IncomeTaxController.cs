@@ -34,7 +34,10 @@ namespace CtrlMoney.UI.Web.Controllers
         [HttpGet]
         public JsonResult GetAjaxHandlerIncomesTaxes(string year)
         {
-            var positions = _positionService.GetByBaseYear(int.Parse(year));// Filtrar ano corrente e anterior
+            int baseYear = int.Parse(year);
+            int nextYear = baseYear + 1;
+
+            var positions = _positionService.GetByBaseYear(int.Parse(year));
 
             var incomesTaxesYear = positions.GroupBy(x => new { x.TicketCode, x.PositionDate.Year })
                            .Select(g => new
@@ -54,13 +57,14 @@ namespace CtrlMoney.UI.Web.Controllers
                          Id = g.Key,
                          TicketCode = g.Select(x => x.TicketCode).Where(ticket => !finalTickes.Any(code => ticket.EndsWith(code))).First(),
                          Tickets = g.Select(x => x.TicketCode),
-                         LastDate = g.Where(x => x.Year == g.OrderBy(y => y.Year).First().Year).FirstOrDefault().Year,
-                         LastTotalValue = g.Where(x => x.Year == g.OrderBy(y => y.Year).First().Year).Sum(x => x.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                         LastQuantity = g.Where(x => x.Year == g.OrderBy(y => y.Year).First().Year).Sum(x => x.Quantity),
-
-                         CurrentDate = g.Where(x => x.Year == g.OrderByDescending(y => y.Year).First().Year).FirstOrDefault().Year,
-                         CurrentTotalValue = g.Where(x => x.Year == g.OrderByDescending(y => y.Year).First().Year).Sum(x => x.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                         CurrentQuantity = g.Where(x => x.Year == g.OrderByDescending(y => y.Year).First().Year).Sum(x => x.Quantity)
+                         //Base year
+                         LastDate = (g.Where(x => x.Year == baseYear).FirstOrDefault() == null ? "--" : g.Where(x => x.Year == baseYear).FirstOrDefault().Year.ToString()),
+                         LastTotalValue = g.Where(x => x.Year == baseYear).Sum(x => x.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                         LastQuantity = g.Where(x => x.Year == baseYear).Sum(x => x.Quantity),
+                         //Next Year
+                         CurrentDate = g.Where(x => x.Year == nextYear).FirstOrDefault() == null ? "--" : g.Where(x => x.Year == nextYear).FirstOrDefault().Year.ToString(),
+                         CurrentTotalValue = g.Where(x => x.Year == nextYear).Sum(x => x.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                         CurrentQuantity = g.Where(x => x.Year == nextYear).Sum(x => x.Quantity)
                      }).ToList();
 
             return Json(new
@@ -80,7 +84,9 @@ namespace CtrlMoney.UI.Web.Controllers
 
             if (conversion != null)
             {
-                var brokerageHistoriesConversion = _brokerageHistoryService1.GetByTicketCode(conversion.TicketOutput);
+                string ticketOld = conversion.TicketInput == ticketCode ? conversion.TicketOutput : conversion.TicketInput;
+
+                var brokerageHistoriesConversion = _brokerageHistoryService1.GetByTicketCode(ticketOld);
                 if (brokerageHistoriesConversion.Count > 0)
                     brokerageHistories = brokerageHistories.Concat(brokerageHistoriesConversion).ToList();
             }
@@ -125,6 +131,7 @@ namespace CtrlMoney.UI.Web.Controllers
             var incomeTaxTicket = new IncomeTaxTicket()
             {
                 TicketCode = ticketCode,
+                Conversion = conversion != null ? $"{conversion.TicketOutput} -> {conversion.TicketInput}" : string.Empty,
                 ResumeBrokerageHistories = resumeBrokerageHistoriesByYear,
                 BrokerageHistoryVMs = brokerageHistoriesVMs.OrderBy(x => x.TransactionDate).ToList(),
                 Quantity = brokerageHistoriesVMs.Sum(x => x.Quantity),

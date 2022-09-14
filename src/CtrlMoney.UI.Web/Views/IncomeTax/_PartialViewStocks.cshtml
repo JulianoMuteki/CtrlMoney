@@ -1,63 +1,71 @@
 ﻿@model CtrlMoney.UI.Web.Models.IncomeTaxTicket
 
 <div class="col-md-6">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-money-check-alt"></i>
-                    @Model.TicketCode - Escriturador: @Model.Bookkeeping
-                </h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                @foreach (var item in Model.ResumeBrokerageHistories)
-                {
-                    <strong><i class="fa-regular fa-calendar-days"></i> @item.Year </strong>
-
-                    <p class="text-muted">
-                        @string.Format("Unit {0} - {1}", item.Quantity, item.TotalValue)
-                    </p>
-                    <hr/>
-                }
-            </div>
-            <!-- /.card-body -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>TicketCode</th>
-                        <th>Data</th>
-                        <th>Transaction type</th>
-                        <th>Quantidade</th>
-                        <th>Valor unit</th>
-                        <th>Valor total</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.BrokerageHistoryVMs)
-                    {
-                        <tr>
-                            <td>@item.TicketCode</td>
-                            <td>@item.TransactionDate</td>
-                            <td>@item.TransactionType</td>
-                            <td>@item.Quantity</td>
-                            <td>@item.Price</td>
-                            <td>@item.TotalPrice</td>
-                        </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <th></th>
-                        <th></th>
-                        <th>@Model.Quantity</th>
-                        <th></th>
-                        <th>@Model.TotalValue</th>
-                    </tr>
-                </tfoot>
-            </table>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-money-check-alt"></i>
+                @Model.TicketCode - Escriturador: @Model.Bookkeeping
+            </h3>
         </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(Model.Conversion))
+            {
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> Alert Ticket change code!</h5>
+                    @Model.Conversion
+                </div>
+            }
+            @foreach (var item in Model.ResumeBrokerageHistories)
+            {
+                <strong><i class="fa-regular fa-calendar-days"></i> @item.Year </strong>
+
+                <p class="text-muted">
+                    @string.Format("Unit {0} - {1}", item.Quantity, item.TotalValue)
+                </p>
+                <hr />
+            }
+        </div>
+        <!-- /.card-body -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>TicketCode</th>
+                    <th>Data</th>
+                    <th>Transaction type</th>
+                    <th>Quantidade</th>
+                    <th>Valor unit</th>
+                    <th>Valor total</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.BrokerageHistoryVMs)
+                {
+                    <tr>
+                        <td>@item.TicketCode</td>
+                        <td>@item.TransactionDate</td>
+                        <td>@item.TransactionType</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price</td>
+                        <td>@item.TotalPrice</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th></th>
+                    <th></th>
+                    <th>@Model.Quantity</th>
+                    <th></th>
+                    <th>@Model.TotalValue</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
     <!-- /.card -->
 </div>
 <!-- /.col -->
