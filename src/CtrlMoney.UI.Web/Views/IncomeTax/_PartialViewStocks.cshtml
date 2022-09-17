@@ -21,10 +21,12 @@
             @foreach (var item in Model.ResumeBrokerageHistories)
             {
                 <strong><i class="fa-regular fa-calendar-days"></i> @item.Year </strong>
-
-                <p class="text-muted">
-                    @string.Format("Unit {0} - {1}", item.Quantity, item.TotalValue)
-                </p>
+                foreach (var type in item.TransactionsYears)
+                {
+                    <p class="text-muted">
+                        @string.Format("{0} - {1} {2}",type.TransactionType, type.Quantity, type.TotalValue)
+                    </p>
+                }
                 <hr />
             }
         </div>

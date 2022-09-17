@@ -92,11 +92,11 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
-        public ICollection<BrokerageHistory> GetByTicketCode(string ticketCode)
+        public ICollection<BrokerageHistory> GetByTicketCode(string ticketCode, int baseYear)
         {
             try
             {
-                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().FindAll(x => x.TicketCode.StartsWith(ticketCode));
+                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().FindAll(x => x.TicketCode.StartsWith(ticketCode) && x.TransactionDate.Year <= baseYear);
 
                 return brokerageHistories;
             }

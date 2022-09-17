@@ -105,7 +105,7 @@ namespace CtrlMoney.AppService
         {
             try
             {
-                return _unitOfWork.Repository<Moviment>().FindAll(x => x.TicketCode.Contains(ticketCode.Substring(0, 4)) && (x.Date.Year == year || x.Date.Year == year + 1));
+                return _unitOfWork.Repository<Moviment>().FindAll(x => x.TicketCode.Contains(ticketCode.Substring(0, 4)) && x.Date.Year <= year);
             }
             catch (CustomException exc)
             {

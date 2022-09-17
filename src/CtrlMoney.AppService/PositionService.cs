@@ -84,7 +84,7 @@ namespace CtrlMoney.AppService
         {
             try
             {
-                return _unitOfWork.Repository<Position>().FindAll(x => x.PositionDate.Year == year || x.PositionDate.Year == (year + 1));
+                return _unitOfWork.Repository<Position>().FindAll(x => x.PositionDate.Year <= year);
             }
             catch (CustomException exc)
             {
@@ -106,11 +106,11 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<Position>> GetByTicketCodeAndYears(string ticketCode, int lastYear)
+        public async Task<ICollection<Position>> GetByTicketCodeAndYears(string ticketCode, int baseYear)
         {
             try
             {
-                return await _unitOfWork.Repository<Position>().FindAllAsync(x => x.TicketCode == ticketCode && (x.PositionDate.Year == lastYear || x.PositionDate.Year == lastYear + 1));
+                return await _unitOfWork.Repository<Position>().FindAllAsync(x => x.TicketCode == ticketCode && x.PositionDate.Year <= baseYear);
             }
             catch (CustomException exc)
             {

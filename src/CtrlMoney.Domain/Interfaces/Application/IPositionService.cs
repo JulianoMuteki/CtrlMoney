@@ -6,7 +6,7 @@ namespace CtrlMoney.Domain.Interfaces.Application
 {
     public interface IPositionService : IApplicationServiceBase<Position>
     {
-        Task<ICollection<Position>> GetByTicketCodeAndYears(string startTicket, int lastYear);
+        Task<ICollection<Position>> GetByTicketCodeAndYears(string startTicket, int baseYear);
         ICollection<Position> GetByBaseYear(int year);
     }
 }
