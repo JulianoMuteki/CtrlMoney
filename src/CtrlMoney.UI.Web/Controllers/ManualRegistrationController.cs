@@ -61,7 +61,7 @@ namespace CtrlMoney.UI.Web.Controllers
             }
             catch
             {
-                return View();
+                return View("Index");
             }
         }
 

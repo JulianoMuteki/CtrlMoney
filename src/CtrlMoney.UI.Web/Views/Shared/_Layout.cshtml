@@ -255,13 +255,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <li class="nav-item">
                                     <a href="@Url.Action("Index", "IncomeTax")" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Index</p>
+                                        <p>Report IRRF</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="@Url.Action("Create", "ManualRegistration")" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Inactive Page</p>
+                                        <p>Create conversion</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "ManualRegistration")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Conversions</p>
                                     </a>
                                 </li>
                             </ul>

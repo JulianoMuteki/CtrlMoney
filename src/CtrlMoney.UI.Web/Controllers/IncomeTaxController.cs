@@ -98,6 +98,7 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                     TotalValue = g.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                                                                     Quantity = g.Sum(x => x.Quantity)
                                                                 }).ToList();
+
             IList<BrokerageHistoryVM> brokerageHistoriesVMs = brokerageHistories.Select(x => new BrokerageHistoryVM()
             {
                 TicketCode = x.TicketCode,
@@ -111,6 +112,7 @@ namespace CtrlMoney.UI.Web.Controllers
 
             var movements = _movementService.GetByStartTicketAndYears(ticketCode, year)
                                             .Where(x => x.MovimentType == "Bonificação em Ativos"
+                                                        || x.MovimentType == "Leilão de Fração"
                                                         || (x.MovimentType == "Recibo de Subscrição" && x.InputOutput == "Debito")).ToList();
             if (movements.Count > 0)
             {
