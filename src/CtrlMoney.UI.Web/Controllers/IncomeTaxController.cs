@@ -36,7 +36,7 @@ namespace CtrlMoney.UI.Web.Controllers
         public JsonResult GetAjaxHandlerIncomesTaxes(string year)
         {
             int baseYear = int.Parse(year);
-            int lastYear = baseYear -1;
+            int lastYear = baseYear - 1;
             var positions = _positionService.GetByBaseYear(int.Parse(year));
 
             var incomesTaxesYear = positions.GroupBy(x => new { x.TicketCode, x.PositionDate.Year })
@@ -105,13 +105,29 @@ namespace CtrlMoney.UI.Web.Controllers
                         TransactionDate = item.Date,
                         TransactionType = item.MovimentType,
                         TotalPrice = item.TransactionValue,
-                        Price = item.UnitPrice,                        
+                        Price = item.UnitPrice,
                         Quantity = item.Quantity
                     });
                 }
             }
 
-            var allBrokerageHistoriesByYear = brokerageHistories.Where(x=>x.TransactionType != "Bonificação em Ativos").GroupBy(x => x.TransactionDate.Year)
+            var earnings = _earningService.GetByTicketCodeAndBaseYear(ticketCode, year);
+
+            var resumeDataByYear = brokerageHistories.Where(x => x.TransactionType != "Bonificação em Ativos").ToList();
+            foreach (var item in earnings)
+            {
+                resumeDataByYear.Add(new BrokerageHistory()
+                {
+                    TicketCode = item.TicketCode,
+                    TransactionDate = item.PaymentDate,
+                    TransactionType = item.EventType,
+                    TotalPrice = item.NetValue,
+                    Price = item.UnitPrice,
+                    Quantity = item.Quantity
+                });
+            }
+
+            var allBrokerageHistoriesByYear = resumeDataByYear.GroupBy(x => x.TransactionDate.Year)
                                                                 .Select(g => new ResumeBrokerageHistories
                                                                 {
                                                                     Year = g.Key,
@@ -124,16 +140,16 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                                         }).ToList()
                                                                 }).ToList();
 
-
-            var allBrokerageHistories = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração").Select(x => new BrokerageHistoryVM()
-            {
-                TicketCode = x.TicketCode,
-                Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                Quantity = x.Quantity,
-                TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                TransactionDate = x.TransactionDate,
-                TransactionType = x.TransactionType
-            }).ToList();
+            var allBrokerageHistories = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração")
+                                                          .Select(x => new BrokerageHistoryVM()
+                                                            {
+                                                                TicketCode = x.TicketCode,
+                                                                Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                                Quantity = x.Quantity,
+                                                                TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                                TransactionDate = x.TransactionDate,
+                                                                TransactionType = x.TransactionType
+                                                            }).ToList();
 
             var incomeTaxTicket = new IncomeTaxTicket()
             {

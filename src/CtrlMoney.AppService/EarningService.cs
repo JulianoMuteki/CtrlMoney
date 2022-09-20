@@ -90,6 +90,22 @@ namespace CtrlMoney.AppService
             throw new NotImplementedException();
         }
 
+        public ICollection<Earning> GetByTicketCodeAndBaseYear(string ticketCode, int year)
+        {
+            try
+            {
+                return _unitOfWork.Repository<Earning>().FindAll(x => x.TicketCode.StartsWith(ticketCode));
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<EarningService>("Unexpected error add GetByTicketCodeAndBaseYear", nameof(this.GetByTicketCodeAndBaseYear), ex);
+            }
+        }
+
         public Earning Update(Earning updated)
         {
             throw new NotImplementedException();

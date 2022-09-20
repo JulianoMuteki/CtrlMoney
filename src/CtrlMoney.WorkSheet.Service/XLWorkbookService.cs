@@ -2,6 +2,7 @@
 using CtrlMoney.CrossCutting.Enums;
 using CtrlMoney.Domain.Entities;
 using CtrlMoney.Domain.Interfaces.Application;
+using System.Globalization;
 
 namespace CtrlMoney.WorkSheet.Service
 {
@@ -26,8 +27,7 @@ namespace CtrlMoney.WorkSheet.Service
                 if (!string.IsNullOrEmpty(product))
                 {
                     var ticketCode = product.Split('-')[0].Trim();
-
-                    DateTime.TryParse(sheet.Cell($"B{l}").Value.ToString(), out DateTime paymentDate);
+                    DateTime paymentDate = DateTime.Parse(sheet.Cell($"B{l}").Value.ToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
                     var eventType = sheet.Cell($"C{l}").Value.ToString();
                     var stockBroker = sheet.Cell($"D{l}").Value.ToString();
                     _ = int.TryParse(sheet.Cell($"E{l}").Value.ToString(), out int quantity);
@@ -95,7 +95,8 @@ namespace CtrlMoney.WorkSheet.Service
             // primeira linha é o cabecalho
             for (int l = 2; l <= totalLinhas; l++)
             {
-                DateTime.TryParse(planilha.Cell($"A{l}").Value.ToString(), out DateTime dataNegociacao);
+                DateTime dataNegociacao = DateTime.Parse(planilha.Cell($"A{l}").Value.ToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                //DateTime.TryParse(planilha.Cell($"A{l}").Value.ToString(), out DateTime dataNegociacao);
                 var tipoMovimentacao = planilha.Cell($"B{l}").Value.ToString();
                 var mercado = planilha.Cell($"C{l}").Value.ToString();
                 var vencimento = planilha.Cell($"D{l}").Value.ToString();
@@ -129,7 +130,8 @@ namespace CtrlMoney.WorkSheet.Service
                     var ticketCode = product.Split('-')[0].Trim();
 
                     var inputoutput = planilha.Cell($"A{l}").Value.ToString();
-                    DateTime.TryParse(planilha.Cell($"B{l}").Value.ToString(), out DateTime date);
+                    //DateTime.TryParse(planilha.Cell($"B{l}").Value.ToString(), out DateTime date);
+                    DateTime date = DateTime.Parse(planilha.Cell($"B{l}").Value.ToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
                     var movementType = planilha.Cell($"C{l}").Value.ToString();
                     var stockBroker = planilha.Cell($"E{l}").Value.ToString();
 
