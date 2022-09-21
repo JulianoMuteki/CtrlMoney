@@ -11,5 +11,10 @@ namespace CtrlMoney.UI.Web.Models
         public string Conversion{ get; set; }
         public ICollection<ResumeBrokerageHistories> ResumeBrokerageHistories { get; set; }
         public ICollection<BrokerageHistoryVM> BrokerageHistoryVMs { get; set; }
+
+        public string Operation { get; set; }
+        public string TotalYearExercise { get; set; }
+        public string TotalCalendarYear { get; set; }
+
     }
 }

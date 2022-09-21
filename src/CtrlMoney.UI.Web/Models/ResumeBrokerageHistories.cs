@@ -7,6 +7,7 @@ namespace CtrlMoney.UI.Web.Models
         public int Year { get; set; }
         public string TicketCode { get; set; }
         public IList<TransactionYear> TransactionsYears { get; set; }
+        public IList<EarningReport> EarningsReport { get; set; }
 
     }
 
@@ -15,5 +16,14 @@ namespace CtrlMoney.UI.Web.Models
         public string TransactionType { get; set; }
         public string TotalValue { get; set; }
         public int Quantity { get; set; }
+
+    }
+
+    public class EarningReport
+    {
+        public string EventType { get; set; }
+        public int Quantity { get; set; }
+        public string TotalValue { get; set; }
+
     }
 }

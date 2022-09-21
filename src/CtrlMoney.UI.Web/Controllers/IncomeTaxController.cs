@@ -111,21 +111,11 @@ namespace CtrlMoney.UI.Web.Controllers
                 }
             }
 
-            var earnings = _earningService.GetByTicketCodeAndBaseYear(ticketCode, year);
+            var earnings = _earningService.GetByTicketCodeAndBaseYear(ticketCode, year); //TODO: Check filter
 
-            var resumeDataByYear = brokerageHistories.Where(x => x.TransactionType != "Bonificação em Ativos").ToList();
-            foreach (var item in earnings)
-            {
-                resumeDataByYear.Add(new BrokerageHistory()
-                {
-                    TicketCode = item.TicketCode,
-                    TransactionDate = item.PaymentDate,
-                    TransactionType = item.EventType,
-                    TotalPrice = item.NetValue,
-                    Price = item.UnitPrice,
-                    Quantity = item.Quantity
-                });
-            }
+            var resumeDataByYear = brokerageHistories.Where(x => x.TransactionType != "Bonificação em Ativos" ).ToList();
+            var brokerageHistoriesTable = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração").OrderBy(x => x.TransactionDate).ToList();
+
 
             var allBrokerageHistoriesByYear = resumeDataByYear.GroupBy(x => x.TransactionDate.Year)
                                                                 .Select(g => new ResumeBrokerageHistories
@@ -137,29 +127,44 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                                             TransactionType = t.Key,
                                                                                             TotalValue = t.Sum(z => z.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                                                                                             Quantity = t.Sum(z => z.Quantity)
+                                                                                        }).ToList(),
+                                                                    EarningsReport = earnings.Where(e => e.PaymentDate.Year == g.Key)
+                                                                                        .GroupBy(e => e.EventType)
+                                                                                        .Select(e => new EarningReport
+                                                                                        {
+                                                                                            EventType = e.Key,
+                                                                                            Quantity = e.Sum(s => s.Quantity),
+                                                                                            TotalValue = e.Sum(s => s.NetValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
                                                                                         }).ToList()
                                                                 }).ToList();
 
-            var allBrokerageHistories = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração")
+            var brokerageHistoryVMs = brokerageHistoriesTable
                                                           .Select(x => new BrokerageHistoryVM()
-                                                            {
-                                                                TicketCode = x.TicketCode,
-                                                                Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                                                                Quantity = x.Quantity,
-                                                                TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                                                                TransactionDate = x.TransactionDate,
-                                                                TransactionType = x.TransactionType
-                                                            }).ToList();
+                                                          {
+                                                              TicketCode = x.TicketCode,
+                                                              Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                              Quantity = x.Quantity,
+                                                              TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                              TransactionDate = x.TransactionDate,
+                                                              TransactionType = x.TransactionType
+                                                          }).ToList();
+
+            string operations = string.Join(", ", brokerageHistoriesTable.Select(operation => string.Format("{0} ({1})", operation.Quantity, operation.Price)));
+            string totalYearExercise = brokerageHistoriesTable.Where(x => x.TransactionDate.Year < year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+            string totalCalendarYear = brokerageHistoriesTable.Where(x => x.TransactionDate.Year <= year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
 
             var incomeTaxTicket = new IncomeTaxTicket()
             {
                 TicketCode = ticketCode,
                 Conversion = conversion != null ? $"{conversion.TicketOutput} -> {conversion.TicketInput}" : string.Empty,
                 ResumeBrokerageHistories = allBrokerageHistoriesByYear,
-                BrokerageHistoryVMs = allBrokerageHistories.OrderBy(x => x.TransactionDate).ToList(),
-                Quantity = allBrokerageHistories.Sum(x => x.Quantity),
-                TotalValue = brokerageHistories.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                Bookkeeping = string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping).Distinct())
+                BrokerageHistoryVMs = brokerageHistoryVMs,
+                Quantity = brokerageHistoriesTable.Sum(x => x.Quantity),
+                TotalValue = brokerageHistoriesTable.Sum(x => x.TotalPrice).ToString(CultureInfo.CreateSpecificCulture("pt-BR")),
+                Bookkeeping = string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping).Distinct()),
+                Operation= operations,
+                TotalCalendarYear = totalCalendarYear,
+                TotalYearExercise = totalYearExercise
             };
 
             return PartialView("_PartialViewStocks", incomeTaxTicket);
