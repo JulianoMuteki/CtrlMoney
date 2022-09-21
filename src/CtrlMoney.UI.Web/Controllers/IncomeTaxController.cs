@@ -112,8 +112,24 @@ namespace CtrlMoney.UI.Web.Controllers
             }
 
             var earnings = _earningService.GetByTicketCodeAndBaseYear(ticketCode, year); //TODO: Check filter
+            if (movements.Count > 0)
+            {
+                foreach (var item in movements.Where(x => x.MovimentType == "Leilão de Fração").ToList())
+                {
+                    earnings.Add(new Earning()
+                    {
+                        TicketCode = item.TicketCode,
+                        PaymentDate = item.Date,
+                        EventType = item.MovimentType,
+                        NetValue = item.TransactionValue,
+                        UnitPrice = item.UnitPrice,
+                        Quantity = item.Quantity
+                    });
+                }
+            }
 
-            var resumeDataByYear = brokerageHistories.Where(x => x.TransactionType != "Bonificação em Ativos" ).ToList();
+            var resumeDataByYear = brokerageHistories.Where(x => x.TransactionType != "Bonificação em Ativos"
+                                                      && x.TransactionType != "Leilão de Fração").ToList();
             var brokerageHistoriesTable = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração").OrderBy(x => x.TransactionDate).ToList();
 
 
@@ -125,6 +141,7 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                                         .Select(t => new TransactionYear
                                                                                         {
                                                                                             TransactionType = t.Key,
+                                                                                            UnitPrice = t.Select(z => z.Price).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                                                                                             TotalValue = t.Sum(z => z.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                                                                                             Quantity = t.Sum(z => z.Quantity)
                                                                                         }).ToList(),

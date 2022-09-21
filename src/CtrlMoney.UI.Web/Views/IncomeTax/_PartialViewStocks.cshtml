@@ -1,6 +1,6 @@
 ﻿@model CtrlMoney.UI.Web.Models.IncomeTaxTicket
 
-<div class="col-md-6">
+<div class="col-md-8">
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">
@@ -9,7 +9,7 @@
             </h3>
         </div>
         <!-- /.card-header -->
-        <div class="card-body">
+        <div class="card-body p-0">
             @if (!string.IsNullOrEmpty(Model.Conversion))
             {
                 <div class="alert alert-warning alert-dismissible">
@@ -18,31 +18,45 @@
                     @Model.Conversion
                 </div>
             }
-            @foreach (var item in Model.ResumeBrokerageHistories)
-            {
-                <strong><i class="fa-regular fa-calendar-days"></i> @item.Year </strong>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="font-weight-bold">
+                                <i class="fa-regular fa-calendar-days"></i> Year
+                            </span>
+                        </th>
+                        <th>Operação</th>
+                        <th>Proventos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ResumeBrokerageHistories)
+                    {
+                        <tr>
+                            <td>@item.Year</td>
+                            <td>
+                                @foreach (var type in item.TransactionsYears)
+                                {
+                                     <div class="d-flex flex-column text-left">
+                                        <span><strong class="text-danger mr-1"><i class="fas fa-arrow-down"></i> @type.TransactionType: </strong> @string.Format("{0} - {1}",type.Quantity, type.UnitPrice)</span>
+                                        <span class="text-muted"><b>Total: </b> @type.TotalValue</span>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                @foreach (var earning in item.EarningsReport)
+                                {
+                                  <div class="d-flex flex-column text-left">
+                                        <span class="text-muted"><b>@earning.EventType</b> @earning.TotalValue</span>
+                                    </div>
+                                }
+                            </td>
 
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        @foreach (var type in item.TransactionsYears)
-                        {
-                            <p class="text-muted">
-                                @string.Format("{0} - {1} {2}",type.TransactionType, type.Quantity, type.TotalValue)
-                            </p>
-                        }
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        @foreach (var earning in item.EarningsReport)
-                        {
-                            <p class="text-muted">
-                                @string.Format("{0}: {1}",earning.EventType, earning.TotalValue)
-                            </p>
-                        }
-                    </div>
-                </div>
-
-                <hr />
-            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
         <!-- /.card-body -->
         <table class="table table-bordered">
@@ -84,7 +98,7 @@
         <div class="callout callout-success">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <h5>@Model.Quantity - @Model.TicketCode</h5>
+                    <h5>@Model.TicketCode - @Model.Quantity units</h5>
                     <p>@Model.Operation</p>
                 </div>
                 <div class="col-12 col-sm-3">
