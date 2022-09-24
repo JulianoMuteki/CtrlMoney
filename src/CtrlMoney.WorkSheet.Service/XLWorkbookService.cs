@@ -23,16 +23,16 @@ namespace CtrlMoney.WorkSheet.Service
 
             for (int l = 2; l <= totalRows; l++)
             {
-                var product = sheet.Cell($"A{l}").Value.ToString();
+                var product = sheet.Cell($"A{l}").CellToString();
                 if (!string.IsNullOrEmpty(product))
                 {
                     var ticketCode = product.Split('-')[0].Trim();
-                    DateTime paymentDate = DateTime.Parse(sheet.Cell($"B{l}").Value.ToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
-                    var eventType = sheet.Cell($"C{l}").Value.ToString();
-                    var stockBroker = sheet.Cell($"D{l}").Value.ToString();
-                    _ = int.TryParse(sheet.Cell($"E{l}").Value.ToString(), out int quantity);
-                    _ = decimal.TryParse(sheet.Cell($"F{l}").Value.ToString(), out decimal unitPrice);
-                    _ = decimal.TryParse(sheet.Cell($"G{l}").Value.ToString(), out decimal netValue);
+                    DateTime paymentDate = DateTime.Parse(sheet.Cell($"B{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                    var eventType = sheet.Cell($"C{l}").CellToString();
+                    var stockBroker = sheet.Cell($"D{l}").CellToString();
+                    int quantity = int.Parse(sheet.Cell($"E{l}").CellToString());
+                    decimal unitPrice = decimal.Parse(sheet.Cell($"F{l}").CellToString());
+                    decimal netValue = decimal.Parse(sheet.Cell($"G{l}").CellToString());
 
                     earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, unitPrice, netValue));
                 }
@@ -59,22 +59,21 @@ namespace CtrlMoney.WorkSheet.Service
 
             for (int l = 2; l <= totalRowsCount; l++)
             {
-                var isProductValid = sheet.Cell($"A{l}").Value.ToString();
+                var isProductValid = sheet.Cell($"A{l}").CellToString();
                 if (!string.IsNullOrEmpty(isProductValid))
                 {
-
-                    var stockBroker = sheet.Cell($"B{l}").Value.ToString();
-                    var tickerCode = sheet.Cell($"D{l}").Value.ToString();
-                    var isinCode = sheet.Cell($"E{l}").Value.ToString();
-                    var type = sheet.Cell($"F{l}").Value.ToString();
-                    var bookkeeping = sheet.Cell($"G{l}").Value.ToString();
-                    _ = int.TryParse(sheet.Cell($"H{l}").Value.ToString(), out int quantity);
-                    _ = int.TryParse(sheet.Cell($"I{l}").Value.ToString(), out int quantityAvailable);
-                    var strQuantityUnavailable = sheet.Cell($"J{l}").Value.ToString();
+                    var stockBroker = sheet.Cell($"B{l}").CellToString();
+                    var tickerCode = sheet.Cell($"D{l}").CellToString();
+                    var isinCode = sheet.Cell($"E{l}").CellToString();
+                    var type = sheet.Cell($"F{l}").CellToString();
+                    var bookkeeping = sheet.Cell($"G{l}").CellToString();
+                    int quantity = int.Parse(sheet.Cell($"H{l}").CellToString());
+                    int quantityAvailable = int.Parse(sheet.Cell($"I{l}").CellToString());
+                    var strQuantityUnavailable = sheet.Cell($"J{l}").CellToString();
                     var quantityUnavailable = string.IsNullOrEmpty(strQuantityUnavailable) || strQuantityUnavailable == "-" ? 0 : int.Parse(strQuantityUnavailable);
-                    var reason = sheet.Cell($"K{l}").Value.ToString();
-                    _ = decimal.TryParse(sheet.Cell($"L{l}").Value.ToString(), out decimal closingPrice);
-                    _ = decimal.TryParse(sheet.Cell($"M{l}").Value.ToString(), out decimal valueUpdated);
+                    var reason = sheet.Cell($"K{l}").CellToString();
+                    decimal closingPrice = decimal.Parse(sheet.Cell($"L{l}").CellToString());
+                    decimal valueUpdated = decimal.Parse(sheet.Cell($"M{l}").CellToString());
 
                     positions.Add(new Position(positionDate, investmentType, stockBroker, tickerCode, isinCode, type, bookkeeping, quantity,
                                                    quantityAvailable, quantityUnavailable, reason, closingPrice, valueUpdated));
@@ -95,19 +94,19 @@ namespace CtrlMoney.WorkSheet.Service
             // primeira linha é o cabecalho
             for (int l = 2; l <= totalLinhas; l++)
             {
-                DateTime dataNegociacao = DateTime.Parse(planilha.Cell($"A{l}").Value.ToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
-                //DateTime.TryParse(planilha.Cell($"A{l}").Value.ToString(), out DateTime dataNegociacao);
-                var tipoMovimentacao = planilha.Cell($"B{l}").Value.ToString();
-                var mercado = planilha.Cell($"C{l}").Value.ToString();
-                var vencimento = planilha.Cell($"D{l}").Value.ToString();
-                var instituicao = planilha.Cell($"E{l}").Value.ToString();
-                var ticket = planilha.Cell($"F{l}").Value.ToString();
-                _ = int.TryParse(planilha.Cell($"G{l}").Value.ToString(), out int quantidade);
-                _ = decimal.TryParse(planilha.Cell($"H{l}").Value.ToString(), out decimal preco);
-                _ = decimal.TryParse(planilha.Cell($"I{l}").Value.ToString(), out decimal valor);
+                DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                var movementType = planilha.Cell($"B{l}").CellToString();
+                var market = planilha.Cell($"C{l}").CellToString();
+                var expire = planilha.Cell($"D{l}").CellToString();
+                var stockBroker = planilha.Cell($"E{l}").CellToString();
+                var ticket = planilha.Cell($"F{l}").CellToString();
 
-                DateTime eExpireDate = string.IsNullOrEmpty(vencimento) || vencimento == "-" ? DateTime.MinValue : DateTime.Parse(vencimento);
-                BrokerageHistory brokerageHistory = new(valor, preco, quantidade, ticket, instituicao, eExpireDate, dataNegociacao, tipoMovimentacao, mercado);
+                int quantity = int.Parse(planilha.Cell($"G{l}").CellToString());
+                decimal price = decimal.Parse(planilha.Cell($"H{l}").CellToString());
+                decimal totalPrice = decimal.Parse(planilha.Cell($"I{l}").CellToString());
+
+                DateTime eExpireDate = string.IsNullOrEmpty(expire) || expire == "-" ? DateTime.MinValue : DateTime.Parse(expire, CultureInfo.CreateSpecificCulture("pt-BR"));
+                BrokerageHistory brokerageHistory = new(totalPrice, price, quantity, ticket, stockBroker, eExpireDate, transactionDate, movementType, market);
                 brokerageHistories.Add(brokerageHistory);
             }
 
@@ -124,20 +123,19 @@ namespace CtrlMoney.WorkSheet.Service
 
             for (int l = 2; l <= totalLinhas; l++)
             {
-                var product = planilha.Cell($"D{l}").Value.ToString();
+                var product = planilha.Cell($"D{l}").CellToString();
                 if (!string.IsNullOrEmpty(product))
                 {
                     var ticketCode = product.Split('-')[0].Trim();
 
-                    var inputoutput = planilha.Cell($"A{l}").Value.ToString();
-                    //DateTime.TryParse(planilha.Cell($"B{l}").Value.ToString(), out DateTime date);
-                    DateTime date = DateTime.Parse(planilha.Cell($"B{l}").Value.ToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
-                    var movementType = planilha.Cell($"C{l}").Value.ToString();
-                    var stockBroker = planilha.Cell($"E{l}").Value.ToString();
+                    var inputoutput = planilha.Cell($"A{l}").CellToString();
+                    DateTime date = DateTime.Parse(planilha.Cell($"B{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                    var movementType = planilha.Cell($"C{l}").CellToString();
+                    var stockBroker = planilha.Cell($"E{l}").CellToString();
 
-                    _ = int.TryParse(planilha.Cell($"F{l}").Value.ToString().Split(',')[0], out int quantity);
-                    _ = decimal.TryParse(planilha.Cell($"G{l}").Value.ToString().Replace('-', '0'), out decimal unitPrice);
-                    _ = decimal.TryParse(planilha.Cell($"H{l}").Value.ToString().Replace('-', '0'), out decimal transactionValue);
+                    int quantity = int.Parse(planilha.Cell($"F{l}").CellToString().Split(',')[0]);
+                    decimal unitPrice = decimal.Parse(planilha.Cell($"G{l}").CellToString().Replace('-', '0'));
+                    decimal transactionValue = decimal.Parse(planilha.Cell($"H{l}").CellToString().Replace('-', '0'));
 
                     Moviment moviment = new Moviment(inputoutput, date, movementType, ticketCode, stockBroker, quantity, unitPrice, transactionValue);
                     moviments.Add(moviment);
@@ -145,6 +143,15 @@ namespace CtrlMoney.WorkSheet.Service
             }
 
             return moviments;
+        }
+    }
+
+    public static class ConvertCustom
+    {
+        public static string CellToString(this IXLCell xLCell)
+        {
+            var cell = xLCell.Value;
+            return string.Format("{0}", cell);
         }
     }
 }
