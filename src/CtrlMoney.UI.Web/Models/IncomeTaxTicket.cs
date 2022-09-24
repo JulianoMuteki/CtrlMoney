@@ -16,5 +16,7 @@ namespace CtrlMoney.UI.Web.Models
         public string TotalYearExercise { get; set; }
         public string TotalCalendarYear { get; set; }
 
+        public int YearExercise { get; set; }
+        public int CalendarYear { get; set; }
     }
 }

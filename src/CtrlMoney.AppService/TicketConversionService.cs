@@ -21,6 +21,10 @@ namespace CtrlMoney.AppService
         {
             try
             {
+                var exists = _unitOfWork.Repository<TicketConversion>().Find(x => x.TicketInput == entity.TicketInput || x.TicketOutput == entity.TicketOutput);
+                if (exists != null)
+                    throw new Exception("Already exitis this Ticket Conversion");
+
                 var result = _unitOfWork.Repository<TicketConversion>().Add(entity);
                 _unitOfWork.CommitSync();
                 return result;
@@ -57,7 +61,19 @@ namespace CtrlMoney.AppService
 
         public ICollection<TicketConversion> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = _unitOfWork.Repository<TicketConversion>().GetAll();
+                return result;
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<TicketConversionService>("Unexpected error GetAll", nameof(this.GetAll), ex);
+            }
         }
 
         public Task<ICollection<TicketConversion>> GetAllAsync()

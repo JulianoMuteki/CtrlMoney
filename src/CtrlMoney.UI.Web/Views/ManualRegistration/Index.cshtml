@@ -59,3 +59,50 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script type="text/javascript">
+
+    function loadTableConversions() {
+        $('#tbConversions').dataTable({
+            "sAjaxSource": '/ManualRegistration/GetAjaxHandlerConversions',
+            "bProcessing": true,
+            "bServerSide": false,
+            "paginate": true,
+            "bDestroy": true,
+            "aoColumns": [
+                {
+                    "mData": "TicketInput",
+                    "bSortable": true,
+                    "defaultContent": "<i>TicketInput</i>",
+                },
+                {
+                    "mData": "TicketOutput",
+                    "bSortable": true,
+                    "defaultContent": "<i>TicketOutput</i>",
+                },
+                {
+                    "mData": "StockBroker",
+                    "bSortable": true,
+                    "defaultContent": "<i>StockBroker</i>",
+                },
+                {
+                    "mData": "Quantity",
+                    "bSortable": true,
+                    "defaultContent": "<i>Quantity</i>",
+                },
+                {
+                    "mData": "UnitPrice",
+                    "bSortable": true,
+                    "defaultContent": "<i>UnitPrice</i>",
+                },
+                {
+                    "mData": "Date",
+                    "bSortable": true,
+                    "defaultContent": "<i>Date</i>",
+                }           
+            ]
+        });
+    }
+    jQuery(document).ready(function() {
+        loadTableConversions();
+    });
+</script>

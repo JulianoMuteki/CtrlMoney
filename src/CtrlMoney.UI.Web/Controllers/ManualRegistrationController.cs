@@ -29,6 +29,18 @@ namespace CtrlMoney.UI.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public JsonResult GetAjaxHandlerConversions()
+        {
+            var conversions = _ticketConversionService.GetAll();
+           
+            return Json(new
+            {
+                aaData = conversions,
+                success = true
+            });
+        }
+
         // GET: ManualRegistrationController/Details/5
         public ActionResult Details(int id)
         {

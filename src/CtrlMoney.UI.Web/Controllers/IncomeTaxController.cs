@@ -166,7 +166,7 @@ namespace CtrlMoney.UI.Web.Controllers
                                                               TransactionType = x.TransactionType
                                                           }).ToList();
 
-            string operations = string.Join(", ", brokerageHistoriesTable.Select(operation => string.Format("{0} ({1})", operation.Quantity, operation.Price)));
+            string operations = string.Join(", ", brokerageHistoriesTable.Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price)));
             string totalYearExercise = brokerageHistoriesTable.Where(x => x.TransactionDate.Year < year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
             string totalCalendarYear = brokerageHistoriesTable.Where(x => x.TransactionDate.Year <= year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
 
@@ -177,11 +177,13 @@ namespace CtrlMoney.UI.Web.Controllers
                 ResumeBrokerageHistories = allBrokerageHistoriesByYear,
                 BrokerageHistoryVMs = brokerageHistoryVMs,
                 Quantity = brokerageHistoriesTable.Sum(x => x.Quantity),
-                TotalValue = brokerageHistoriesTable.Sum(x => x.TotalPrice).ToString(CultureInfo.CreateSpecificCulture("pt-BR")),
+                TotalValue = brokerageHistoriesTable.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 Bookkeeping = string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping).Distinct()),
-                Operation= operations,
+                Operation = operations,
                 TotalCalendarYear = totalCalendarYear,
-                TotalYearExercise = totalYearExercise
+                TotalYearExercise = totalYearExercise,
+                YearExercise = year,
+                CalendarYear = year - 1
             };
 
             return PartialView("_PartialViewStocks", incomeTaxTicket);
