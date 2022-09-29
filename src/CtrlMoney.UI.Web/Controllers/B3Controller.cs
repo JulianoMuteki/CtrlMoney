@@ -229,6 +229,7 @@ namespace CtrlMoney.UI.Web.Controllers
             {
                 var movement = _movementService.GetById(model.TicketId);
                 movement.UnitPrice = model.UnitPrice;
+                movement.Quantity = model.Quantity;
                 movement.TransactionValue = movement.Quantity * movement.UnitPrice;
                 _movementService.Update(movement);
             }

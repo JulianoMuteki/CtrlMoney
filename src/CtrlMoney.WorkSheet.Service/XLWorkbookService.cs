@@ -30,8 +30,8 @@ namespace CtrlMoney.WorkSheet.Service
                     DateTime paymentDate = DateTime.Parse(sheet.Cell($"B{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
                     var eventType = sheet.Cell($"C{l}").CellToString();
                     var stockBroker = sheet.Cell($"D{l}").CellToString();
-                    int quantity = int.Parse(sheet.Cell($"E{l}").CellToString());
-                    decimal unitPrice = decimal.Parse(sheet.Cell($"F{l}").CellToString());
+                    int quantity = int.Parse(sheet.Cell($"E{l}").CellToString().Split(',')[0]);
+                    decimal unitPrice = decimal.Parse(sheet.Cell($"F{l}").CellToString().Replace('-', '0'));
                     decimal netValue = decimal.Parse(sheet.Cell($"G{l}").CellToString());
 
                     earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, unitPrice, netValue));
@@ -67,8 +67,8 @@ namespace CtrlMoney.WorkSheet.Service
                     var isinCode = sheet.Cell($"E{l}").CellToString();
                     var type = sheet.Cell($"F{l}").CellToString();
                     var bookkeeping = sheet.Cell($"G{l}").CellToString();
-                    int quantity = int.Parse(sheet.Cell($"H{l}").CellToString());
-                    int quantityAvailable = int.Parse(sheet.Cell($"I{l}").CellToString());
+                    int quantity = int.Parse(sheet.Cell($"H{l}").CellToString().Replace('-', '0').Split(',')[0]);
+                    int quantityAvailable = int.Parse(sheet.Cell($"I{l}").CellToString().Replace('-', '0'));
                     var strQuantityUnavailable = sheet.Cell($"J{l}").CellToString();
                     var quantityUnavailable = string.IsNullOrEmpty(strQuantityUnavailable) || strQuantityUnavailable == "-" ? 0 : int.Parse(strQuantityUnavailable);
                     var reason = sheet.Cell($"K{l}").CellToString();
@@ -101,7 +101,7 @@ namespace CtrlMoney.WorkSheet.Service
                 var stockBroker = planilha.Cell($"E{l}").CellToString();
                 var ticket = planilha.Cell($"F{l}").CellToString();
 
-                int quantity = int.Parse(planilha.Cell($"G{l}").CellToString());
+                int quantity = int.Parse(planilha.Cell($"G{l}").CellToString().Split(',')[0]);
                 decimal price = decimal.Parse(planilha.Cell($"H{l}").CellToString());
                 decimal totalPrice = decimal.Parse(planilha.Cell($"I{l}").CellToString());
 

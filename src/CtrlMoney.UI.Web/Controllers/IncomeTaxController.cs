@@ -130,33 +130,33 @@ namespace CtrlMoney.UI.Web.Controllers
 
             var resumeDataByYear = brokerageHistories.Where(x => x.TransactionType != "Bonificação em Ativos"
                                                       && x.TransactionType != "Leilão de Fração").ToList();
-            var brokerageHistoriesTable = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração").OrderBy(x => x.TransactionDate).ToList();
 
+            var resumeTransactionsAndEarningsByYear = resumeDataByYear.GroupBy(x => x.TransactionDate.Year)
+                                                    .Select(g => new ResumeBrokerageHistories
+                                                    {
+                                                        Year = g.Key,
+                                                        TransactionsYears = g.GroupBy(y => y.TransactionType)
+                                                                            .Select(t => new TransactionYear
+                                                                            {
+                                                                                TransactionType = t.Key,
+                                                                                UnitPrice = t.Select(z => z.Price).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                                                TotalValue = t.Sum(z => z.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                                                                                Quantity = t.Sum(z => z.Quantity)
+                                                                            }).ToList(),
+                                                        EarningsReport = earnings.Where(e => e.PaymentDate.Year == g.Key)
+                                                                            .GroupBy(e => e.EventType)
+                                                                            .Select(e => new EarningReport
+                                                                            {
+                                                                                EventType = e.Key,
+                                                                                Quantity = e.Sum(s => s.Quantity),
+                                                                                TotalValue = e.Sum(s => s.NetValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
+                                                                            }).ToList()
+                                                    }).ToList();
 
-            var allBrokerageHistoriesByYear = resumeDataByYear.GroupBy(x => x.TransactionDate.Year)
-                                                                .Select(g => new ResumeBrokerageHistories
-                                                                {
-                                                                    Year = g.Key,
-                                                                    TransactionsYears = g.GroupBy(y => y.TransactionType)
-                                                                                        .Select(t => new TransactionYear
-                                                                                        {
-                                                                                            TransactionType = t.Key,
-                                                                                            UnitPrice = t.Select(z => z.Price).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                                                                                            TotalValue = t.Sum(z => z.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                                                                                            Quantity = t.Sum(z => z.Quantity)
-                                                                                        }).ToList(),
-                                                                    EarningsReport = earnings.Where(e => e.PaymentDate.Year == g.Key)
-                                                                                        .GroupBy(e => e.EventType)
-                                                                                        .Select(e => new EarningReport
-                                                                                        {
-                                                                                            EventType = e.Key,
-                                                                                            Quantity = e.Sum(s => s.Quantity),
-                                                                                            TotalValue = e.Sum(s => s.NetValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
-                                                                                        }).ToList()
-                                                                }).ToList();
+            #region Input data
+            var brokerageHistoriesTableInput = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração" && x.TransactionType != "Venda").OrderBy(x => x.TransactionDate).ToList();
 
-            var brokerageHistoryVMs = brokerageHistoriesTable
-                                                          .Select(x => new BrokerageHistoryVM()
+            var brokerageHistoryBuy = brokerageHistoriesTableInput.Select(x => new BrokerageHistoryVM()
                                                           {
                                                               TicketCode = x.TicketCode,
                                                               Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
@@ -166,22 +166,63 @@ namespace CtrlMoney.UI.Web.Controllers
                                                               TransactionType = x.TransactionType
                                                           }).ToList();
 
-            string operations = string.Join(", ", brokerageHistoriesTable.Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price)));
-            string totalYearExercise = brokerageHistoriesTable.Where(x => x.TransactionDate.Year < year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
-            string totalCalendarYear = brokerageHistoriesTable.Where(x => x.TransactionDate.Year <= year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+            string operationsInput = string.Join(", ", brokerageHistoriesTableInput.Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price)));
+            string totalCalendarYearInput = brokerageHistoriesTableInput.Where(x => x.TransactionDate.Year < year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+            string totalYearExerciseInput = brokerageHistoriesTableInput.Where(x => x.TransactionDate.Year <= year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            DataOperation dataOperationInput = new()
+            {
+                BrokeragesHistories = brokerageHistoryBuy,
+                Quantity = brokerageHistoriesTableInput.Sum(x => x.Quantity),
+                TotalValue = brokerageHistoriesTableInput.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                Operation = operationsInput,
+                TotalCalendarYear = totalCalendarYearInput,
+                TotalYearExercise = totalYearExerciseInput
+            };
+            #endregion
+
+            #region Output data
+            var brokerageHistoriesTableOutput = brokerageHistories.Where(x => x.TransactionType != "Leilão de Fração" && x.TransactionType == "Venda").OrderBy(x => x.TransactionDate).ToList();
+
+            var brokerageHistorySell = brokerageHistoriesTableOutput.Select(x => new BrokerageHistoryVM()
+            {
+                TicketCode = x.TicketCode,
+                Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                Quantity = x.Quantity,
+                TotalPrice = x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                TransactionDate = x.TransactionDate,
+                TransactionType = x.TransactionType
+            }).ToList();
+
+            string operationsOutput = string.Join(", ", brokerageHistoriesTableOutput.Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price)));
+            string totalCalendarYearOutput = brokerageHistoriesTableOutput.Where(x => x.TransactionDate.Year < year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+            string totalYearExerciseOutput = brokerageHistoriesTableOutput.Where(x => x.TransactionDate.Year <= year).Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            DataOperation dataOperationOutput = new()
+            {
+                BrokeragesHistories = brokerageHistorySell,
+                Quantity = brokerageHistoriesTableOutput.Sum(x => x.Quantity),
+                TotalValue = brokerageHistoriesTableOutput.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                Operation = operationsOutput,
+                TotalCalendarYear = totalCalendarYearOutput,
+                TotalYearExercise = totalYearExerciseOutput
+            };
+            #endregion
 
             var incomeTaxTicket = new IncomeTaxTicket()
             {
                 TicketCode = ticketCode,
                 Conversion = conversion != null ? $"{conversion.TicketOutput} -> {conversion.TicketInput}" : string.Empty,
-                ResumeBrokerageHistories = allBrokerageHistoriesByYear,
-                BrokerageHistoryVMs = brokerageHistoryVMs,
-                Quantity = brokerageHistoriesTable.Sum(x => x.Quantity),
-                TotalValue = brokerageHistoriesTable.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                ResumeBrokerageHistories = resumeTransactionsAndEarningsByYear,
                 Bookkeeping = string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping).Distinct()),
-                Operation = operations,
-                TotalCalendarYear = totalCalendarYear,
-                TotalYearExercise = totalYearExercise,
+                //BrokerageHistoryVMs = brokerageHistoryBuy,
+                //Quantity = brokerageHistoriesTableInput.Sum(x => x.Quantity),
+                //TotalValue = brokerageHistoriesTableInput.Sum(x => x.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                //Operation = operations,
+                //TotalCalendarYear = totalCalendarYearInput,
+                //TotalYearExercise = totalYearExerciseInput,
+                DataOperationInput = dataOperationInput,
+                DataOperationOutput = dataOperationOutput,
                 YearExercise = year,
                 CalendarYear = year - 1
             };
