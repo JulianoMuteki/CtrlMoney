@@ -58,11 +58,11 @@
                 </tbody>
             </table>
         </div>
-        <!-- Buy -->
+        <!-- Movements -->
         <div class="card-header">
             <h3 class="card-title">
                 <i class="fas fa-money-check-alt"></i>
-                Compra
+                Movimentações
             </h3>
         </div>
         <table class="table table-bordered">
@@ -114,66 +114,6 @@
                 <div class="col-12 col-sm-3">
                     <h5>Ano EXERCÍCIO @Model.YearExercise</h5>
                     <p>@Model.DataOperationInput.TotalYearExercise</p>
-                </div>
-            </div>
-
-        </div>
-         <!-- Sell -->
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-money-check-alt"></i>
-                Venda
-            </h3>
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>TicketCode</th>
-                    <th>Data</th>
-                    <th>Transaction type</th>
-                    <th>Quantidade</th>
-                    <th>Valor unit</th>
-                    <th>Valor total</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.DataOperationOutput.BrokeragesHistories)
-                {
-                    <tr>
-                        <td>@item.TicketCode</td>
-                        <td>@item.TransactionDate</td>
-                        <td>@item.TransactionType</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.Price</td>
-                        <td>@item.TotalPrice</td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th></th>
-                    <th></th>
-                    <th>@Model.DataOperationOutput.Quantity</th>
-                    <th></th>
-                    <th>@Model.DataOperationOutput.TotalValue</th>
-                </tr>
-            </tfoot>
-        </table>
-        <div class="callout callout-warning">
-            <div class="row">
-                <div class="col-12 col-sm-6">
-                    <h5>@Model.TicketCode - @Model.DataOperationOutput.Quantity units</h5>
-                    <p>@Model.DataOperationOutput.Operation</p>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <h5>ANO-CALENDÁRIO @Model.CalendarYear</h5>
-                    <p>@Model.DataOperationOutput.TotalCalendarYear</p>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <h5>Ano EXERCÍCIO @Model.YearExercise</h5>
-                    <p>@Model.DataOperationOutput.TotalYearExercise</p>
                 </div>
             </div>
 
