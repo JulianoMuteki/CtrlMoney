@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Brokerages Histories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Advanced Form</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Brokerages Histories</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Your historical</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="tbBrokeragesHistories" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>TransactionDate</th>
+                                        <th>TransactionType</th>
+                                        <th>Categoria</th>
+                                        <th>StockBroker</th>
+                                        <th>TicketCode</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>TotalPrice</th>
+                                        <th>Brokerage</th>
+                                        <th>Fees</th>
+                                        <th>Taxes</th>
+                                        <th>IRRF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<script type="text/javascript">
+
+    function loadTableBrokeragesHistories() {
+        $('#tbBrokeragesHistories').dataTable({
+            "sAjaxSource": '/StatusInvest/GetAjaxHandlerBrokeragesHistories',
+            "bProcessing": true,
+            "bServerSide": false,
+            "paginate": true,
+            "bDestroy": true,
+            "aoColumns": [
+                {
+                    "mData": "TransactionDate",
+                    "bSortable": true,
+                    "defaultContent": "<i>TransactionDate</i>",
+                },
+                {
+                    "mData": "TransactionType",
+                    "bSortable": true,
+                    "defaultContent": "<i>TransactionType</i>",
+                },
+                {
+                    "mData": "Category",
+                    "bSortable": true,
+                    "defaultContent": "<i>Category</i>",
+                },
+                {
+                    "mData": "StockBroker",
+                    "bSortable": true,
+                    "defaultContent": "<i>StockBroker</i>",
+                },
+                {
+                    "mData": "TicketCode",
+                    "bSortable": true,
+                    "defaultContent": "<i>TicketCode</i>",
+                },
+                {
+                    "mData": "Quantity",
+                    "bSortable": true,
+                    "defaultContent": "<i>Quantity</i>",
+                },
+                {
+                    "mData": "Price",
+                    "bSortable": false,
+                    "defaultContent": "<i>Price</i>",
+                },
+                {
+                    "mData": "TotalPrice",
+                    "bSortable": false,
+                    "defaultContent": "<i>TotalPrice</i>",
+                },
+                {
+                    "mData": "Brokerage",
+                    "bSortable": false,
+                    "defaultContent": "<i>TotalPrice</i>",
+                },
+                {
+                    "mData": "Fees",
+                    "bSortable": false,
+                    "defaultContent": "<i>TotalPrice</i>",
+                },
+                {
+                    "mData": "Taxes",
+                    "bSortable": false,
+                    "defaultContent": "<i>TotalPrice</i>",
+                },
+                {
+                    "mData": "IRRF",
+                    "bSortable": false,
+                    "defaultContent": "<i>TotalPrice</i>",
+                }
+            ]
+        });
+    }
+    jQuery(document).ready(function() {
+        loadTableBrokeragesHistories();
+    });
+</script>

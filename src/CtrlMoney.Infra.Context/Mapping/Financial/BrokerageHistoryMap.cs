@@ -46,6 +46,16 @@ namespace CtrlMoney.Infra.Context.Mapping.Financial
             builder.Property(e => e.TransactionDate)                   
                     .IsRequired();
 
+            builder.Property(e => e.Category)
+                    .IsRequired();
+            builder.Property(e => e.Brokerage)
+                    .IsRequired();
+            builder.Property(e => e.Fees)
+                    .IsRequired();
+            builder.Property(e => e.Taxes)
+                    .IsRequired();
+            builder.Property(e => e.IRRF)
+                    .IsRequired();
+        }
     }
-}
 }

@@ -113,6 +113,43 @@ namespace CtrlMoney.WorkSheet.Service
             return brokerageHistories;
         }
 
+        /// <summary>
+        /// Import StatusInvest Sheet Transactions
+        /// </summary>
+        /// <param name="fullfileName"></param>
+        /// <returns></returns>
+        public IList<BrokerageHistory> ImportSITransactionsSheet(string fullfileName)
+        {
+            var xls = new XLWorkbook(fullfileName);
+            var planilha = xls.Worksheets.First(w => w.Name == "Carteira");
+
+            var totalLinhas = planilha.Rows().Count();
+            IList<BrokerageHistory> brokerageHistories = new List<BrokerageHistory>(totalLinhas);
+
+            for (int l = 2; l <= totalLinhas; l++)
+            {
+                if (!string.IsNullOrEmpty(planilha.Cell($"A{l}").CellToString()))
+                {
+                    DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                    var category = planilha.Cell($"B{l}").CellToString();
+                    var ticket = planilha.Cell($"C{l}").CellToString();
+                    var transactionType = planilha.Cell($"D{l}").CellToString();
+                    int quantity = int.Parse(planilha.Cell($"E{l}").CellToString().Split(',')[0]);
+                    decimal price = decimal.Parse(planilha.Cell($"F{l}").CellToString());
+                    var stockBroker = planilha.Cell($"G{l}").CellToString();
+                    decimal brokerage = decimal.Parse(planilha.Cell($"H{l}").CellToString());
+                    decimal fees = decimal.Parse(planilha.Cell($"I{l}").CellToString());
+                    decimal taxes = decimal.Parse(planilha.Cell($"J{l}").CellToString());
+                    decimal irrf = decimal.Parse(planilha.Cell($"K{l}").CellToString());
+
+                    BrokerageHistory brokerageHistory = new(transactionDate, transactionType, stockBroker, ticket, quantity, price, category, brokerage, fees, taxes, irrf);
+                    brokerageHistories.Add(brokerageHistory);
+                }
+            }
+
+            return brokerageHistories;
+        }
+
         public IList<Moviment> ImportMovimentsSheet(string fullfileName)
         {
             var xls = new XLWorkbook(fullfileName);
