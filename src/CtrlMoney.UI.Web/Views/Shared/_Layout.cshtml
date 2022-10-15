@@ -247,15 +247,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    Income Tax
+                                    Status Invest
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="@Url.Action("Index", "IncomeTax")" class="nav-link">
+                                    <a href="@Url.Action("IncomeTaxReport", "StatusInvest")" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Report IRRF</p>
+                                        <p>IncomeTaxReport</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("BrokeragesHistories", "StatusInvest")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Brokerages Histories</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("UploadTransaction", "StatusInvest")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Upload Transaction</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("EarningIndex", "StatusInvest")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Earnings</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("UploadEarning", "StatusInvest")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Upload Earnings</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
