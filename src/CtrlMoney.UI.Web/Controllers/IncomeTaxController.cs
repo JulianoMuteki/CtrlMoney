@@ -121,8 +121,8 @@ namespace CtrlMoney.UI.Web.Controllers
                         TicketCode = item.TicketCode,
                         PaymentDate = item.Date,
                         EventType = item.MovimentType,
-                        NetValue = item.TransactionValue,
-                        UnitPrice = item.UnitPrice,
+                        TotalPrice = item.TransactionValue,
+                        Price = item.UnitPrice,
                         Quantity = item.Quantity
                     });
                 }
@@ -149,7 +149,7 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                             {
                                                                                 EventType = e.Key,
                                                                                 Quantity = e.Sum(s => s.Quantity),
-                                                                                TotalValue = e.Sum(s => s.NetValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
+                                                                                TotalValue = e.Sum(s => s.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
                                                                             }).ToList()
                                                     }).ToList();
 

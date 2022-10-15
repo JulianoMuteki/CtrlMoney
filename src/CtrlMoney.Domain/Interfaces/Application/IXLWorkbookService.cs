@@ -12,6 +12,7 @@ namespace CtrlMoney.Domain.Interfaces.Application
         IList<Moviment> ImportMovimentsSheet(string fullfileName);
 
         IList<BrokerageHistory> ImportSITransactionsSheet(string fullfileName);
-        
+        IList<Earning> ImportSIEarningsSheet(string fullfileName);
+
     }
 }

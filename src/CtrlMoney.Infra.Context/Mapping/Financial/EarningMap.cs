@@ -42,12 +42,22 @@ namespace CtrlMoney.Infra.Context.Mapping.Financial
             builder.Property(e => e.Quantity)
                     .IsRequired();
 
-            builder.Property(e => e.UnitPrice)
+            builder.Property(e => e.Price)
                     .HasColumnType("decimal(10,2)")
                     .IsRequired();
 
-            builder.Property(e => e.NetValue)
+            builder.Property(e => e.TotalPrice)
                     .HasColumnType("decimal(10,2)")
+                    .IsRequired();
+
+            builder.Property(e => e.TotalNetAmount)
+                    .HasColumnType("decimal(10,2)")
+                    .IsRequired();
+
+            builder.Property(e => e.Category)
+                    .IsRequired();
+
+            builder.Property(e => e.WithDate)
                     .IsRequired();
         }
     }

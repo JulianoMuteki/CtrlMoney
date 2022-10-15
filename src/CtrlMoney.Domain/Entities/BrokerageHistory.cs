@@ -96,9 +96,11 @@ namespace CtrlMoney.Domain.Entities
             switch (transactionType)
             {
                 case "C":
-                    return "Compra";
+                    transactionType = "Compra";
+                    break;
                 case "V":
-                    return "Venda";
+                    transactionType = "Venda";
+                    break;
                 default:
                     break;                    
             }

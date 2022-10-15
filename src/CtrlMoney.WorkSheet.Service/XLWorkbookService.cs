@@ -150,6 +150,38 @@ namespace CtrlMoney.WorkSheet.Service
             return brokerageHistories;
         }
 
+        public IList<Earning> ImportSIEarningsSheet(string fullfileName)
+        {
+            var xls = new XLWorkbook(fullfileName);
+            var sheet = xls.Worksheets.First(w => w.Name == "Proventos");
+
+            var totalRows = sheet.Rows().Count();
+            IList<Earning> earnings = new List<Earning>(totalRows);
+
+            for (int l = 2; l <= totalRows; l++)
+            {
+                var category = sheet.Cell($"A{l}").CellToString();
+                if (!string.IsNullOrEmpty(category))
+                {
+                    var ticketCode = sheet.Cell($"B{l}").CellToString();
+                    var stockBroker = sheet.Cell($"C{l}").CellToString();
+                    var eventType = sheet.Cell($"D{l}").CellToString();
+                    
+                    int quantity = int.Parse(sheet.Cell($"E{l}").CellToString().Split(',')[0]);
+                    decimal price = decimal.Parse(sheet.Cell($"F{l}").CellToString().Replace("R$ ", ""));
+                    decimal totalPrice = decimal.Parse(sheet.Cell($"G{l}").CellToString().Replace("R$ ", ""));
+                    decimal totalNetAmount = decimal.Parse(sheet.Cell($"H{l}").CellToString().Replace("R$ ", ""));
+                    DateTime withDate = DateTime.Parse(sheet.Cell($"I{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                    DateTime paymentDate = !sheet.Cell($"J{l}").CellToString().Contains("-") ? DateTime.Parse(sheet.Cell($"J{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"))
+                                                                                        : DateTime.MinValue;
+                    
+                    earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, price, totalPrice, totalNetAmount, category, withDate));
+                }
+            }
+
+            return earnings;
+        }
+
         public IList<Moviment> ImportMovimentsSheet(string fullfileName)
         {
             var xls = new XLWorkbook(fullfileName);

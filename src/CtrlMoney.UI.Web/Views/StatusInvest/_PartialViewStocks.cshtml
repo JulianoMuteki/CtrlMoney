@@ -1,0 +1,124 @@
+﻿@model CtrlMoney.UI.Web.Models.IncomeTaxTicket
+
+<div class="col-md-8">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-money-check-alt"></i>
+                @Model.TicketCode - Escriturador: @Model.Bookkeeping
+            </h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body p-0">
+            @if (!string.IsNullOrEmpty(Model.Conversion))
+            {
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> Alert Ticket change code!</h5>
+                    @Model.Conversion
+                </div>
+            }
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="font-weight-bold">
+                                <i class="fa-regular fa-calendar-days"></i> Year
+                            </span>
+                        </th>
+                        <th>Operação</th>
+                        <th>Proventos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ResumeBrokerageHistories)
+                    {
+                        <tr>
+                            <td>@item.Year</td>
+                            <td>
+                                @foreach (var type in item.TransactionsYears)
+                                {
+                                     <div class="d-flex flex-column text-left">
+                                        <span><strong class="text-danger mr-1"><i class="fas fa-arrow-down"></i> @type.TransactionType: </strong> @string.Format("{0} - {1}",type.Quantity, type.UnitPrice)</span>
+                                        <span class="text-muted"><b>Total: </b> @type.TotalValue</span>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                @foreach (var earning in item.EarningsReport)
+                                {
+                                  <div class="d-flex flex-column text-left">
+                                        <span class="text-muted"><b>@earning.EventType</b> @earning.TotalValue</span>
+                                    </div>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- Movements -->
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-money-check-alt"></i>
+                Movimentações
+            </h3>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>TicketCode</th>
+                    <th>Data</th>
+                    <th>Transaction type</th>
+                    <th>Quantidade</th>
+                    <th>Valor unit</th>
+                    <th>Valor total</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DataOperationInput.BrokeragesHistories)
+                {
+                    <tr>
+                        <td>@item.TicketCode</td>
+                        <td>@item.TransactionDate</td>
+                        <td>@item.TransactionType</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price</td>
+                        <td>@item.TotalPrice</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th></th>
+                    <th></th>
+                    <th>@Model.DataOperationInput.Quantity</th>
+                    <th></th>
+                    <th>@Model.DataOperationInput.TotalValue</th>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="callout callout-success">
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <h5>@Model.TicketCode - @Model.DataOperationInput.Quantity units</h5>
+                    <p>@Model.DataOperationInput.Operation</p>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <h5>ANO-CALENDÁRIO @Model.CalendarYear</h5>
+                    <p>@Model.DataOperationInput.TotalCalendarYear</p>
+                </div>
+                <div class="col-12 col-sm-3">
+                    <h5>Ano EXERCÍCIO @Model.YearExercise</h5>
+                    <p>@Model.DataOperationInput.TotalYearExercise</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.card -->
+</div>
+<!-- /.col -->
