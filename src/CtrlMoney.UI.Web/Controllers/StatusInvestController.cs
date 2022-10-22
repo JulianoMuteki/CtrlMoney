@@ -1,4 +1,6 @@
-﻿using CtrlMoney.Domain.Interfaces.Application;
+﻿using CtrlMoney.AppService;
+using CtrlMoney.Domain.Entities;
+using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Extensions;
 using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,16 +10,23 @@ using System.Linq;
 namespace CtrlMoney.UI.Web.Controllers
 {
     public class StatusInvestController : Controller
-    {
-        private readonly IXLWorkbookService _xLWorkbookService;
+    {      
         private readonly IBrokerageHistoryService _brokerageHistoryService;
+        private readonly ITicketConversionService _ticketConversionService;
+        private readonly IXLWorkbookService _xLWorkbookService;
         private readonly IEarningService _earningService;
-        public StatusInvestController(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService,
-                            IEarningService earningService)
-        {
-            _xLWorkbookService = xLWorkbookService;
+        private readonly IMovimentService _movementService;
+        public StatusInvestController(IXLWorkbookService xLWorkbookService, 
+                                      IBrokerageHistoryService brokerageHistoryService,
+                                      IEarningService earningService,
+                                      ITicketConversionService ticketConversionService,
+                                      IMovimentService movementService)
+        {            
+            _ticketConversionService = ticketConversionService;
             _brokerageHistoryService = brokerageHistoryService;
+            _xLWorkbookService = xLWorkbookService;
             _earningService = earningService;
+            _movementService = movementService;
         }
 
         public IActionResult Index()
@@ -159,7 +168,35 @@ namespace CtrlMoney.UI.Web.Controllers
 
             var earnings = _earningService.GetByTicketCodeAndBaseYear(ticketCode, year); //TODO: Check filter
 
-            var resumeDataByYear = brokerageHistories; //.Where(x => !x.TransactionType.Contains("Conversão")).ToList();
+            var conversion = _ticketConversionService.GetByTicketInput(ticketCode);
+
+            if (conversion != null)
+            {
+                string ticketOld = conversion.TicketInput == ticketCode ? conversion.TicketOutput : conversion.TicketInput;
+
+                var brokerageHistoriesConversion = _brokerageHistoryService.GetByTicketCode(ticketOld, year);
+                if (brokerageHistoriesConversion.Count > 0)
+                    brokerageHistories = brokerageHistories.Concat(brokerageHistoriesConversion).ToList();
+            }
+            var movements = _movementService.GetByStartTicketAndYears(ticketCode, year)
+                                            .Where(x => x.MovimentType == "Leilão de Fração" && x.InputOutput == "Credito").ToList();
+            if (movements.Count > 0)
+            {
+                foreach (var item in movements)
+                {
+                    earnings.Add(new Earning()
+                    {
+                        TicketCode = item.TicketCode,
+                        PaymentDate = item.Date,
+                        EventType = item.MovimentType,
+                        TotalPrice = item.TransactionValue,
+                        Price = item.UnitPrice,
+                        Quantity = item.Quantity
+                    });
+                }
+            }
+
+            var resumeDataByYear = brokerageHistories;
 
             var resumeTransactionsAndEarningsByYear = resumeDataByYear.GroupBy(x => x.TransactionDate.Year)
                                                     .Select(g => new ResumeBrokerageHistories
@@ -229,7 +266,7 @@ namespace CtrlMoney.UI.Web.Controllers
             var incomeTaxTicket = new IncomeTaxTicket()
             {
                 TicketCode = ticketCode,
-                Conversion = ticketCode, //conversion != null ? $"{conversion.TicketOutput} -> {conversion.TicketInput}" : string.Empty,
+                Conversion = conversion != null ? $"{conversion.TicketOutput} -> {conversion.TicketInput}" : string.Empty,
                 ResumeBrokerageHistories = resumeTransactionsAndEarningsByYear,
                 Bookkeeping = "ESCRITURADOR NÃO ENCONTRADO", //string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping).Distinct()),
                 DataOperationInput = dataOperationInput,
