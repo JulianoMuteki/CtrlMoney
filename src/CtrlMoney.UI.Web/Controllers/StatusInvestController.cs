@@ -126,15 +126,30 @@ namespace CtrlMoney.UI.Web.Controllers
             int lastYear = baseYear - 1;
             var positions = _brokerageHistoryService.GetAll().ToList();                           
 
+           var conversions = _ticketConversionService.GetAll();
+
+            if (conversions.Count > 0)
+            {
+                foreach (var conversion in conversions)
+                {
+                    var ticket = positions.Where(x => x.TicketCode == conversion.TicketInput || x.TicketCode == conversion.TicketOutput).FirstOrDefault();
+                    string ticketOld = conversion.TicketInput == ticket.TicketCode ? conversion.TicketOutput : conversion.TicketInput;
+
+                    var brokerageHistoriesConversion = _brokerageHistoryService.GetByTicketCode(ticketOld, baseYear);
+                    if (brokerageHistoriesConversion.Count > 0)
+                        positions = positions.Concat(brokerageHistoriesConversion).ToList();
+                }
+            }
+
             var incomesTaxesYear = positions.GroupBy(x => new { x.TicketCode, x.TransactionDate.Year })
-                           .Select(g => new
-                           {
-                               TicketCode = g.Key.TicketCode,
-                               Year = g.Key.Year,
-                               TotalValue = g.Where(z => z.TransactionDate.Year == g.Key.Year).Sum(s=>s.TotalPrice),
-                               Quantity = g.Where(z => z.TransactionDate.Year == g.Key.Year).Sum(s => s.Quantity)
-                           }
-                           ).ToList();
+               .Select(g => new
+               {
+                   TicketCode = g.Key.TicketCode,
+                   Year = g.Key.Year,
+                   TotalValue = g.Where(z => z.TransactionDate.Year == g.Key.Year).Sum(s => s.TotalPrice),
+                   Quantity = g.Where(z => z.TransactionDate.Year == g.Key.Year).Sum(s => s.Quantity)
+               }
+               ).ToList();
 
             string[] finalTickes = new string[] { "12", "13" };
 
@@ -167,7 +182,6 @@ namespace CtrlMoney.UI.Web.Controllers
             var brokerageHistories = _brokerageHistoryService.GetByTicketCode(ticketCode, year).OrderBy(x => x.TransactionDate).ToList(); // Filtrar ano
 
             var earnings = _earningService.GetByTicketCodeAndBaseYear(ticketCode, year); //TODO: Check filter
-
             var conversion = _ticketConversionService.GetByTicketInput(ticketCode);
 
             if (conversion != null)

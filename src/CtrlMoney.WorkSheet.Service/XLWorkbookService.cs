@@ -128,7 +128,7 @@ namespace CtrlMoney.WorkSheet.Service
 
             for (int l = 2; l <= totalLinhas; l++)
             {
-                if (!string.IsNullOrEmpty(planilha.Cell($"A{l}").CellToString()))
+                if (!string.IsNullOrEmpty(planilha.Cell($"C{l}").CellToString()))
                 {
                     DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
                     var category = planilha.Cell($"B{l}").CellToString();
