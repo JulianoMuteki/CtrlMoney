@@ -77,6 +77,24 @@ namespace CtrlMoney.AppService
             }
         }
 
+        public ICollection<BrokerageHistory> GetByCategory(string category)
+        {
+            try
+            {
+                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().FindBy(x=>x.Category == category);
+
+                return brokerageHistories.ToList();
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<BrokerageHistoryService>("Unexpected error GetByCategory", nameof(this.GetByCategory), ex);
+            }
+        }
+
         public Task<ICollection<BrokerageHistory>> GetAllAsync()
         {
             throw new NotImplementedException();

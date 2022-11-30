@@ -6,5 +6,6 @@ namespace CtrlMoney.Domain.Interfaces.Application
     public interface IBrokerageHistoryService : IApplicationServiceBase<BrokerageHistory>
     {
         ICollection<BrokerageHistory> GetByTicketCode(string ticketCode, int baseYear);
+        ICollection<BrokerageHistory> GetByCategory(string category);
     }
 }

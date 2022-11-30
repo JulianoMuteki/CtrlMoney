@@ -120,11 +120,11 @@ namespace CtrlMoney.UI.Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAjaxHandlerIncomesTaxes(string year)
+        public JsonResult GetAjaxHandlerIncomesTaxes(string year, string category)
         {
             int baseYear = int.Parse(year);
             int lastYear = baseYear - 1;
-            var positions = _brokerageHistoryService.GetAll().ToList();                           
+            var positions = _brokerageHistoryService.GetByCategory(category);                          
 
            var conversions = _ticketConversionService.GetAll();
 
@@ -133,11 +133,14 @@ namespace CtrlMoney.UI.Web.Controllers
                 foreach (var conversion in conversions)
                 {
                     var ticket = positions.Where(x => x.TicketCode == conversion.TicketInput || x.TicketCode == conversion.TicketOutput).FirstOrDefault();
-                    string ticketOld = conversion.TicketInput == ticket.TicketCode ? conversion.TicketOutput : conversion.TicketInput;
+                    if (ticket != null)
+                    {
+                        string ticketOld = conversion.TicketInput == ticket.TicketCode ? conversion.TicketOutput : conversion.TicketInput;
 
-                    var brokerageHistoriesConversion = _brokerageHistoryService.GetByTicketCode(ticketOld, baseYear);
-                    if (brokerageHistoriesConversion.Count > 0)
-                        positions = positions.Concat(brokerageHistoriesConversion).ToList();
+                        var brokerageHistoriesConversion = _brokerageHistoryService.GetByTicketCode(ticketOld, baseYear);
+                        if (brokerageHistoriesConversion.Count > 0)
+                            positions = positions.Concat(brokerageHistoriesConversion).ToList();
+                    }
                 }
             }
 

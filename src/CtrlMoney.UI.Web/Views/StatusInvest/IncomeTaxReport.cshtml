@@ -37,6 +37,21 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Categoria</label>
+                                        <select id="categoryList" class="form-control select2" style="width: 100%;">
+                                            <option selected="selected">Ações</option>
+                                            <option>Fundos imobiliários</option>
+                                            <option>ETF</option>                                           
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                                <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Ano-calendário</label>
                                         <select id="yearsList" class="form-control select2" style="width: 100%;">
                                             <option selected="selected">2022</option>
@@ -110,8 +125,8 @@
         return "<div></div>";
     }
 
-    function loadTableIncomesTaxes(year) {
-        var url = '@Url.Content("~/StatusInvest/GetAjaxHandlerIncomesTaxes")?year=' + year;
+    function loadTableIncomesTaxes(year, category) {
+        var url = '@Url.Content("~/StatusInvest/GetAjaxHandlerIncomesTaxes")?year=' + year + '&category=' + category;
 
         table = $('#tbIncomesTaxes').DataTable({
             "sAjaxSource": url,
@@ -191,11 +206,14 @@
             }
         });
 
-        loadTableIncomesTaxes($('option:selected', $("#yearsList")).text());
+        loadTableIncomesTaxes($('option:selected', $("#yearsList")).text(), $('option:selected', $("#categoryList")).text());
 
         $("#yearsList").change(function() {          
-            loadTableIncomesTaxes($('option:selected', this).text());
+            loadTableIncomesTaxes($('option:selected', this).text(), $('option:selected', $("#categoryList")).text());
         });
-
+        
+        $("#categoryList").change(function () {
+            loadTableIncomesTaxes($('option:selected', $("#yearsList")).text(), $('option:selected', this).text());
+        });
     });
 </script>
