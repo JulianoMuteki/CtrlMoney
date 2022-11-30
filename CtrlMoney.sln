@@ -55,8 +55,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.WorkSheet.Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Automation", "6 - Automation", "{19372744-317F-4CA3-A99C-1F3073911ACB}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{9B218037-2762-45E0-8396-81C4039AD8DD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,10 +97,6 @@ Global
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B218037-2762-45E0-8396-81C4039AD8DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B218037-2762-45E0-8396-81C4039AD8DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B218037-2762-45E0-8396-81C4039AD8DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B218037-2762-45E0-8396-81C4039AD8DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

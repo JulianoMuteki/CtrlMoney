@@ -3,14 +3,13 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>9b218037-2762-45e0-8396-81c4039ad8dd</ProjectGuid>
+    <ProjectGuid>f04b2621-49c5-460e-863f-6323356596d2</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>ctrlmoney.ui.web</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include=".env.pass.dev.ctrlmoney" />
-    <None Include="docker-compose.dev.yml">
+    <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />

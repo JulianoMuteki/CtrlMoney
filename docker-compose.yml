@@ -1,28 +1,8 @@
 version: '3.4'
 
 services:
-  ctrl-money-app:
-    image: ctrl-money:latest
-    container_name: "ctrlmoney-app-${ENVIRONMENT}"    
+  ctrlmoney.ui.web:
+    image: ${DOCKER_REGISTRY-}ctrlmoneyuiweb
     build:
       context: .
       dockerfile: src/CtrlMoney.UI.Web/Dockerfile
-    links:
-      - ctrlmoney-db
-    depends_on:
-      ctrlmoney-db:
-        condition: service_healthy
-  ctrlmoney-db:
-    image: postgres:latest
-    container_name: "ctrlmoney-db-${ENVIRONMENT}"    
-    restart: always
-    ports:
-      - "15434:5432"
-    environment:
-      POSTGRES_DB: "ctrlmoney-db-${ENVIRONMENT}"    
-      POSTGRES_PASSWORD: "${DATABASE_DEFAULT_PASSWORD}"      
-    healthcheck:
-      test: "pg_isready -q -U postgres"
-networks:
-  ctrlmoney-network:
-    driver: bridge
