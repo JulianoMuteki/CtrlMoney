@@ -33,17 +33,55 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Categoria</label>
+                                        <select id="categoryList" class="form-control select2" style="width: 100%;">
+                                            <option value="all" selected="selected">Todos</option>
+                                            <option value="Ações">Ações</option>
+                                            <option value="Fundos imobiliários">Fundos imobiliários</option>
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Filter date</label>
+                                        <select id="periodList" class="form-control select2" style="width: 100%;">
+                                            <option value="all" selected="selected">Todos</option>
+                                            <option value="thisYear">Ano @DateTime.Now.Year</option>
+                                            <option value="6">6 meses</option>
+                                            <option value="12">12 meses</option>
+                                            <option value="24">24 meses</option>
+                                            <option value="60">60 meses</option>
+                                        </select>
+                                    </div>
+                                    <!-- /.form-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                             <table id="tbReport" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>TicketCode</th>
-                                        <th>Category</th>    
-                                        <th>YoC total (DY+JCP)</th>
-                                        <th>Average (DY+JCP)</th>
-                                        <th>YoC total (DY)</th>
-                                        <th>Average (DY)</th>
-                                        <th>Average buy Price</th>
-                                        <th>Quantity</th>
+                                        <th>Category</th>
+                                        <th>DateInitSet</th>
+                                        <th>Dividend</th>
+                                        <th>YoC</th>
+                                        <th>BrokeragesAveragePrice</th>
+                                        <th>EarningTotal</th>
+                                        <th>DividendTotal</th>
+                                        <th>JCPTotal</th>
+                                        <th>QuantityStocks</th>
                                         <th>Profit</th>
                                     </tr>
                                 </thead>
@@ -63,9 +101,14 @@
 <!-- /.content-wrapper -->
 <script type="text/javascript">
 
-    function loadTableReport() {
+    function getSelectedValue(component){
+        return $('option:selected', component).val();
+    }
+
+    function loadTableReport(category, period) {
+
         $('#tbReport').dataTable({
-            "sAjaxSource": '/MyMoney/GetAjaxHandlerReport',
+            "sAjaxSource": '/MyMoney/GetAjaxHandlerReport?category=' + category + '&period=' + period,
             "bProcessing": true,
             "bServerSide": false,
             "paginate": true,
@@ -82,24 +125,19 @@
                     "defaultContent": "<i>Category</i>",
                 },
                 {
-                    "mData": "YoCTotal",
+                    "mData": "DateInitSet",
                     "bSortable": true,
-                    "defaultContent": "<i>YoCTotal</i>",
+                    "defaultContent": "<i>DateInitSet</i>",
+                },             
+                {
+                    "mData": "Dividend",
+                    "bSortable": true,
+                    "defaultContent": "<i>Dividend</i>",
                 },
                 {
-                    "mData": "AllEarningAvaregePrice",
+                    "mData": "YieldOnCost",
                     "bSortable": true,
-                    "defaultContent": "<i>AllEarningAvaregePrice</i>",
-                },
-                {
-                    "mData": "YoCDyTotal",
-                    "bSortable": true,
-                    "defaultContent": "<i>YoCTotal</i>",
-                },
-                {
-                    "mData": "DyEarningAvaregePrice",
-                    "bSortable": true,
-                    "defaultContent": "<i>DyEarningAvaregePrice</i>",
+                    "defaultContent": "<i>YieldOnCost</i>",
                 },
                 {
                     "mData": "BrokeragesAveragePrice",
@@ -107,9 +145,24 @@
                     "defaultContent": "<i>BrokeragesAveragePrice</i>",
                 },
                 {
-                    "mData": "Quantity",
+                    "mData": "EarningTotal",
                     "bSortable": true,
-                    "defaultContent": "<i>Quantity</i>",
+                    "defaultContent": "<i>EarningTotal</i>",
+                },
+                {
+                    "mData": "DividendTotal",
+                    "bSortable": true,
+                    "defaultContent": "<i>DividendTotal</i>",
+                },
+                {
+                    "mData": "JCPTotal",
+                    "bSortable": true,
+                    "defaultContent": "<i>JCPTotal</i>",
+                },
+                {
+                    "mData": "QuantityStocks",
+                    "bSortable": true,
+                    "defaultContent": "<i>QuantityStocks</i>",
                 },
                 {
                     "mData": "Profit",
@@ -120,8 +173,16 @@
         });
     }
 
+    $("#categoryList").change(function () {
+        loadTableReport($('option:selected', this).val(), $('option:selected', $("#periodList")).val());
+    });
+
+    $("#periodList").change(function () {
+        loadTableReport($('option:selected', $("#categoryList")).val(), $('option:selected', this).val());
+    });
+
     jQuery(document).ready(function () {
-        loadTableReport();
+        loadTableReport($('option:selected', $("#categoryList")).val(), $('option:selected', $("#periodList")).val());
     });
 </script>
 

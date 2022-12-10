@@ -1,5 +1,4 @@
-﻿using CtrlMoney.Domain.Entities;
-using CtrlMoney.Domain.Interfaces.Application;
+﻿using CtrlMoney.Domain.Interfaces.Application;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
@@ -32,14 +31,37 @@ namespace CtrlMoney.UI.Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAjaxHandlerReport()
+        public JsonResult GetAjaxHandlerReport(string category, string period)
         {
             try
             {
+                var brokeragesHistories = _brokerageHistoryService
+                                            .GetAll()
+                                            .Where(x => (category == "all")
+                                                  ? x.Category == "Ações" || x.Category == "Fundos imobiliários"
+                                                  : x.Category == category).ToList();
+                var earnings = _earningService.GetAll().Where(x => (category == "all")
+                                                  ? x.Category == "Ações" || x.Category == "FIIs"
+                                                  : x.Category == category).ToList();
 
-                var brokeragesHistories = _brokerageHistoryService.GetAll().Where(x => x.Category == "Ações" || x.Category == "Fundos imobiliários").ToList();
-                var earnings = _earningService.GetAll().ToList();
+                DateTime dateTimePeriod = brokeragesHistories.OrderByDescending(x => x.TransactionDate).Select(x=>x.TransactionDate).FirstOrDefault();
 
+                if (period != "all")
+                {
+                    int periodValue = 0;
+                    if (period == "thisYear")
+                    {
+                        dateTimePeriod = new DateTime(DateTime.Now.Year, 01, 01);
+                    }
+                    else
+                    {
+                        periodValue = int.Parse(period);
+                        dateTimePeriod = DateTime.Now.AddMonths(-periodValue);
+                    }
+
+                    brokeragesHistories = brokeragesHistories.Where(x => x.TransactionDate >= dateTimePeriod).ToList();
+                    earnings = earnings.Where(e => e.PaymentDate >= dateTimePeriod).ToList();
+                }
 
                 var brokeragesAverage = brokeragesHistories.GroupBy(x => x.TicketCode).Select(x =>
                 new
@@ -55,35 +77,27 @@ namespace CtrlMoney.UI.Web.Controllers
                 {
                     x.Key,
                     x.FirstOrDefault().Category,
-                    AllAveragePrice = x.Average(a => a.Price),
-                    DyAverageList = x.Where(d => d.EventType == "Dividendo").Select(p => p.Price).ToList(),
-                }).ToList();
-
-                var test = brokeragesAverage.Select(x => new
-                {
-                    TicketCode = x.Key,
-                    x.Category,
-                    AllEarningAvaregePrice = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.AllAveragePrice).FirstOrDefault(),
-                    DyEarningAvaregePrice = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.DyAverageList.Count > 0 ? s.DyAverageList.Average() : 0).FirstOrDefault(),
-                    x.BrokeragesAveragePrice,
-                    x.Quantity,
-                    Profit = 0
+                    SumEarningTotal = x.Where(d => d.EventType == "Rendimento" || d.EventType == "Dividendo" || d.EventType == "JCP").Sum(p => p.Price),
+                    SumDividendTotal = x.Where(d => d.EventType == "Rendimento" || d.EventType == "Dividendo").Sum(p => p.Price),
+                    JCPTotal = x.Where(d => d.EventType == "JCP").Sum(p => p.Price),
                 }).ToList();
 
                 NumberFormatInfo nfi = new CultureInfo("pt-BR", false).NumberFormat;
                 nfi.PercentDecimalDigits = 2;
 
-                var report = test.Select(x => new
+                var report = brokeragesAverage.Select(x => new
                 {
-                    x.TicketCode,
+                    TicketCode = x.Key,
                     x.Category,
-                    YoCTotal = decimal.Round((x.AllEarningAvaregePrice / x.BrokeragesAveragePrice), 6).ToString("P", nfi),
-                    YoCDyTotal = decimal.Round((x.DyEarningAvaregePrice / x.BrokeragesAveragePrice), 6).ToString("P", nfi),
+                    DateInitSet = dateTimePeriod.ToString("dd-MM-yyyy"),
+                    Dividend = decimal.Round((earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumEarningTotal).FirstOrDefault() / x.BrokeragesAveragePrice), 6).ToString("P", nfi),
+                    YieldOnCost = decimal.Round((earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumEarningTotal).FirstOrDefault() / x.BrokeragesAveragePrice), 6).ToString("P", nfi),
                     BrokeragesAveragePrice = x.BrokeragesAveragePrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                    AllEarningAvaregePrice = x.AllEarningAvaregePrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                    DyEarningAvaregePrice = x.DyEarningAvaregePrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                    x.Quantity,
-                    x.Profit
+                    EarningTotal = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumEarningTotal).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    DividendTotal = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumDividendTotal).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    JCPTotal = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.JCPTotal).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    QuantityStocks = x.Quantity,
+                    Profit = 0
                 }).ToList();
 
                 return Json(new
