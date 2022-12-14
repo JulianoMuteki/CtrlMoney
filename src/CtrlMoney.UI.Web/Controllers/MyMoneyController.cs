@@ -78,8 +78,9 @@ namespace CtrlMoney.UI.Web.Controllers
                     x.Key,
                     x.FirstOrDefault().Category,
                     SumEarningTotal = x.Where(d => d.EventType == "Rendimento" || d.EventType == "Dividendo" || d.EventType == "JCP").Sum(p => p.Price),
-                    SumDividendTotal = x.Where(d => d.EventType == "Rendimento" || d.EventType == "Dividendo").Sum(p => p.Price),
-                    JCPTotal = x.Where(d => d.EventType == "JCP").Sum(p => p.Price),
+                    SumDividendTotal = x.Where(d => d.EventType == "Rendimento" || d.EventType == "Dividendo").Sum(p => p.TotalNetAmount),
+                    JCPTotal = x.Where(d => d.EventType == "JCP").Sum(p => p.TotalNetAmount),
+                    Total = x.Where(d => d.EventType == "Rendimento" || d.EventType == "Dividendo" || d.EventType == "JCP").Sum(p => p.TotalNetAmount)
                 }).ToList();
 
                 NumberFormatInfo nfi = new CultureInfo("pt-BR", false).NumberFormat;
@@ -93,7 +94,7 @@ namespace CtrlMoney.UI.Web.Controllers
                     Dividend = decimal.Round((earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumEarningTotal).FirstOrDefault() / x.BrokeragesAveragePrice), 6).ToString("P", nfi),
                     YieldOnCost = decimal.Round((earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumEarningTotal).FirstOrDefault() / x.BrokeragesAveragePrice), 6).ToString("P", nfi),
                     BrokeragesAveragePrice = x.BrokeragesAveragePrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                    EarningTotal = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumEarningTotal).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    Total = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.Total).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                     DividendTotal = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.SumDividendTotal).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                     JCPTotal = earningsAverage.Where(e => e.Key == x.Key).Select(s => s.JCPTotal).FirstOrDefault().ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                     QuantityStocks = x.Quantity,
