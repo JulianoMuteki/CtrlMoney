@@ -2,14 +2,15 @@
 
 namespace CtrlMoney.UI.Web.Models
 {
-    public class BrokerageHistoryVM
+    public class TicketResume
     {
         public string TicketCode { get; set; }
         public string OldTicketCode { get; set; }
         public DateTime TransactionDate { get; set; }
-        public string TransactionType { get; set; }       
+        public string TransactionType { get; set; }
         public int Quantity { get; set; }
-        public string Price { get; set; }
-        public string TotalPrice { get; set; }
+        public decimal Price { get; set; }
+        public decimal TotalPrice { get; set; }
+        public string Category { get; set; }
     }
 }

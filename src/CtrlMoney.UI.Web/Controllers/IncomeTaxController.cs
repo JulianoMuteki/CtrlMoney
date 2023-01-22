@@ -166,19 +166,21 @@ namespace CtrlMoney.UI.Web.Controllers
                 TransactionType = x.TransactionType
             }).ToList();
 
-            decimal totalCalendarYearInput = (brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra" &&
-                                                                                     x.TransactionDate.Year < year).Sum(x => x.TotalPrice)
+            int yearExercise = year - 1;
+
+            decimal totalYearExerciseInput = (brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra" &&
+                                                                                     x.TransactionDate.Year <= yearExercise).Sum(x => x.TotalPrice)
                                               -
                                              brokerageHistoriesTableInput.Where(x => x.TransactionType == "Venda" &&
-                                                                                     x.TransactionDate.Year < year).Sum(x => x.TotalPrice)
+                                                                                     x.TransactionDate.Year <= yearExercise).Sum(x => x.TotalPrice)
                                              );
 
 
-            decimal totalYearExerciseInput = (brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra" &&
-                                                                                     x.TransactionDate.Year <= year).Sum(x => x.TotalPrice)
+            decimal totalLastYearInput = (brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra" &&
+                                                                                     x.TransactionDate.Year < yearExercise).Sum(x => x.TotalPrice)
                                                -
                                                brokerageHistoriesTableInput.Where(x => x.TransactionType == "Venda" &&
-                                                                                     x.TransactionDate.Year <= year).Sum(x => x.TotalPrice)
+                                                                                     x.TransactionDate.Year < yearExercise).Sum(x => x.TotalPrice)
                                                );
 
             DataOperation dataOperationInput = new()
@@ -191,8 +193,8 @@ namespace CtrlMoney.UI.Web.Controllers
                 TotalValue = totalYearExerciseInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 Operation = string.Join(", ", brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra" && x.TransactionDate.Year == year)
                                                                           .Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price))),
-                TotalCalendarYear = totalCalendarYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                TotalYearExercise = totalYearExerciseInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
+                TotalCalendarYear = totalYearExerciseInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
+                TotalLastYear = totalLastYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
             };
             #endregion
 
@@ -203,7 +205,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 ResumeBrokerageHistories = resumeTransactionsAndEarningsByYear,
                 Bookkeeping = string.Join(", ", lastPositions.Where(x => x.Bookkeeping != "ESCRITURADOR NÃO ENCONTRADO").Select(x => x.Bookkeeping).Distinct()),
                 DataOperationInput = dataOperationInput,
-                YearExercise = year,
+                ExerciseYear = year,
                 CalendarYear = year - 1
             };
 

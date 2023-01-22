@@ -15,7 +15,7 @@ namespace CtrlMoney.Domain.Entities
         public DateTime ExpireDate { get; set; }
         public string StockBroker { get; set; }//Corretora	
         public string TicketCode { get; set; } //Código Ativo
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } //TODO: Change to decimal
         public decimal Price { get; set; }//Preço unitário	
         public decimal TotalPrice { get; set; }
         public string Category { get; set; } //Categoria	

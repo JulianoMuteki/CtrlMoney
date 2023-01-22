@@ -32,8 +32,8 @@ namespace CtrlMoney.UI.Web.Models
         public int Quantity { get; set; }
         public string TotalValue { get; set; }
         public string Operation { get; set; }
+        public string TotalLastYear { get; set; }
         public string TotalCalendarYear { get; set; }
-        public string TotalYearExercise { get; set; }
         public IList<BrokerageHistoryVM> BrokeragesHistories { get; set; }        
     }
 

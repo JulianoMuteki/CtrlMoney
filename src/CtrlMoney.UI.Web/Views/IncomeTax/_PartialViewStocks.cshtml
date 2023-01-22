@@ -104,19 +104,21 @@
         <div class="callout callout-success">
             <div class="row">
                 <div class="col-12 col-sm-6">
+                    <h5>EXERCÍCIO @Model.ExerciseYear - ANO-CALENDÁRIO @Model.CalendarYear</h5>
+                </div>
+                <div class="col-12 col-sm-6">
                     <h5>@Model.TicketCode - @Model.DataOperationInput.Quantity units</h5>
                     <p>@Model.DataOperationInput.Operation</p>
                 </div>
                 <div class="col-12 col-sm-3">
-                    <h5>ANO-CALENDÁRIO @Model.CalendarYear</h5>
-                    <p>@Model.DataOperationInput.TotalCalendarYear</p>
+                    <h5>SITUAÇÃO EM @Model.CalendarYear</h5>
+                    <p>@Model.DataOperationInput.TotalLastYear</p>
                 </div>
                 <div class="col-12 col-sm-3">
-                    <h5>Ano EXERCÍCIO @Model.YearExercise</h5>
-                    <p>@Model.DataOperationInput.TotalYearExercise</p>
+                    <h5>SITUAÇÃO EM @Model.ExerciseYear</h5>
+                    <p>@Model.DataOperationInput.TotalCalendarYear</p>
                 </div>
             </div>
-
         </div>
     </div>
     <!-- /.card -->

@@ -94,7 +94,7 @@ namespace CtrlMoney.AppService
         {
             try
             {
-                return _unitOfWork.Repository<Earning>().FindAll(x => x.TicketCode.StartsWith(ticketCode));
+                return _unitOfWork.Repository<Earning>().FindAll(x => x.TicketCode.StartsWith(ticketCode) && x.PaymentDate != DateTime.MinValue).Where(x=>x.PaymentDate.Year <= year).ToList();
             }
             catch (CustomException exc)
             {

@@ -1,4 +1,5 @@
 ﻿using CtrlMoney.Domain.Interfaces.Application;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
@@ -40,9 +41,12 @@ namespace CtrlMoney.UI.Web.Controllers
                                             .Where(x => (category == "all")
                                                   ? x.Category == "Ações" || x.Category == "Fundos imobiliários"
                                                   : x.Category == category).ToList();
+
+                var fiisType = category == "Fundos imobiliários" ? "FIIs" : category;
+
                 var earnings = _earningService.GetAll().Where(x => (category == "all")
                                                   ? x.Category == "Ações" || x.Category == "FIIs"
-                                                  : x.Category == category).ToList();
+                                                  : x.Category == fiisType).ToList();
 
                 DateTime dateTimePeriod = brokeragesHistories.OrderByDescending(x => x.TransactionDate).Select(x=>x.TransactionDate).FirstOrDefault();
 

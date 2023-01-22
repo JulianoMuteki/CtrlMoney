@@ -19,7 +19,8 @@ namespace CtrlMoney.UI.Web.Models
 
         public DataOperation DataOperationInput { get; set; }
         public DataOperation DataOperationOutput { get; set; }
-        public int YearExercise { get; set; }
+        public int ExerciseYear { get; set; }
         public int CalendarYear { get; set; }
+        public int LastYear { get; set; }
     }
 }
