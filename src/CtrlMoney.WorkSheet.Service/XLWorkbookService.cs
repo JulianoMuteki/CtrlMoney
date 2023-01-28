@@ -125,25 +125,34 @@ namespace CtrlMoney.WorkSheet.Service
 
             var totalLinhas = planilha.Rows().Count();
             IList<BrokerageHistory> brokerageHistories = new List<BrokerageHistory>(totalLinhas);
+            IList<BrokerageHistory> brokerageHistoriesErrors = new List<BrokerageHistory>();
 
             for (int l = 2; l <= totalLinhas; l++)
             {
                 if (!string.IsNullOrEmpty(planilha.Cell($"C{l}").CellToString()))
                 {
-                    DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
-                    var category = planilha.Cell($"B{l}").CellToString();
-                    var ticket = planilha.Cell($"C{l}").CellToString();
-                    var transactionType = planilha.Cell($"D{l}").CellToString();
-                    int quantity = int.Parse(planilha.Cell($"E{l}").CellToString().Split(',')[0]);
-                    decimal price = decimal.Parse(planilha.Cell($"F{l}").CellToString());
-                    var stockBroker = planilha.Cell($"G{l}").CellToString();
-                    decimal brokerage = decimal.Parse(planilha.Cell($"H{l}").CellToString());
-                    decimal fees = decimal.Parse(planilha.Cell($"I{l}").CellToString());
-                    decimal taxes = decimal.Parse(planilha.Cell($"J{l}").CellToString());
-                    decimal irrf = decimal.Parse(planilha.Cell($"K{l}").CellToString());
+                    try
+                    {
+                        DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                        var category = planilha.Cell($"B{l}").CellToString();
+                        var ticket = planilha.Cell($"C{l}").CellToString();
+                        var transactionType = planilha.Cell($"D{l}").CellToString();
+                        int quantity = int.Parse(planilha.Cell($"E{l}").CellToString().Split(',')[0]);
+                        decimal price = decimal.Parse(planilha.Cell($"F{l}").CellToString());
+                        var stockBroker = planilha.Cell($"G{l}").CellToString();
+                        decimal brokerage = decimal.Parse(planilha.Cell($"H{l}").CellToString());
+                        decimal fees = decimal.Parse(planilha.Cell($"I{l}").CellToString());
+                        decimal taxes = decimal.Parse(planilha.Cell($"J{l}").CellToString());
+                        decimal irrf = decimal.Parse(planilha.Cell($"K{l}").CellToString());
 
-                    BrokerageHistory brokerageHistory = new(transactionDate, transactionType, stockBroker, ticket, quantity, price, category, brokerage, fees, taxes, irrf);
-                    brokerageHistories.Add(brokerageHistory);
+                        BrokerageHistory brokerageHistory = new(transactionDate, transactionType, stockBroker, ticket, quantity, price, category, brokerage, fees, taxes, irrf);
+                        brokerageHistories.Add(brokerageHistory);
+                    }catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(Environment.NewLine);
+                        Console.WriteLine(planilha.Rows(l.ToString()));
+                    }
                 }
             }
 

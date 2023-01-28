@@ -36,11 +36,20 @@ namespace CtrlMoney.UI.Web.Controllers
         {
             try
             {
-                var brokeragesHistories = _brokerageHistoryService
+                var brokeragesHistoriesFiltered = _brokerageHistoryService
                                             .GetAll()
                                             .Where(x => (category == "all")
                                                   ? x.Category == "Ações" || x.Category == "Fundos imobiliários"
-                                                  : x.Category == category).ToList();
+                                                  : x.Category == category)
+                                            .GroupBy(t => t.TicketCode)
+                                            .Select(b => new
+                                            {
+                                                b.Key,
+                                                Quantity = b.Where(x => x.TransactionType == "Compra").Sum(x => x.Quantity) - b.Where(x => x.TransactionType == "Venda").Sum(x => x.Quantity),
+                                                histories = b.ToList()
+                                            });
+
+                var brokeragesHistories = brokeragesHistoriesFiltered.Where(x => x.Quantity > 0).SelectMany(x => x.histories);
 
                 var fiisType = category == "Fundos imobiliários" ? "FIIs" : category;
 
