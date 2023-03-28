@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CtrlMoney.CrossCutting.Ioc;
 using CtrlMoney.Domain.Identity;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -97,16 +100,23 @@ namespace CtrlMoney.UI.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CtrlMoneyContext context)
         {
-            if (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            // else
+            // {
+            //     app.UseExceptionHandler(@"/Home/Error");
+            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //     app.UseHsts();
+            // }
+            app.UseRequestLocalization(new RequestLocalizationOptions
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler(@"/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+                DefaultRequestCulture = new RequestCulture("pt-BR"),
+                SupportedCultures = new List<CultureInfo> { new CultureInfo("pt-BR") },
+                SupportedUICultures = new List<CultureInfo> { new CultureInfo("pt-BR") }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

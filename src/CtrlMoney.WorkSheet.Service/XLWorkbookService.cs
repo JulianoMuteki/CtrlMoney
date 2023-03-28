@@ -8,6 +8,9 @@ namespace CtrlMoney.WorkSheet.Service
 {
     public class XLWorkbookService : IXLWorkbookService
     {
+        private const string _transactionSheetTabName = "Negociação";
+        private const string _earningSheetTabName = "Proventos";
+        private const string _movimentSheetTabName = "Movimentação";
         public XLWorkbookService()
         {
 
@@ -121,7 +124,7 @@ namespace CtrlMoney.WorkSheet.Service
         public IList<BrokerageHistory> ImportSITransactionsSheet(string fullfileName)
         {
             var xls = new XLWorkbook(fullfileName);
-            var planilha = xls.Worksheets.First(w => w.Name == "Carteira");
+            var planilha = xls.Worksheets.First(w => w.Name == _transactionSheetTabName);
 
             var totalLinhas = planilha.Rows().Count();
             IList<BrokerageHistory> brokerageHistories = new List<BrokerageHistory>(totalLinhas);
@@ -133,7 +136,7 @@ namespace CtrlMoney.WorkSheet.Service
                 {
                     try
                     {
-                        DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                        DateTime transactionDate = DateTime.Parse(planilha.Cell($"A{l}").CellToString());
                         var category = planilha.Cell($"B{l}").CellToString();
                         var ticket = planilha.Cell($"C{l}").CellToString();
                         var transactionType = planilha.Cell($"D{l}").CellToString();
@@ -147,7 +150,10 @@ namespace CtrlMoney.WorkSheet.Service
 
                         BrokerageHistory brokerageHistory = new(transactionDate, transactionType, stockBroker, ticket, quantity, price, category, brokerage, fees, taxes, irrf);
                         brokerageHistories.Add(brokerageHistory);
-                    }catch(Exception ex)
+
+                        Console.WriteLine("###### Price:" + brokerageHistory.Price);
+                    }
+                    catch(Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                         Console.WriteLine(Environment.NewLine);
@@ -162,7 +168,7 @@ namespace CtrlMoney.WorkSheet.Service
         public IList<Earning> ImportSIEarningsSheet(string fullfileName)
         {
             var xls = new XLWorkbook(fullfileName);
-            var sheet = xls.Worksheets.First(w => w.Name == "Proventos");
+            var sheet = xls.Worksheets.First(w => w.Name == _earningSheetTabName);
 
             var totalRows = sheet.Rows().Count();
             IList<Earning> earnings = new List<Earning>(totalRows);
@@ -194,7 +200,7 @@ namespace CtrlMoney.WorkSheet.Service
         public IList<Moviment> ImportMovimentsSheet(string fullfileName)
         {
             var xls = new XLWorkbook(fullfileName);
-            var planilha = xls.Worksheets.First(w => w.Name == "Movimentação");
+            var planilha = xls.Worksheets.First(w => w.Name == _movimentSheetTabName);
 
             var totalLinhas = planilha.Rows().Count();
             IList<Moviment> moviments = new List<Moviment>(totalLinhas);
@@ -211,7 +217,7 @@ namespace CtrlMoney.WorkSheet.Service
                     var movementType = planilha.Cell($"C{l}").CellToString();
                     var stockBroker = planilha.Cell($"E{l}").CellToString();
 
-                    int quantity = int.Parse(planilha.Cell($"F{l}").CellToString().Split(',')[0]);
+                    decimal quantity = decimal.Parse(planilha.Cell($"F{l}").CellToString());
                     decimal unitPrice = decimal.Parse(planilha.Cell($"G{l}").CellToString().Replace('-', '0'));
                     decimal transactionValue = decimal.Parse(planilha.Cell($"H{l}").CellToString().Replace('-', '0'));
 

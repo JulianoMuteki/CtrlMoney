@@ -1,10 +1,8 @@
 ﻿using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Models;
-using CtrlMoney.WorkSheet.Service;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace CtrlMoney.UI.Web.Controllers
 {
@@ -15,7 +13,7 @@ namespace CtrlMoney.UI.Web.Controllers
         private readonly IPositionService _positionService;
         private readonly IEarningService _earningService;
         private readonly IMovimentService _movementService;
-        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService, 
+        public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService,
                             IPositionService positionService, IEarningService earningService, IMovimentService movementService)
         {
             _xLWorkbookService = xLWorkbookService;
@@ -134,7 +132,7 @@ namespace CtrlMoney.UI.Web.Controllers
         public IActionResult UploadPosition(SingleFileModel model)
         {
             if (ModelState.IsValid)
-            {             
+            {
                 var fullfileName = CreateFile(model);
                 var positions = _xLWorkbookService.ImportPositionsSheet(fullfileName, DateTime.Parse(model.FileName));
                 _positionService.AddRange(positions);
@@ -200,6 +198,11 @@ namespace CtrlMoney.UI.Web.Controllers
             {
                 model.File.CopyTo(stream);
             }
+            FileInfo fInfo = new FileInfo(fullfileName);
+            if (!fInfo.Exists)
+            {
+                throw new Exception($"Error in copy file: {model.FileName} with fullname: {fullfileName}");
+            }
 
             return fullfileName;
         }
@@ -218,7 +221,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 MovimentType = model.MovimentType,
                 UnitPrice = model.UnitPrice
             };
-           
+
             return View(movementVM);
         }
 

@@ -9,7 +9,7 @@ namespace CtrlMoney.Domain.Entities
         public DateTime PaymentDate { get; set; }
         public string EventType { get; set; }
         public string StockBroker { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public decimal Price { get; set; }//Preço unitário	
         public decimal TotalPrice { get; set; }
         public decimal TotalNetAmount { get; set; }  // Total líq.

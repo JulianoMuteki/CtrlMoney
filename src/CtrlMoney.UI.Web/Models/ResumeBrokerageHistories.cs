@@ -15,21 +15,21 @@ namespace CtrlMoney.UI.Web.Models
     {
         public string TransactionType { get; set; }
         public string TotalValue { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string UnitPrice { get; set; }
     }
 
     public class EarningReport
     {
         public string EventType { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string TotalValue { get; set; }
 
     }
 
     public class DataOperation
     {
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string TotalValue { get; set; }
         public string Operation { get; set; }
         public string TotalLastYear { get; set; }

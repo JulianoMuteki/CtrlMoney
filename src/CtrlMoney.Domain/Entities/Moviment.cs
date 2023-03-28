@@ -10,7 +10,7 @@ namespace CtrlMoney.Domain.Entities
         public string MovimentType { get; set; }
         public string TicketCode { get; set; }
         public string StockBroker { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal TransactionValue { get; set; }
 
@@ -20,7 +20,7 @@ namespace CtrlMoney.Domain.Entities
 
         }
 
-        public Moviment(string inputOutput, DateTime date, string movimentType, string ticketCode, string stockBroker, int quantity, decimal unitPrice, decimal transactionValue)
+        public Moviment(string inputOutput, DateTime date, string movimentType, string ticketCode, string stockBroker, decimal quantity, decimal unitPrice, decimal transactionValue)
         {
             InputOutput = inputOutput;
             Date = date;

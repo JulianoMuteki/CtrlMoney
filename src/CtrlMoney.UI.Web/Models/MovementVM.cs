@@ -13,7 +13,7 @@ namespace CtrlMoney.UI.Web.Models
         public string StockBroker { get; set; }
 
         [Required(ErrorMessage = "Please select Quantity")]
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         [Required(ErrorMessage = "Please select UnitPrice")]
         public decimal UnitPrice { get; set; }
