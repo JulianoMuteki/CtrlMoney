@@ -236,7 +236,7 @@ namespace CtrlMoney.UI.Web.Controllers
                         TicketCode = item.TicketCode,
                         PaymentDate = item.Date,
                         EventType = item.MovimentType,
-                        TotalPrice = item.TransactionValue,
+                        TotalNetAmount = item.TransactionValue,
                         Price = item.UnitPrice,
                         Quantity = item.Quantity
                     });
@@ -265,7 +265,7 @@ namespace CtrlMoney.UI.Web.Controllers
                                                                                 {
                                                                                     EventType = e.Key,
                                                                                     Quantity = e.Sum(s => s.Quantity),
-                                                                                    TotalValue = e.Sum(s => s.TotalPrice).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
+                                                                                    TotalValue = e.Sum(s => s.TotalNetAmount).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
                                                                                 }).ToList()
                                                     }).ToList();
 
@@ -310,13 +310,14 @@ namespace CtrlMoney.UI.Web.Controllers
             DataOperation dataOperationInput = new()
             {
                 BrokeragesHistories = historyMovements,
-                Quantity = brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra")
+                Quantity = brokerageHistoriesTableInput.Where(x => (x.TransactionType == "Compra" || x.TransactionType == "Bonificação"))
                                                        .Sum(x => x.Quantity)
                           - brokerageHistoriesTableInput.Where(x => x.TransactionType == "Venda")
                                                         .Sum(x => x.Quantity),
                 TotalValue = totalCalendarYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                Operation = string.Join(", ", brokerageHistoriesTableInput.Where(x => x.TransactionType == "Compra" && x.TransactionDate.Year == calendarYear)
+                Operation = string.Join(", ", brokerageHistoriesTableInput.Where(x => (x.TransactionType == "Compra" || x.TransactionType == "Bonificação") && x.TransactionDate.Year == calendarYear)
                                                                           .Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price))),
+                WeightedAverage = CalcularMediaPonderada(brokerageHistories).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 TotalLastYear = totalLastYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 TotalCalendarYear = totalCalendarYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"))
             };
@@ -335,6 +336,22 @@ namespace CtrlMoney.UI.Web.Controllers
             };
 
             return PartialView("_PartialViewStocks", incomeTaxTicket);
+        }
+
+        private decimal CalcularMediaPonderada(IList<BrokerageHistory> brokerageHistories)
+        {
+            decimal totalValuePurchases = 0;
+            decimal totalQuantityPurchases = 0;
+
+            foreach (var brokerageHistory in brokerageHistories)
+            {
+                totalValuePurchases += brokerageHistory.Price * brokerageHistory.Quantity; //valor * quantidade
+                totalQuantityPurchases += brokerageHistory.Quantity;
+            }
+
+            decimal totalWeightedAverage = (totalValuePurchases / totalQuantityPurchases) * totalQuantityPurchases;
+
+            return totalValuePurchases / totalQuantityPurchases;
         }
     }
 }

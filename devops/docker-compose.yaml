@@ -16,8 +16,8 @@ services:
     image: postgres:latest
     container_name: "ctrlmoney-db-${ENVIRONMENT}"
     restart: always
-    ports:
-      - "5432"
+    # ports:
+    #   - "15433:5432"
     environment:
       POSTGRES_DB: "ctrlmoney-db-${ENVIRONMENT}"
       POSTGRES_PASSWORD: "${DATABASE_DEFAULT_PASSWORD}"

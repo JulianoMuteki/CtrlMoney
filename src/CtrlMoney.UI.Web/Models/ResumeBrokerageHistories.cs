@@ -34,9 +34,9 @@ namespace CtrlMoney.UI.Web.Models
         public string Operation { get; set; }
         public string TotalLastYear { get; set; }
         public string TotalCalendarYear { get; set; }
-        public IList<BrokerageHistoryVM> BrokeragesHistories { get; set; }        
+        public string WeightedAverage { get; set; }
+        public IList<BrokerageHistoryVM> BrokeragesHistories { get; set; }
     }
 
 }
 
-               

@@ -11,6 +11,8 @@ services:
     networks:
       - ctrlmoney-network
   ctrlmoney-db:
+    ports:
+      - "15433:5432"  
     networks:
       - ctrlmoney-network    
 networks:
