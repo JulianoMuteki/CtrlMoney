@@ -22,7 +22,7 @@ namespace CtrlMoney.Domain.Entities
 
         }
 
-        public Earning(string ticketCode, DateTime paymentDate, string eventType, string stockBroker, int quantity, decimal price, decimal totalPrice)
+        public Earning(string ticketCode, DateTime paymentDate, string eventType, string stockBroker, int quantity, decimal price, decimal totalNetAmount, string category)
             : base()
         {
             TicketCode = ticketCode;
@@ -31,7 +31,9 @@ namespace CtrlMoney.Domain.Entities
             StockBroker = stockBroker;
             Quantity = quantity;
             Price = price;
-            TotalPrice = totalPrice;
+            TotalPrice = quantity * price;
+            TotalNetAmount = totalNetAmount;
+            Category = category;
         }
 
         /// <summary>

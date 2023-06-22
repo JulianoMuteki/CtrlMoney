@@ -2,17 +2,24 @@
 using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CtrlMoney.UI.Web.Controllers
 {
     public class B3Controller : Controller
     {
+
         private readonly IXLWorkbookService _xLWorkbookService;
         private readonly IBrokerageHistoryService _brokerageHistoryService1;
         private readonly IPositionService _positionService;
         private readonly IEarningService _earningService;
         private readonly IMovimentService _movementService;
+        
+        private IDictionary<string, string> _keyTickerValuePairs = new Dictionary<string, string>();
         public B3Controller(IXLWorkbookService xLWorkbookService, IBrokerageHistoryService brokerageHistoryService,
                             IPositionService positionService, IEarningService earningService, IMovimentService movementService)
         {
@@ -21,6 +28,33 @@ namespace CtrlMoney.UI.Web.Controllers
             _positionService = positionService;
             _earningService = earningService;
             _movementService = movementService;
+            
+
+            ReadCategoryTickers();
+        }
+
+        private void ReadCategoryTickers()
+        {
+            var brokeragesHistory = _brokerageHistoryService1.GetAll().Select(x=> new KeyValuePair<string, string>(x.TicketCode, x.Category)).Distinct();
+            var earnings = _earningService.GetAll().Select(x => new KeyValuePair<string, string>(x.TicketCode, x.Category)).Distinct();
+
+            foreach (var item in brokeragesHistory)
+            {
+                SetTickersValuePairs(item);
+            }
+
+            foreach (var item in earnings)
+            {
+                SetTickersValuePairs(item);
+            }
+        }
+
+        private void SetTickersValuePairs(KeyValuePair<string, string> keyValuePair)
+        {
+            if (!_keyTickerValuePairs.ContainsKey(keyValuePair.Key))
+            {
+                _keyTickerValuePairs.Add(keyValuePair.Key, keyValuePair.Value);
+            }
         }
 
         public IActionResult Index()
@@ -52,7 +86,7 @@ namespace CtrlMoney.UI.Web.Controllers
             if (ModelState.IsValid)
             {
                 var fullfileName = CreateFile(model);
-                var brokerageHistories = _xLWorkbookService.ImportTransactionsSheet(fullfileName);
+                var brokerageHistories = _xLWorkbookService.ImportTransactionsB3Sheet(fullfileName, _keyTickerValuePairs);
                 _brokerageHistoryService1.AddRange(brokerageHistories);
                 System.IO.File.Delete(fullfileName);
 
@@ -93,7 +127,8 @@ namespace CtrlMoney.UI.Web.Controllers
             if (ModelState.IsValid)
             {
                 var fullfileName = CreateFile(model);
-                var earnings = _xLWorkbookService.ImportEarningsSheet(fullfileName);
+                var earnings = _xLWorkbookService.ImportEarningsB3Sheet(fullfileName, _keyTickerValuePairs);
+
                 _earningService.AddRange(earnings);
                 System.IO.File.Delete(fullfileName);
 
@@ -174,7 +209,7 @@ namespace CtrlMoney.UI.Web.Controllers
             if (ModelState.IsValid)
             {
                 var fullfileName = CreateFile(model);
-                var moviments = _xLWorkbookService.ImportMovimentsSheet(fullfileName);
+                var moviments = _xLWorkbookService.ImportMovimentsB3Sheet(fullfileName, _keyTickerValuePairs);
                 _movementService.AddRange(moviments);
                 System.IO.File.Delete(fullfileName);
 
@@ -184,6 +219,7 @@ namespace CtrlMoney.UI.Web.Controllers
             }
             return RedirectToAction("MovementIndex");
         }
+
         private string CreateFile(SingleFileModel model)
         {
             string fullfileName;

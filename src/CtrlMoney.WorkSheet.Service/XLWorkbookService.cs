@@ -8,18 +8,45 @@ namespace CtrlMoney.WorkSheet.Service
 {
     public class XLWorkbookService : IXLWorkbookService
     {
+        private readonly IHttpClientFactory _clientFactory;
+
         private const string _transactionSheetTabName = "Negociação";
         private const string _earningSheetTabName = "Proventos";
         private const string _movimentSheetTabName = "Movimentação";
-        public XLWorkbookService()
-        {
+        private const string _earningB3SheetTabName = "Proventos Recebidos";
+        private const string _transactionB3SheetTabName = "Negociação";
+        private readonly string _categoryStock = "Ações";
+        private readonly string _categoryREITs = "Fundos imobiliários";
 
+        private readonly IList<string> _movementsTypesRequired = new List<string>() { "Atualização", "Fração em Ativos", "Bonificação em Ativos", "Leilão de Fração", "Amortização", "Recibo de Subscrição" };
+
+        public XLWorkbookService(IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
+        private async Task<string> CheckTickerCategoryTypeStock(string tickerCode)
+        {
+            var client = _clientFactory.CreateClient("Tickers");
+            var response = await client.GetAsync($"/acoes/{tickerCode.ToLower()}/");
+
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
+            {
+                // Read the response content as a string
+                var content = await response.Content.ReadAsStringAsync();
+                if(content.StartsWith("<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\" />"))
+                {
+                    return _categoryStock;
+                }
+            }
+
+            return _categoryREITs;
         }
 
-        public IList<Earning> ImportEarningsSheet(string fullfileName)
+        public IList<Earning> ImportEarningsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories)
         {
             var xls = new XLWorkbook(fullfileName);
-            var sheet = xls.Worksheets.First(w => w.Name == "Proventos Recebidos");
+            var sheet = xls.Worksheets.First(w => w.Name == _earningB3SheetTabName);
 
             var totalRows = sheet.Rows().Count();
             IList<Earning> earnings = new List<Earning>(totalRows);
@@ -29,18 +56,29 @@ namespace CtrlMoney.WorkSheet.Service
                 var product = sheet.Cell($"A{l}").CellToString();
                 if (!string.IsNullOrEmpty(product))
                 {
-                    var ticketCode = product.Split('-')[0].Trim();
+                    var ticketCode = product.Split('-')[0].Trim().TrimEnd('F');
                     DateTime paymentDate = DateTime.Parse(sheet.Cell($"B{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
                     var eventType = sheet.Cell($"C{l}").CellToString();
                     var stockBroker = sheet.Cell($"D{l}").CellToString();
                     int quantity = int.Parse(sheet.Cell($"E{l}").CellToString().Split(',')[0]);
                     decimal unitPrice = decimal.Parse(sheet.Cell($"F{l}").CellToString().Replace('-', '0'));
                     decimal netValue = decimal.Parse(sheet.Cell($"G{l}").CellToString());
+                    string category = "";
 
-                    earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, unitPrice, netValue));
+                    if (!keyTickersCategories.ContainsKey(ticketCode))
+                    {
+                        category = CheckTickerCategoryTypeStock(ticketCode).Result;
+                        keyTickersCategories.Add(ticketCode, category);
+                    }
+                    else
+                    {
+                        category = keyTickersCategories[ticketCode];
+                    }
+
+                    earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, unitPrice, netValue, category));
                 }
             }
-            
+
             return earnings;
         }
 
@@ -50,7 +88,7 @@ namespace CtrlMoney.WorkSheet.Service
             List<Position> positions = new List<Position>();
             positions.AddRange(ImportSheetTabForPositions(xls, positionDate, "Acoes", EInvestmentType.STOCK));
             positions.AddRange(ImportSheetTabForPositions(xls, positionDate, "Fundo de Investimento", EInvestmentType.INVESTMENT_FUNDS));
-            
+
             return positions;
         }
 
@@ -86,10 +124,10 @@ namespace CtrlMoney.WorkSheet.Service
             return positions;
         }
 
-        public IList<BrokerageHistory> ImportTransactionsSheet(string fullfileName)
+        public IList<BrokerageHistory> ImportTransactionsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories)
         {
             var xls = new XLWorkbook(fullfileName);
-            var planilha = xls.Worksheets.First(w => w.Name == "Negociação");
+            var planilha = xls.Worksheets.First(w => w.Name == _transactionB3SheetTabName);
 
             var totalLinhas = planilha.Rows().Count();
             IList<BrokerageHistory> brokerageHistories = new List<BrokerageHistory>(totalLinhas);
@@ -102,14 +140,25 @@ namespace CtrlMoney.WorkSheet.Service
                 var market = planilha.Cell($"C{l}").CellToString();
                 var expire = planilha.Cell($"D{l}").CellToString();
                 var stockBroker = planilha.Cell($"E{l}").CellToString();
-                var ticket = planilha.Cell($"F{l}").CellToString();
+                var ticketCode = planilha.Cell($"F{l}").CellToString().TrimEnd('F');
 
                 int quantity = int.Parse(planilha.Cell($"G{l}").CellToString().Split(',')[0]);
                 decimal price = decimal.Parse(planilha.Cell($"H{l}").CellToString());
                 decimal totalPrice = decimal.Parse(planilha.Cell($"I{l}").CellToString());
+                string category = "";
+
+                if (!keyTickersCategories.ContainsKey(ticketCode))
+                {
+                    category = CheckTickerCategoryTypeStock(ticketCode).Result;
+                    keyTickersCategories.Add(ticketCode, category);
+                }
+                else
+                {
+                    category = keyTickersCategories[ticketCode];
+                }
 
                 DateTime eExpireDate = string.IsNullOrEmpty(expire) || expire == "-" ? DateTime.MinValue : DateTime.Parse(expire, CultureInfo.CreateSpecificCulture("pt-BR"));
-                BrokerageHistory brokerageHistory = new(totalPrice, price, quantity, ticket, stockBroker, eExpireDate, transactionDate, movementType, market);
+                BrokerageHistory brokerageHistory = new(totalPrice, price, quantity, ticketCode, stockBroker, eExpireDate, transactionDate, movementType, market, category);
                 brokerageHistories.Add(brokerageHistory);
             }
 
@@ -153,7 +202,7 @@ namespace CtrlMoney.WorkSheet.Service
 
                         Console.WriteLine("###### Price:" + brokerageHistory.Price);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                         Console.WriteLine(Environment.NewLine);
@@ -181,7 +230,7 @@ namespace CtrlMoney.WorkSheet.Service
                     var ticketCode = sheet.Cell($"B{l}").CellToString();
                     var stockBroker = sheet.Cell($"C{l}").CellToString();
                     var eventType = sheet.Cell($"D{l}").CellToString();
-                    
+
                     int quantity = int.Parse(sheet.Cell($"E{l}").CellToString().Split(',')[0]);
                     decimal price = decimal.Parse(sheet.Cell($"F{l}").CellToString().Replace("R$ ", ""));
                     decimal totalPrice = decimal.Parse(sheet.Cell($"G{l}").CellToString().Replace("R$ ", ""));
@@ -189,7 +238,7 @@ namespace CtrlMoney.WorkSheet.Service
                     DateTime withDate = DateTime.Parse(sheet.Cell($"I{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
                     DateTime paymentDate = !sheet.Cell($"J{l}").CellToString().Contains("-") ? DateTime.Parse(sheet.Cell($"J{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"))
                                                                                         : DateTime.MinValue;
-                    
+
                     earnings.Add(new Earning(ticketCode, paymentDate, eventType, stockBroker, quantity, price, totalPrice, totalNetAmount, category, withDate));
                 }
             }
@@ -197,37 +246,41 @@ namespace CtrlMoney.WorkSheet.Service
             return earnings;
         }
 
-        public IList<Moviment> ImportMovimentsSheet(string fullfileName)
+        public IList<Moviment> ImportMovimentsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories)
         {
             var xls = new XLWorkbook(fullfileName);
-            var planilha = xls.Worksheets.First(w => w.Name == _movimentSheetTabName);
+            var sheetTab = xls.Worksheets.First(w => w.Name == _movimentSheetTabName);
 
-            var totalLinhas = planilha.Rows().Count();
+            var totalLinhas = sheetTab.Rows().Count();
             IList<Moviment> moviments = new List<Moviment>(totalLinhas);
 
             for (int l = 2; l <= totalLinhas; l++)
             {
-                var product = planilha.Cell($"D{l}").CellToString();
+                var product = sheetTab.Cell($"D{l}").CellToString();
                 if (!string.IsNullOrEmpty(product))
                 {
-                    var ticketCode = product.Split('-')[0].Trim();
+                    var ticketCode = product.Split('-')[0].Trim().TrimEnd('F');
+                    var inputoutput = sheetTab.Cell($"A{l}").CellToString();
+                    DateTime date = DateTime.Parse(sheetTab.Cell($"B{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
+                    string movementType = sheetTab.Cell($"C{l}").CellToString();
+                    string stockBroker = sheetTab.Cell($"E{l}").CellToString();
 
-                    var inputoutput = planilha.Cell($"A{l}").CellToString();
-                    DateTime date = DateTime.Parse(planilha.Cell($"B{l}").CellToString(), CultureInfo.CreateSpecificCulture("pt-BR"));
-                    var movementType = planilha.Cell($"C{l}").CellToString();
-                    var stockBroker = planilha.Cell($"E{l}").CellToString();
+                    decimal quantity = decimal.Parse(sheetTab.Cell($"F{l}").CellToString());
+                    decimal unitPrice = decimal.Parse(sheetTab.Cell($"G{l}").CellToString().Replace('-', '0'));
+                    decimal transactionValue = decimal.Parse(sheetTab.Cell($"H{l}").CellToString().Replace('-', '0'));
 
-                    decimal quantity = decimal.Parse(planilha.Cell($"F{l}").CellToString());
-                    decimal unitPrice = decimal.Parse(planilha.Cell($"G{l}").CellToString().Replace('-', '0'));
-                    decimal transactionValue = decimal.Parse(planilha.Cell($"H{l}").CellToString().Replace('-', '0'));
-
-                    Moviment moviment = new Moviment(inputoutput, date, movementType, ticketCode, stockBroker, quantity, unitPrice, transactionValue);
-                    moviments.Add(moviment);
+                    if (_movementsTypesRequired.Contains(movementType))
+                    {
+                        Moviment moviment = new Moviment(inputoutput, date, movementType, ticketCode, stockBroker, quantity, unitPrice, transactionValue);
+                        moviments.Add(moviment);
+                    }
                 }
             }
 
             return moviments;
         }
+
+
     }
 
     public static class ConvertCustom

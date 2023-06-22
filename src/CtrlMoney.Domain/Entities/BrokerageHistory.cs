@@ -1,9 +1,5 @@
 ﻿using CtrlMoney.Domain.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CtrlMoney.Domain.Entities
 {
@@ -41,7 +37,7 @@ namespace CtrlMoney.Domain.Entities
         /// <param name="transactionDate"></param>
         /// <param name="transactionType"></param>
         /// <param name="market"></param>
-        public BrokerageHistory(decimal totalPrice, decimal price, int quantity, string ticketCode, string stockBroker, DateTime expireDate, DateTime transactionDate, string transactionType, string market)
+        public BrokerageHistory(decimal totalPrice, decimal price, int quantity, string ticketCode, string stockBroker, DateTime expireDate, DateTime transactionDate, string transactionType, string market, string category)
             : base()
         {
             TotalPrice = totalPrice;
@@ -53,6 +49,7 @@ namespace CtrlMoney.Domain.Entities
             TransactionDate = transactionDate;
             TransactionType = transactionType;
             Market = market;
+            Category = category;
         }
 
 
@@ -102,7 +99,7 @@ namespace CtrlMoney.Domain.Entities
                     transactionType = "Venda";
                     break;
                 default:
-                    break;                    
+                    break;
             }
             return transactionType;
         }

@@ -51,11 +51,11 @@ namespace CtrlMoney.UI.Web.Controllers
 
                 var brokeragesHistories = brokeragesHistoriesFiltered.Where(x => x.Quantity > 0).SelectMany(x => x.histories);
 
-                var fiisType = category == "Fundos imobiliários" ? "FIIs" : category;
+                var earningsAll = _earningService.GetAll();
 
-                var earnings = _earningService.GetAll().Where(x => (category == "all")
-                                                  ? x.Category == "Ações" || x.Category == "FIIs"
-                                                  : x.Category == fiisType).ToList();
+                var earnings = earningsAll.Where(x => (category == "all")
+                                                  ? x.Category == "Ações" || x.Category == "Fundos imobiliários"
+                                                  : x.Category == category).ToList();
 
                 DateTime dateTimePeriod = brokeragesHistories.OrderByDescending(x => x.TransactionDate).Select(x=>x.TransactionDate).FirstOrDefault();
 
@@ -83,7 +83,7 @@ namespace CtrlMoney.UI.Web.Controllers
                     x.FirstOrDefault().Category,
                     BrokeragesAveragePrice = x.Average(a => a.Price),
                     Quantity = x.Sum(s => s.Quantity)
-                });
+                }).ToList();
 
                 var earningsAverage = earnings.GroupBy(x => x.TicketCode).Select(x =>
                 new

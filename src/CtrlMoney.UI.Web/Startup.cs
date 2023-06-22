@@ -94,7 +94,11 @@ namespace CtrlMoney.UI.Web
             services.AddRazorPages();
             RegisterServices(services);
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
-            // services.AddScoped(ctx => ctx.GetService<IOptions<ConnectionStrings>>());
+
+            services.AddHttpClient("Tickers", httpClient =>
+            {
+                httpClient.BaseAddress = new Uri("https://www.analisedeacoes.com/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

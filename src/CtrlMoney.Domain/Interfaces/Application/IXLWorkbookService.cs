@@ -6,10 +6,10 @@ namespace CtrlMoney.Domain.Interfaces.Application
 {
     public interface IXLWorkbookService
     {
-        IList<BrokerageHistory> ImportTransactionsSheet(string fullfileName);
-        IList<Earning> ImportEarningsSheet(string fullfileName);
+        IList<BrokerageHistory> ImportTransactionsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories);
+        IList<Earning> ImportEarningsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories);
+        IList<Moviment> ImportMovimentsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories);
         IList<Position> ImportPositionsSheet(string fullfileName, DateTime positionDate);
-        IList<Moviment> ImportMovimentsSheet(string fullfileName);
 
         IList<BrokerageHistory> ImportSITransactionsSheet(string fullfileName);
         IList<Earning> ImportSIEarningsSheet(string fullfileName);
