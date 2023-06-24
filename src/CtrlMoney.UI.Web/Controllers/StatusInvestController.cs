@@ -1,11 +1,10 @@
-﻿using CtrlMoney.AppService;
+﻿using CtrlMoney.CrossCutting;
+using CtrlMoney.CrossCutting.Enums;
 using CtrlMoney.Domain.Entities;
 using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Extensions;
 using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Packaging.Signing;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -131,27 +130,11 @@ namespace CtrlMoney.UI.Web.Controllers
             int lastYear = yearNum - 2;
 
             var brokerageHistories = _brokerageHistoryService.GetByCategory(category).ToList();
-            var conversions = _ticketConversionService.GetAll();
-            var oldTickets = new Dictionary<string, string>();
+            var conversions = _ticketConversionService.GetAll().ToList();
 
-            if (conversions.Count > 0)
-            {
-                foreach (var conversion in conversions)
-                {
-                    var ticket = brokerageHistories.Where(x => x.TicketCode == conversion.TicketInput || x.TicketCode == conversion.TicketOutput).FirstOrDefault();
-                    if (ticket != null)
-                    {
-                        string ticketOld = conversion.TicketInput == ticket.TicketCode ? conversion.TicketOutput : conversion.TicketInput;
-                        brokerageHistories.RemoveAll(x => x.TicketCode == ticketOld);
+            var ticketsResume = CreateTicketsResume(brokerageHistories, conversions, yearExercise);
 
-                        oldTickets.Add(ticket.TicketCode, ticketOld);
-                    }
-                }
-            }
-
-            var ticketsResume = CreateTicketsResume(brokerageHistories, oldTickets, yearExercise);
-
-            var incomesTaxes = ticketsResume.Where(x => x.Quantity > 0)
+            var incomesTaxes = ticketsResume
                      .Select(g => new
                      {
                          Id = g.TicketCode,
@@ -165,38 +148,44 @@ namespace CtrlMoney.UI.Web.Controllers
 
             return Json(new
             {
-                aaData = incomesTaxes.Where(x=>x.Quantity > 0).ToList(),
+                aaData = incomesTaxes.ToList(),
                 success = true
             });
         }
 
-        private IList<TicketResume> CreateTicketsResume(ICollection<BrokerageHistory> brokerageHistories, Dictionary<string, string> oldTickets, int baseYear)
+        private IList<TicketResume> CreateTicketsResume(ICollection<BrokerageHistory> brokerageHistories, ICollection<TicketConversion> ticketConversions, int baseYear)
         {
             IList<TicketResume> ticketsResumes = new List<TicketResume>();
 
             var ticketsCode = brokerageHistories.Select(x => x.TicketCode).Distinct();
-
+            
             foreach (var ticketCode in ticketsCode)
             {
-                string oldTicket = string.Empty;
-
-                IList<BrokerageHistory> brokerageHistoriesByTicket = brokerageHistories.Where(x => x.TicketCode == ticketCode).ToList();
-                if (oldTickets.Any(k => k.Key == ticketCode))
+                if (!ticketsResumes.Any(x => x.TicketCode == ticketCode))
                 {
-                    oldTicket = oldTickets.Where(x => x.Key == ticketCode).Select(t => t.Value).FirstOrDefault();
+                    string oldTicketCode = string.Empty;
+                    string currentTickent = ticketCode;
 
-                    var brokerageHistoriesConversion = _brokerageHistoryService.GetByTicketCode(oldTicket, baseYear);
-                    if (brokerageHistoriesConversion.Count > 0)
-                        brokerageHistoriesByTicket = brokerageHistoriesByTicket.Concat(brokerageHistoriesConversion).ToList();
+                    IList<BrokerageHistory> brokerageHistoriesByTicket = brokerageHistories.Where(x => x.TicketCode == ticketCode).ToList();
+
+                    if (ticketConversions.Any(k => k.TicketOutput == ticketCode))
+                    {
+                        var oldTicket = ticketConversions.Where(x => x.TicketOutput == ticketCode).FirstOrDefault();
+                        oldTicketCode = oldTicket.TicketOutput;
+                        currentTickent = oldTicket.TicketInput;
+
+                        brokerageHistoriesByTicket = brokerageHistories.Where(x => x.TicketCode == oldTicket.TicketInput
+                                                                                   || x.TicketCode == oldTicket.TicketOutput).ToList();
+                    }
+
+                    ticketsResumes.Add(new TicketResume()
+                    {
+                        TicketCode = currentTickent,
+                        OldTicketCode = oldTicketCode,
+                        Quantity = brokerageHistoriesByTicket.Where(x => x.TransactionType == "Compra").Sum(x => x.Quantity) - brokerageHistoriesByTicket.Where(x => x.TransactionType == "Venda").Sum(x => x.Quantity),
+                        TotalPrice = brokerageHistoriesByTicket.Where(x => x.TransactionType == "Compra").Sum(x => x.TotalPrice) - brokerageHistoriesByTicket.Where(x => x.TransactionType == "Venda").Sum(x => x.TotalPrice)
+                    });
                 }
-
-                ticketsResumes.Add(new TicketResume()
-                {
-                    TicketCode = ticketCode,
-                    OldTicketCode = oldTicket,
-                    Quantity = brokerageHistoriesByTicket.Where(x => x.TransactionType == "Compra").Sum(x => x.Quantity) - brokerageHistoriesByTicket.Where(x => x.TransactionType == "Venda").Sum(x => x.Quantity),
-                    TotalPrice = brokerageHistoriesByTicket.Where(x => x.TransactionType == "Compra").Sum(x => x.TotalPrice) - brokerageHistoriesByTicket.Where(x => x.TransactionType == "Venda").Sum(x => x.TotalPrice)
-                });
             }
 
             return ticketsResumes;
@@ -225,11 +214,36 @@ namespace CtrlMoney.UI.Web.Controllers
                 if (brokerageHistoriesConversion.Count > 0)
                     brokerageHistories = brokerageHistories.Concat(brokerageHistoriesConversion).ToList();
             }
-            var movements = _movementService.GetByStartTicketAndYears(ticketCode, calendarYear)
-                                            .Where(x => x.MovimentType == "Leilão de Fração" && x.InputOutput == "Credito").ToList();
-            if (movements.Count > 0)
+
+            var movementsTransactions = _movementService.GetByStartTicketAndYears(ticketCode, calendarYear)
+                                            .Where(x => (x.MovimentType == MovementTypeList.MovimentsTypes[MovimentType.BONIFICACAO_EM_ATIVOS]
+                                                         || x.MovimentType == MovementTypeList.MovimentsTypes[MovimentType.RECIBO_DE_SUBSCRICAO])
+                                                        && x.InputOutput == "Credito").ToList();
+
+            if (movementsTransactions.Count > 0)
             {
-                foreach (var item in movements)
+                foreach (var item in movementsTransactions)
+                {
+                    brokerageHistories.Add(new BrokerageHistory()
+                    {
+                        TicketCode = item.TicketCode,
+                        TransactionDate = item.Date,
+                        StockBroker = item.StockBroker,
+                        TransactionType = item.MovimentType,
+                        TotalPrice = item.TransactionValue,
+                        Price = item.UnitPrice,
+                        Quantity = item.Quantity
+                    });
+                }
+            }
+
+            var movementsEarnings = _movementService.GetByStartTicketAndYears(ticketCode, calendarYear)
+                                            .Where(x => (x.MovimentType == MovementTypeList.MovimentsTypes[MovimentType.LEILAO_DE_FRACAO]
+                                                        || x.MovimentType == MovementTypeList.MovimentsTypes[MovimentType.AMORTIZACAO])
+                                                        && x.InputOutput == "Credito").ToList();
+            if (movementsEarnings.Count > 0)
+            {
+                foreach (var item in movementsEarnings)
                 {
                     earnings.Add(new Earning()
                     {
@@ -276,7 +290,7 @@ namespace CtrlMoney.UI.Web.Controllers
                 TicketCode = x.TicketCode,
                 Price = x.Price.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 Quantity = x.Quantity,
-                TotalPrice = x.TransactionType != "Bonificação" ? x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")) : "--",
+                TotalPrice = x.TransactionType != MovementTypeList.MovimentsTypes[MovimentType.BONIFICACAO_EM_ATIVOS] ? x.TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")) : "--",
                 TransactionDate = x.TransactionDate,
                 TransactionType = x.TransactionType
             }).ToList();
@@ -310,12 +324,12 @@ namespace CtrlMoney.UI.Web.Controllers
             DataOperation dataOperationInput = new()
             {
                 BrokeragesHistories = historyMovements,
-                Quantity = brokerageHistoriesTableInput.Where(x => (x.TransactionType == "Compra" || x.TransactionType == "Bonificação"))
+                Quantity = brokerageHistoriesTableInput.Where(x => (x.TransactionType == "Compra" || x.TransactionType == MovementTypeList.MovimentsTypes[MovimentType.BONIFICACAO_EM_ATIVOS]))
                                                        .Sum(x => x.Quantity)
                           - brokerageHistoriesTableInput.Where(x => x.TransactionType == "Venda")
                                                         .Sum(x => x.Quantity),
                 TotalValue = totalCalendarYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
-                Operation = string.Join(", ", brokerageHistoriesTableInput.Where(x => (x.TransactionType == "Compra" || x.TransactionType == "Bonificação") && x.TransactionDate.Year == calendarYear)
+                Operation = string.Join(", ", brokerageHistoriesTableInput.Where(x => (x.TransactionType == "Compra" || x.TransactionType == MovementTypeList.MovimentsTypes[MovimentType.BONIFICACAO_EM_ATIVOS]) && x.TransactionDate.Year == calendarYear)
                                                                           .Select(operation => string.Format("{0} (R${1})", operation.Quantity, operation.Price))),
                 WeightedAverage = CalcularMediaPonderada(brokerageHistories).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),
                 TotalLastYear = totalLastYearInput.ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR")),

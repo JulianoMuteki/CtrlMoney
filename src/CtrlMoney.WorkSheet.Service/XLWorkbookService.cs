@@ -3,6 +3,7 @@ using CtrlMoney.CrossCutting.Enums;
 using CtrlMoney.Domain.Entities;
 using CtrlMoney.Domain.Interfaces.Application;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace CtrlMoney.WorkSheet.Service
 {
@@ -17,30 +18,56 @@ namespace CtrlMoney.WorkSheet.Service
         private const string _transactionB3SheetTabName = "Negociação";
         private readonly string _categoryStock = "Ações";
         private readonly string _categoryREITs = "Fundos imobiliários";
-
+        private readonly string _categoryETF = "ETF";
+        private readonly string _categoryInvalid = "Invalid";
+        
         private readonly IList<string> _movementsTypesRequired = new List<string>() { "Atualização", "Fração em Ativos", "Bonificação em Ativos", "Leilão de Fração", "Amortização", "Recibo de Subscrição" };
+
+        private readonly IDictionary<string, string> _categories = new Dictionary<string, string>();
 
         public XLWorkbookService(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
+
+            _categories.Add(_categoryStock, "acoes");
+            _categories.Add(_categoryREITs, "fundos-imobiliarios");
+            _categories.Add(_categoryETF, "etfs");
         }
-        private async Task<string> CheckTickerCategoryTypeStock(string tickerCode)
+        private async Task<string> CheckTickerCategoryType(string tickerCode)
+        {
+            foreach (var item in _categories)
+            {                
+                if (await GetStockType(tickerCode, item.Value))
+                {
+                    return item.Key;
+                }
+            }
+            return _categoryInvalid;
+        }
+
+        private async Task<bool> GetStockType(string tickerCode, string url)
         {
             var client = _clientFactory.CreateClient("Tickers");
-            var response = await client.GetAsync($"/acoes/{tickerCode.ToLower()}/");
+            var response = await client.GetAsync($"/{url}/{tickerCode.ToLower()}");
 
             // Check if the request was successful
             if (response.IsSuccessStatusCode)
-            {
+            {                 
+                string padrao = $@"COTA&#xC7;&#xC3;O [A-Za-z]{{2}} {tickerCode.ToUpper()}";                
+                Regex regex = new Regex(padrao);
+
                 // Read the response content as a string
                 var content = await response.Content.ReadAsStringAsync();
-                if(content.StartsWith("<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\" />"))
+                if (content.TrimStart().StartsWith("<!DOCTYPE html>") && content.Contains("<meta name=\"publisher\" content=\"statusinvest.com.br\">")
+                    && content.Contains("class=\"d-flex justify-between align-items-center mb-sm-2  flex-wrap flex-xs-nowrap\"") 
+                    && regex.IsMatch(content)
+                    && !content.Contains("<span class=\"d-block mb-1 fw-900\">OPS. . .</span>Não encontramos o que você está procurando"))
                 {
-                    return _categoryStock;
+                    return true;
                 }
             }
 
-            return _categoryREITs;
+            return false;
         }
 
         public IList<Earning> ImportEarningsB3Sheet(string fullfileName, IDictionary<string, string> keyTickersCategories)
@@ -67,7 +94,7 @@ namespace CtrlMoney.WorkSheet.Service
 
                     if (!keyTickersCategories.ContainsKey(ticketCode))
                     {
-                        category = CheckTickerCategoryTypeStock(ticketCode).Result;
+                        category = CheckTickerCategoryType(ticketCode).Result;
                         keyTickersCategories.Add(ticketCode, category);
                     }
                     else
@@ -149,7 +176,7 @@ namespace CtrlMoney.WorkSheet.Service
 
                 if (!keyTickersCategories.ContainsKey(ticketCode))
                 {
-                    category = CheckTickerCategoryTypeStock(ticketCode).Result;
+                    category = CheckTickerCategoryType(ticketCode).Result;
                     keyTickersCategories.Add(ticketCode, category);
                 }
                 else

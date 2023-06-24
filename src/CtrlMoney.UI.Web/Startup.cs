@@ -97,7 +97,12 @@ namespace CtrlMoney.UI.Web
 
             services.AddHttpClient("Tickers", httpClient =>
             {
-                httpClient.BaseAddress = new Uri("https://www.analisedeacoes.com/");
+                httpClient.BaseAddress = new Uri("https://statusinvest.com.br/");
+                httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"); // Github API versioning
+                httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.5"); // Github requires a user-agent
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"); // Github requires a user-agent
+                httpClient.DefaultRequestHeaders.Add("Connection", "close"); // Github requires a user-agent
+                httpClient.DefaultRequestHeaders.Add("DNT", "1");
             });
         }
 
