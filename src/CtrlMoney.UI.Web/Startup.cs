@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using CtrlMoney.CrossCutting.Ioc;
@@ -8,6 +8,7 @@ using CtrlMoney.Domain.Identity;
 using CtrlMoney.Domain.Security;
 using CtrlMoney.Infra.Context;
 using CtrlMoney.UI.Web.CustomConfig;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -103,6 +103,14 @@ namespace CtrlMoney.UI.Web
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"); // Github requires a user-agent
                 httpClient.DefaultRequestHeaders.Add("Connection", "close"); // Github requires a user-agent
                 httpClient.DefaultRequestHeaders.Add("DNT", "1");
+            });
+            string urlAPIYFinance = Configuration?.GetSection("YFinanceHost")?["Url"];
+            services.AddHttpClient("YFinance", httpClient =>
+            {
+                //httpClient.BaseAddress = new Uri("http://172.18.194.39:5001");
+                httpClient.BaseAddress = new Uri(urlAPIYFinance);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
             });
         }
 

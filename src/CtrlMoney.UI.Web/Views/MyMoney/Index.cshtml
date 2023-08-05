@@ -38,7 +38,8 @@
                                     <div class="form-group">
                                         <label>Categoria</label>
                                         <select id="categoryList" class="form-control select2" style="width: 100%;">
-                                            <option value="all" selected="selected">Todos</option>
+                                            <option value="all" selected="selected">Selecione</option>
+                                            <option value="all">Todos</option>
                                             <option value="Ações">Ações</option>
                                             <option value="Fundos imobiliários">Fundos imobiliários</option>
                                         </select>
@@ -53,10 +54,10 @@
                                     <div class="form-group">
                                         <label>Filter date</label>
                                         <select id="periodList" class="form-control select2" style="width: 100%;">
-                                            <option value="all" selected="selected">Todos</option>
+                                            <option value="all">Todos</option>
                                             <option value="thisYear">Ano @DateTime.Now.Year</option>
                                             <option value="6">6 meses</option>
-                                            <option value="12">12 meses</option>
+                                            <option value="12" selected="selected">12 meses</option>
                                             <option value="24">24 meses</option>
                                             <option value="60">60 meses</option>
                                         </select>
@@ -75,12 +76,13 @@
                                         <th>TicketCode</th>
                                         <th>Category</th>
                                         <th>DateInitSet</th>
+                                        <th>CurrentPrice</th>
                                         <th>Dividend</th>
                                         <th>YoC</th>
-                                        <th>BrokeragesAveragePrice</th>                                       
-                                        <th>DividendTotal</th>
+                                        <th>BrokeragesAveragePrice</th>
+                                        <th>TotalPriceByTicket</th>
+                                        <th>EarningTotal</th>
                                         <th>JCPTotal</th>
-                                        <th>Total</th>
                                         <th>QuantityStocks</th>
                                         <th>Profit</th>
                                     </tr>
@@ -101,7 +103,7 @@
 <!-- /.content-wrapper -->
 <script type="text/javascript">
 
-    function getSelectedValue(component){
+    function getSelectedValue(component) {
         return $('option:selected', component).val();
     }
 
@@ -128,7 +130,12 @@
                     "mData": "DateInitSet",
                     "bSortable": true,
                     "defaultContent": "<i>DateInitSet</i>",
-                },             
+                },
+                {
+                    "mData": "CurrentPrice",
+                    "bSortable": true,
+                    "defaultContent": "<i>CurrentPrice</i>",
+                },
                 {
                     "mData": "Dividend",
                     "bSortable": true,
@@ -145,19 +152,19 @@
                     "defaultContent": "<i>BrokeragesAveragePrice</i>",
                 },
                 {
-                    "mData": "DividendTotal",
+                    "mData": "TotalPriceByTicket",
                     "bSortable": true,
-                    "defaultContent": "<i>DividendTotal</i>",
+                    "defaultContent": "<i>TotalPriceByTicket</i>",
+                },
+                {
+                    "mData": "EarningTotal",
+                    "bSortable": true,
+                    "defaultContent": "<i>EarningTotal</i>",
                 },
                 {
                     "mData": "JCPTotal",
                     "bSortable": true,
                     "defaultContent": "<i>JCPTotal</i>",
-                },
-                {
-                    "mData": "Total",
-                    "bSortable": true,
-                    "defaultContent": "<i>Total</i>",
                 },
                 {
                     "mData": "QuantityStocks",
@@ -181,9 +188,9 @@
         loadTableReport($('option:selected', $("#categoryList")).val(), $('option:selected', this).val());
     });
 
-    jQuery(document).ready(function () {
-        loadTableReport($('option:selected', $("#categoryList")).val(), $('option:selected', $("#periodList")).val());
-    });
+        //jQuery(document).ready(function () {
+        //    loadTableReport($('option:selected', $("#categoryList")).val(), $('option:selected', $("#periodList")).val());
+        //});
 </script>
 
 

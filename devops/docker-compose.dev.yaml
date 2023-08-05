@@ -7,6 +7,7 @@ services:
     environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - PORT=8002
+       - YFinanceHost__Url=${YFinanceHost_URL}
        - ConnectionStrings__DefaultConnection=User ID =postgres;Password=${DATABASE_DEFAULT_PASSWORD};Server=ctrlmoney-db;Port=5432;Database=ctrlmoney-db-${ENVIRONMENT};Integrated Security=true;Pooling=true;
     networks:
       - ctrlmoney-network
