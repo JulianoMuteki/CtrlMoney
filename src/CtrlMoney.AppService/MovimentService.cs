@@ -5,7 +5,6 @@ using CtrlMoney.Domain.Interfaces.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CtrlMoney.AppService
@@ -57,6 +56,24 @@ namespace CtrlMoney.AppService
         public Task<Guid> DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        public void DeleteByRangeDate(DateTime dtStart, DateTime dtEnd)
+        {
+            try
+            {
+                var movements = _unitOfWork.Repository<Moviment>().FindBy(x=>x.Date >= dtStart && x.Date <= dtEnd).ToList();
+                _unitOfWork.Repository<Moviment>().DeleteRange(movements);
+                _unitOfWork.CommitSync();
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error Update", nameof(this.DeleteByRangeDate), ex);
+            }
         }
 
         public ICollection<Moviment> GetAll()

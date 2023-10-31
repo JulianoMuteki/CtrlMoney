@@ -106,7 +106,9 @@ namespace CtrlMoney.UI.Web.Controllers
                                                 histories = b.ToList()
                                             });
 
-                var brokeragesHistories = brokeragesHistoriesFiltered.Where(x => x.Quantity > 0).SelectMany(x => x.histories);
+                var ticketsConversions = _ticketConversionService.GetAll().ToList();
+                var brokeragesHistories = brokeragesHistoriesFiltered.Where(x => x.Quantity > 0 && !ticketsConversions.Any(t=>t.TicketOutput == x.Key) ).SelectMany(x => x.histories);
+
                 var brokeragesAverage = brokeragesHistories.GroupBy(x => x.TicketCode).Select(x =>
                  new
                  {

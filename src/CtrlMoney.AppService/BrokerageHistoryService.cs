@@ -137,5 +137,23 @@ namespace CtrlMoney.AppService
         {
             throw new NotImplementedException();
         }
+
+        public void DeleteByRangeDate(DateTime dtStart, DateTime dtEnd)
+        {
+            try
+            {
+                var brokerageHistories = _unitOfWork.Repository<BrokerageHistory>().FindBy(x => x.TransactionDate >= dtStart && x.TransactionDate <= dtEnd).ToList();
+                _unitOfWork.Repository<BrokerageHistory>().DeleteRange(brokerageHistories);
+                _unitOfWork.CommitSync();
+            }
+            catch (CustomException exc)
+            {
+                throw exc;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.Create<MovimentService>("Unexpected error Update", nameof(this.DeleteByRangeDate), ex);
+            }
+        }
     }
 }

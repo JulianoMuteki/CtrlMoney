@@ -28,10 +28,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link href="~/lib/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
     <!-- BootStrap Tree View-->
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" />*@
-    <link href="~/lib/chart.js/chart.min.css" rel="stylesheet" />
-
+    <link href="~/lib/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
     <!-- jQuery -->
     <script src="~/lib/jquery/jquery.min.js"></script>
+
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -311,9 +311,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="~/admin-lte/js/adminlte.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="~/admin-lte/js/demo.js"></script>
+    <script src="~/lib/moments/moment-with-locales.js"></script>
+
     <!-- Select2 -->
     <script src="~/lib/select2/js/select2.full.min.js"></script>
-    <script src="~/lib/chart.js/chart.min.js"></script>
+    <script src="~/lib/Chart.js/chart.js"></script>
+    <script src="~/lib/bootstrap-daterangepicker/daterangepicker.js"></script>
     <!-- page script -->
     <script>
         $(function () {
@@ -337,6 +340,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 "autoWidth": false,
                 "responsive": true,
             });
+
+            moment.locale('pt-br');
+            //Date range picker
+            $('#reservation').daterangepicker();
         });
     </script>
 </body>

@@ -3,6 +3,7 @@ using CtrlMoney.Domain.Interfaces.Application;
 using CtrlMoney.UI.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CtrlMoney.UI.Web.Controllers
 {
@@ -117,6 +118,27 @@ namespace CtrlMoney.UI.Web.Controllers
             {
                 return View();
             }
+        }
+
+
+        public ActionResult DeleteImport()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult DeleteImport(string selectedDate)
+        {
+            string[] dates = selectedDate.Split('-');
+            
+            DateTime dtStart = DateTime.Parse(dates[0].Trim());
+            DateTime dtEnd = DateTime.Parse(dates[1].Trim());
+
+            _movementService.DeleteByRangeDate(dtStart, dtEnd);
+            _earningService.DeleteByRangeDate(dtStart, dtEnd);
+            _brokerageHistoryService1.DeleteByRangeDate(dtStart, dtEnd);
+
+            ViewBag.Message = $"Deleted data from {dtStart} to {dtEnd}";
+            return View();
         }
     }
 }

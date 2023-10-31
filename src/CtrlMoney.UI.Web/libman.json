@@ -1,6 +1,6 @@
 {
-  "version": "1.0",
   "defaultProvider": "cdnjs",
+  "version": "1.0",
   "libraries": [
     {
       "library": "admin-lte@3.2.0",
@@ -27,7 +27,7 @@
       "destination": "wwwroot/lib/jquery.inputmask/"
     },
     {
-      "library": "bootstrap-daterangepicker@3.0.5",
+      "library": "bootstrap-daterangepicker@3.1",
       "destination": "wwwroot/lib/bootstrap-daterangepicker/"
     },
     {
@@ -47,8 +47,13 @@
       "destination": "wwwroot/lib/bs-custom-file-input/"
     },
     {
-      "library": "Chart.js@2.9.4",
+      "library": "Chart.js@3.9.1",
+      "provider": "cdnjs",
       "destination": "wwwroot/lib/Chart.js/"
+    },
+    {
+      "library": "moment.js@2.29.4",
+      "destination": "wwwroot/lib/moments/"
     }
   ]
 }
