@@ -1,8 +1,9 @@
-﻿using CtrlMoney.Domain.Interfaces.Application;
+﻿using CtrlMoney.Domain.Entities;
+using CtrlMoney.Domain.Interfaces.Application;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -39,27 +40,6 @@ namespace CtrlMoney.UI.Web.Controllers
             return View();
         }
 
-        private async Task<bool> GetStockInfo(string tickerCode, string url)
-        {
-            var client = _clientFactory.CreateClient("YFinance");
-            var response = await client.GetAsync($"/{url}?ticker=TAEE11.SA");
-
-            // Check if the request was successful
-            if (response.IsSuccessStatusCode)
-            {
-                // Read the response content as a string
-                var content = await response.Content.ReadAsStringAsync();
-                dynamic stuff = JsonConvert.DeserializeObject(content.ToString());
-
-                if (true)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public async Task<decimal> GetAsync(string tickerCode)
         {
             decimal currentPrice = 1;
@@ -93,21 +73,7 @@ namespace CtrlMoney.UI.Web.Controllers
         {
             try
             {
-                var brokeragesHistoriesFiltered = _brokerageHistoryService
-                                            .GetAll()
-                                            .Where(x => (category == "all")
-                                                  ? x.Category == "Ações" || x.Category == "Fundos imobiliários"
-                                                  : x.Category == category)
-                                            .GroupBy(t => t.TicketCode)
-                                            .Select(b => new
-                                            {
-                                                b.Key,
-                                                Quantity = b.Where(x => x.TransactionType == "Compra").Sum(x => x.Quantity) - b.Where(x => x.TransactionType == "Venda").Sum(x => x.Quantity),
-                                                histories = b.ToList()
-                                            });
-
-                var ticketsConversions = _ticketConversionService.GetAll().ToList();
-                var brokeragesHistories = brokeragesHistoriesFiltered.Where(x => x.Quantity > 0 && !ticketsConversions.Any(t=>t.TicketOutput == x.Key) ).SelectMany(x => x.histories);
+                IEnumerable<BrokerageHistory> brokeragesHistories = GetBrokeragesHistoriesByCategory(category);
 
                 var brokeragesAverage = brokeragesHistories.GroupBy(x => x.TicketCode).Select(x =>
                  new
@@ -185,6 +151,26 @@ namespace CtrlMoney.UI.Web.Controllers
             {
                 throw ex;
             }
+        }
+
+        private IEnumerable<BrokerageHistory> GetBrokeragesHistoriesByCategory(string category)
+        {
+            var brokeragesHistoriesFiltered = _brokerageHistoryService
+                                        .GetAll()
+                                        .Where(x => (category == "all")
+                                              ? x.Category == "Ações" || x.Category == "Fundos imobiliários"
+                                              : x.Category == category)
+                                        .GroupBy(t => t.TicketCode)
+                                        .Select(b => new
+                                        {
+                                            b.Key,
+                                            Quantity = b.Where(x => x.TransactionType == "Compra").Sum(x => x.Quantity) - b.Where(x => x.TransactionType == "Venda").Sum(x => x.Quantity),
+                                            histories = b.ToList()
+                                        });
+
+            var ticketsConversions = _ticketConversionService.GetAll().ToList();
+            var brokeragesHistories = brokeragesHistoriesFiltered.Where(x => x.Quantity > 0 && !ticketsConversions.Any(t => t.TicketOutput == x.Key)).SelectMany(x => x.histories);
+            return brokeragesHistories;
         }
     }
 

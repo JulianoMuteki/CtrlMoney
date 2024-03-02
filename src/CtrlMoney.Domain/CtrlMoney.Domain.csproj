@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CtrlMoney.CrossCutting\CtrlMoney.CrossCutting.csproj" />
+    <ProjectReference Include="..\CtrlMoney.DataTransfer\CtrlMoney.DataTransfer.csproj" />
   </ItemGroup>
 
 </Project>

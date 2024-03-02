@@ -107,6 +107,15 @@
     <!-- /.content -->
 </div>
 <script>
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     $(function () {
         /* ChartJS
          * -------
@@ -195,23 +204,56 @@
         lineChartData.datasets[0].fill = false;
         lineChartData.datasets[1].fill = false;
         lineChartOptions.datasetFill = false
+        var stocks = [];
+        var total = [];
+        var colorList = [];
 
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/Dashboard/GetCompositionTotalStocks")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    // $('#EmployeeName').val(response.Name);
+                    // $('#EmployeeDesignation').val(response.Designation);
 
+                    // $('#EmployeeLocation').val(response.Location);
+                    $.each(response.aaData, function (index, value) {
+                        var color = getRandomColor();
+                        stocks.push(value.Category);
+                        total.push(value.TotalValue);
+                        colorList.push(color);
+                    });
+
+                    new Chart(pieChartCanvas, {
+                        type: 'pie',
+                        data: pieData,
+                        options: pieOptions
+                    })
+
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+       
         //-------------
         //- DONUT CHART -
         //-------------
         // Get context with jQuery - using jQuery's .get() method.
         var donutData = {
-            labels: [
-                'Ações',
-                'ETFs',
-                'FIIS',
-                'Cripto',
-            ],
+            labels: stocks,
             datasets: [
                 {
-                    data: [700, 500, 600, 100],
-                    backgroundColor: ['#f56954', '#00a65a', '#00c0ef', '#d2d6de'],
+                    data: total,
+                    backgroundColor: colorList,
                 }
             ]
         }
@@ -233,11 +275,11 @@
         }
         //Create pie or douhnut chart
         // You can switch between pie and douhnut using the method below.
-        new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
-        })
+        // new Chart(pieChartCanvas, {
+        //     type: 'pie',
+        //     data: pieData,
+        //     options: pieOptions
+        // })
 
         //-------------
         //- BAR CHART -

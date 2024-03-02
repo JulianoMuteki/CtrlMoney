@@ -20,6 +20,8 @@ namespace CtrlMoney.CrossCutting.Ioc
             services.AddScoped<IEarningService, EarningService>();
             services.AddScoped<IMovimentService, MovimentService>();
             services.AddScoped<ITicketConversionService, TicketConversionService>();
+            services.AddScoped<IReportService, ReportService>();
+
             
         }
     }

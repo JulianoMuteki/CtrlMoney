@@ -55,6 +55,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CtrlMoney.WorkSheet.Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Automation", "6 - Automation", "{19372744-317F-4CA3-A99C-1F3073911ACB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlMoney.DataTransfer", "src\CtrlMoney.DataTransfer\CtrlMoney.DataTransfer.csproj", "{1B87E2B8-D14D-4E3C-9763-CC9D9F25D16A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B87E2B8-D14D-4E3C-9763-CC9D9F25D16A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B87E2B8-D14D-4E3C-9763-CC9D9F25D16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B87E2B8-D14D-4E3C-9763-CC9D9F25D16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B87E2B8-D14D-4E3C-9763-CC9D9F25D16A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{15058CA6-85C0-445E-8829-D1F4A0B89CD5} = {FD597515-773B-4966-B6D4-B609293D9009}
 		{54175EEE-E617-4B19-B4F6-ABF4B82458BF} = {13640474-D6F2-4165-B9D2-D73D2F9ADC25}
 		{0420C7A7-5C2E-46F5-81F5-B434D97F5A03} = {24C8350B-503F-4962-8C9E-09EB3D454042}
+		{1B87E2B8-D14D-4E3C-9763-CC9D9F25D16A} = {24C8350B-503F-4962-8C9E-09EB3D454042}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38EB263C-007B-4828-8AF0-F1B813B3FCD2}
